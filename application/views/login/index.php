@@ -1,15 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
-?><!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta charset="utf-8">
-	<title>E-Query System</title>
+?>
 
-	<link href="w3.css" rel="stylesheet" type="text/css">
-
-</head>
-<body>
 	
 	<div class="container-fluid">
 		<div class="row justify-content-md-center mt-5">
@@ -35,5 +27,3 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 			</div>
 		</div>
 	</div>
-</body>
-</html>

@@ -78,7 +78,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		<code>support@jvty13.heliohost.com</code>
 
 	</div>
-	<img src="<?php echo $image; ?>">
 	<!--<img src="<?php //echo $image; ?>" width="250" height="250" class="w3-circle w3-card-2">-->
 	<p class="footer">Page rendered in <strong>{elapsed_time}</strong> seconds.</p>
 </div>
