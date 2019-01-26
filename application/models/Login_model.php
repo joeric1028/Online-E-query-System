@@ -6,14 +6,22 @@ class login_model extends CI_Model {
 		$this->load->database();
 	}
 	
-	public function get_student($slug = FALSE)
+	public function authenticate_user()
 	{
-		if ($slug === FALSE)
+    	$data = array(
+        	'idnumber' => $this->input->post('username'),
+        	'password' => $this->input->post('password')
+		);
+		
+		$query = $this->db->get_where('users', array('idnumber' => $data['idnumber']));
+		
+		foreach ($query->result() as $row)
 		{
-			$query = $this->db->get('student');
-			return $query->result_array();
+			if ($data['idnumber'] == $row->idnumber && $data['password'] == $row->password)
+			{
+				return true;
+			}
 		}
-		$query = $this->db->get_where('student', array('slug' => $slug));
-		return $query->row_array();
+		return false;
 	}
 }

@@ -23,7 +23,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | a PHP script and you can easily do that on your own.
 |
 */
-$config['base_url'] = 'http://jvty13.heliohost.org/';
+//$config['base_url'] = 'http://jvty13.heliohost.org/'; for live website
+$config['base_url'] = 'http://jvty13/'; // for virtualhost
 
 /*
 |--------------------------------------------------------------------------
@@ -64,7 +65,7 @@ $config['uri_protocol']	= 'REQUEST_URI';
 |
 | https://codeigniter.com/user_guide/general/urls.html
 */
-$config['url_suffix'] = '';
+$config['url_suffix'] = '.html';
 
 /*
 |--------------------------------------------------------------------------
