@@ -1,12 +1,9 @@
-<?php
-defined('BASEPATH') OR exit('No direct script access allowed');
-?><!DOCTYPE html>
+<?php defined('BASEPATH') OR exit('No direct script access allowed');?>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="utf-8">
 	<title>E-Query System</title>
 
-	<link href="w3.css" rel="stylesheet" type="text/css">
 	<style type="text/css">
 
 	::selection { background-color: #E13300; color: white; }

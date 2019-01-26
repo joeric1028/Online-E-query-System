@@ -21,25 +21,7 @@ class Welcome extends CI_Controller {
 
 	public function index()
 	{
-		$config['image_library']   = 'gd2';
-		$config['source_image']    = 'application/cache/temp.jpg';
-		$config['create_thumb']    = TRUE;
-		$config['maintain_ratio']  = TRUE;
-		$config['width']           = 500;
-		$config['height']          = 500;
-
-		$this->load->library('image_lib', $config);
-		$this->load->helper('file');
-		$this->load->helper('path');
-
-		if ( ! $this->image_lib->resize())
-		{
-        	echo $this->image_lib->display_errors();
-		}
-
-		$data['image'] = set_realpath('./application/cache/temp_thumb.jpg');
-		//$data['image'] = read_file(set_realpath('./application/cache/temp_thumb.jpg'));
-
+		$data['title'] = 'E-Query System';
 		$this->load->view('underconstruction/index', $data);
 	}
 }
