@@ -1,6 +1,4 @@
-<?php
-defined('BASEPATH') OR exit('No direct script access allowed');
-?>
+<?php defined('BASEPATH') OR exit('No direct script access allowed');?>
 
 	<div class="container-fluid">
 		<div class="row justify-content-md-center mt-5">
@@ -14,14 +12,16 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 						<?php echo form_open(); ?>
 							<div class="form-group">
 								<label for="username">Username</label>
-								<input type="text" class="form-control" id="username" name="username" placeholder="Username" value="<?php echo $username; ?>">
+								<input type="text" class="form-control" id="username" name="username" placeholder="Username" value="<?php echo set_value('username'); ?>" size="25"/>
+								<div class="form-group text-danger"><?php echo form_error('username'); ?></div>
 							</div>
 							<div class="form-group">
 								<label for="password">Password</label>
-								<input type="password" class="form-control" id="password" name="password" placeholder="Password">
+								<input type="password" class="form-control" id="password" name="password" placeholder="Password" size="25"/>
+								<div class="form-group text-danger"><?php echo form_error('password');?></div>
 							</div>
 							<button type="submit" class="btn btn-primary">Login</button>
-							<div class="form-group .text-danger"><?php echo validation_errors(); echo $status; ?></div>
+							<div class="form-group text-success"><?php echo $status;?></div>
 						</div>
 						</form>
 					</div>
