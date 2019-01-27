@@ -11,7 +11,7 @@ class Main extends CI_Controller {
     public function index()
     {
         $data['news'] = $this->Student_model->get_student();
-        $data['title'] = 'Welcom to E-Query System';
+        $data['title'] = 'Welcome to E-Query System';
 
         $this->load->view('templates/header', $data);
         $this->load->view('main/index', $data);
