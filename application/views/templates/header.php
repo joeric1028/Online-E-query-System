@@ -32,8 +32,11 @@
           <ul class="sidebar-nav">
               <li>
                 <div class=" profile-userpic ">
-                  <img class="" src="https://scontent.fceb1-1.fna.fbcdn.net/v/t1.0-9/37058989_2277003782315410_7144235440386605056_n.jpg?_nc_cat=111&_nc_ht=scontent.fceb1-1.fna&oh=9c091a921cdfb63f441e1659dfcf5c47&oe=5CFEB225" class="img-responsive" alt="">
-                </div><div class="profile-name">JV Ty</div>
+                  <img class="d-flex align-items-center" src="https://scontent.fceb1-1.fna.fbcdn.net/v/t1.0-9/37058989_2277003782315410_7144235440386605056_n.jpg?_nc_cat=111&_nc_ht=scontent.fceb1-1.fna&oh=9c091a921cdfb63f441e1659dfcf5c47&oe=5CFEB225" class="img-responsive" alt="">
+                </div>
+              </li>
+              <li>
+                <div class="d-flex align-items-center "><h6>Welcome, JV Ty!</h6></div>
               </li>
               <li>
                 <a href="#">Home</a>
