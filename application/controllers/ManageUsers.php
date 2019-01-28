@@ -1,5 +1,5 @@
 <?php
-class Main extends CI_Controller {
+class ManageUsers extends CI_Controller {
 
     public function __construct()
     {
@@ -10,12 +10,11 @@ class Main extends CI_Controller {
 
     public function index()
     {
-        $data['news'] = $this->Student_model->get_student();
-        $data['title'] = 'Welcome to E-Query System!';
-        $data['activePage'] = "dashboard";
+        $data['title'] = 'Manage Users';
+        $data['activePage'] = "users";
 
         $this->load->view('templates/header', $data);
-        $this->load->view('main/index', $data);
+        $this->load->view('manage_users/index', $data);
         $this->load->view('templates/footer');
     }
 }

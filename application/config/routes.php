@@ -53,6 +53,7 @@ $route['default_controller'] = 'welcome';
 
 $route['main'] = 'main';
 $route['login'] = 'login';
+$route['users'] = 'manageusers';
 $route['news/(:any)'] = 'news/view/$1';
 $route['news'] = 'news';
 $route['welcome'] = 'welcome';

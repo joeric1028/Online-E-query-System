@@ -11,7 +11,7 @@
         <link rel="stylesheet" href="assets/plugins/fontawesome-free-5.6.3-web/css/all.min.css" />
     </head>
     <body>
-    <nav class="navbar navbar-inverse navbar-expand-lg navbar-dark bg-primary">
+    <nav class="navbar navbar-inverse navbar-expand-lg navbar-dark bg-primary sticky-top">
       <ul class="navbar-nav mr-auto">
         <li class="nav-item">
           <a href="#menu-toggle" class="btn btn-light-outline nav-link" id="menu-toggle"><span class="fas fa-bars"></span></a>
@@ -31,7 +31,7 @@
         <div id="sidebar-wrapper">
           <ul class="sidebar-nav">
               <li>
-                <div class=" profile-userpic ">
+                <div class="profile-userpic ">
                   <img class="d-flex align-items-center" src="https://scontent.fceb1-1.fna.fbcdn.net/v/t1.0-9/37058989_2277003782315410_7144235440386605056_n.jpg?_nc_cat=111&_nc_ht=scontent.fceb1-1.fna&oh=9c091a921cdfb63f441e1659dfcf5c47&oe=5CFEB225" class="img-responsive" alt="">
                 </div>
               </li>
@@ -39,19 +39,29 @@
                 <div class="d-flex align-items-center "><h6>Welcome, JV Ty!</h6></div>
               </li>
               <li>
-                <a href="#">Home</a>
+                <a <?php if($activePage === "dashboard"):?>class="active"<?php endif;?> href="#">
+                  Home
+                </a>
               </li>
               <li>
-                <a href="#">Manage Users</a>
+                <a <?php if($activePage === "users"):?>class="active"<?php endif;?> href="#">
+                  Manage Users  
+                </a>
               </li>
               <li>
-                <a href="#">Accounts</a>
+                <a <?php if($activePage === "accounts"):?>class="active"<?php endif;?> href="#">
+                  Accounts
+                </a>
               </li>
               <li>
-                <a href="#">Grades</a>
+                <a <?php if($activePage === "grades"):?>class="active"<?php endif;?> href="#">
+                  Grades
+                </a>
               </li>
               <li>
-                <a href="#">School Calendar</a>
+                <a <?php if($activePage === "calendar"):?>class="active"<?php endif;?> href="#">
+                  School Calendar
+                </a>
               </li>
           </ul>
         </div>
