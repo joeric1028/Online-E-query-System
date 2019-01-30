@@ -9,7 +9,7 @@
 				<div class="container login-container">
 					<div class="card">
 						<div class="card-body">
-						<?php echo form_open(); ?>
+						<?php echo form_open('login'); ?>
 							<div class="form-group">
 								<label for="username">Username</label>
 								<input type="text" class="form-control" id="username" name="username" placeholder="Username" value="<?php echo set_value('username'); ?>" size="25"/>
@@ -22,6 +22,7 @@
 							</div>
 							<button type="submit" class="btn btn-primary">Login</button>
 							<div class="form-group text-success"><?php echo $status;?></div>
+							<div class="form-group text-danger"><?php echo $errorstatus;?></div>
 						</div>
 						</form>
 					</div>
