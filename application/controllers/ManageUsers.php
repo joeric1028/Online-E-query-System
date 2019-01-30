@@ -10,8 +10,11 @@ class ManageUsers extends CI_Controller {
 
     public function index()
     {
+     
+        $activePage = "offnungszeiten.php";
+
         $data['title'] = 'Manage Users';
-        $data['activePage'] = "users";
+        $data['activePage'] = 'users';
 
         $this->load->view('templates/header', $data);
         $this->load->view('manage_users/index', $data);

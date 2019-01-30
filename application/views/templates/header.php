@@ -9,8 +9,20 @@
         <link rel="stylesheet" href="assets/css/bootstrap.min.css" />
         <link rel="stylesheet" href="assets/css/custom.css" />
         <link rel="stylesheet" href="assets/plugins/fontawesome-free-5.6.3-web/css/all.min.css" />
+        <link rel="stylesheet" type="text/css" href="assets/plugins/DataTables/datatables.min.css"/>
+        <script type="text/javascript" src="assets/js/jquery-3.3.1.js"></script>
+        <script type="text/javascript" src="assets/js/bootstrap.js"></script>
+        <script type="text/javascript" src="assets/plugins/DataTables/datatables.min.js"></script>
+
+        <script>
+            $("#menu-toggle").click(function(e) {
+                e.preventDefault();
+                $("#wrapper").toggleClass("toggled");
+            });
+        </script>
     </head>
     <body>
+      <img src="assets/img/backgrounds/bg.jpg" id="bg-image" />
     <nav class="navbar navbar-inverse navbar-expand-lg navbar-dark bg-primary sticky-top">
       <ul class="navbar-nav mr-auto">
         <li class="nav-item">
@@ -39,27 +51,27 @@
                 <div class="d-flex align-items-center "><h6>Welcome, JV Ty!</h6></div>
               </li>
               <li>
-                <a <?php if($activePage === "dashboard"):?>class="active"<?php endif;?> href="#">
+                <a <?php if($activePage === "dashboard"):?>class="active"<?php endif;?> href="main">
                   Home
                 </a>
               </li>
               <li>
-                <a <?php if($activePage === "users"):?>class="active"<?php endif;?> href="#">
+                <a <?php if($activePage === "users"):?>class="active"<?php endif;?> href="users">
                   Manage Users  
                 </a>
               </li>
               <li>
-                <a <?php if($activePage === "accounts"):?>class="active"<?php endif;?> href="#">
+                <a <?php if($activePage === "accounts"):?>class="active"<?php endif;?> href="accounts">
                   Accounts
                 </a>
               </li>
               <li>
-                <a <?php if($activePage === "grades"):?>class="active"<?php endif;?> href="#">
+                <a <?php if($activePage === "grades"):?>class="active"<?php endif;?> href="grades">
                   Grades
                 </a>
               </li>
               <li>
-                <a <?php if($activePage === "calendar"):?>class="active"<?php endif;?> href="#">
+                <a <?php if($activePage === "calendar"):?>class="active"<?php endif;?> href="calendar">
                   School Calendar
                 </a>
               </li>
