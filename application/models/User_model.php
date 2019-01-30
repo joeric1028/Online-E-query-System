@@ -51,6 +51,13 @@ class User_model extends CI_Model {
 		$query = $this->db->insert('users', $data);
 	}
 
+	public function get_users()
+	{
+		$query = $this->db->get('users');
+
+		return $query->result();
+	}
+
 	public function read_user($data)
 	{
 		$query = $this->db->get_where('users', array('idnumber' => $data));
