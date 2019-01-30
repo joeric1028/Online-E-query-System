@@ -5,7 +5,6 @@ class Main extends CI_Controller {
     {
         parent::__construct();
         $this->load->model('Student_model');
-        $this->load->helper('url_helper');
     }
 
     public function index()

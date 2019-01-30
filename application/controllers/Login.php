@@ -18,7 +18,7 @@ class Login extends CI_Controller
         } 
         else
         {
-            if ($this->Login_model->authenticate_user())
+            if ($this->User_model->authenticate_user())
             {
                 $data['status'] = 'Login Successfully!';
                 
