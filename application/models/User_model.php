@@ -49,6 +49,14 @@ class User_model extends CI_Model {
 
 		//success: User not found. Can create user.
 		$query = $this->db->insert('users', $data);
+
+		if ($query == false)
+		{
+			return false;
+		}
+		else {
+			return true;
+		}
 	}
 
 	public function get_users()
@@ -93,8 +101,17 @@ class User_model extends CI_Model {
         	'type' => $this->input->post('type'),
         	'password' => $this->input->post('password')
 		);
-		
-		$query = $this->db->replace('table', $data);
+
+		$query = $this->db->update('users', $data, array('idnumber' => $data['idnumber']));
+
+		if ($query == false)
+		{
+			return false;
+		}
+		else
+		{
+			return true;
+		}
 	}
 
 	public function delete_user()
@@ -110,5 +127,10 @@ class User_model extends CI_Model {
 		);
 		
 		$query = $this->db->delete('users', array('idnumber' => $data['idnumber']));
+		
+		if ($query == false)
+		{
+			return false;
+		}
 	}
 }
