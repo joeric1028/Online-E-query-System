@@ -52,27 +52,27 @@
               </li>
               <li>
                 <a <?php if($activePage === "dashboard"):?>class="active"<?php endif;?> href="main">
-                  Home
+                  <i class="fas fa-home"></i> Home 
                 </a>
               </li>
               <li>
                 <a <?php if($activePage === "users"):?>class="active"<?php endif;?> href="users">
-                  Manage Users  
+                  <i class="fas fa-users"></i> Manage Users  
                 </a>
               </li>
               <li>
                 <a <?php if($activePage === "accounts"):?>class="active"<?php endif;?> href="accounts">
-                  Accounts
+                  <i class="fas fa-briefcase"></i> Accounts
                 </a>
               </li>
               <li>
                 <a <?php if($activePage === "grades"):?>class="active"<?php endif;?> href="grades">
-                  Grades
+                  <i class="fas fa-list-ol"></i> Grades
                 </a>
               </li>
               <li>
                 <a <?php if($activePage === "calendar"):?>class="active"<?php endif;?> href="calendar">
-                  School Calendar
+                  <i class="fas fa-calendar"></i> School Calendar
                 </a>
               </li>
           </ul>
