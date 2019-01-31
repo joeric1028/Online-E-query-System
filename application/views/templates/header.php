@@ -9,10 +9,10 @@
         <link rel="stylesheet" href="assets/css/bootstrap.min.css" />
         <link rel="stylesheet" href="assets/css/custom.css" />
         <link rel="stylesheet" href="assets/plugins/fontawesome-free-5.6.3-web/css/all.min.css" />
-        <link rel="stylesheet" type="text/css" href="assets/plugins/DataTables/datatables.min.css"/>
+        <link rel="stylesheet" type="text/css" href="assets/plugins/DataTables/datatables.css"/>
         <script type="text/javascript" src="assets/js/jquery-3.3.1.js"></script>
         <script type="text/javascript" src="assets/js/bootstrap.js"></script>
-        <script type="text/javascript" src="assets/plugins/DataTables/datatables.min.js"></script>
+        <script type="text/javascript" charset="utf8" src="assets/plugins/DataTables/datatables.min.js"></script>
 
         <script>
             $("#menu-toggle").click(function(e) {
