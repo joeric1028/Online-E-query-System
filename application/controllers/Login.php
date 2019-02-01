@@ -20,13 +20,13 @@ class Login extends CI_Controller
         {
             if ($this->User_model->authenticate_user())
             {
-                $data['status'] = 'Login Successfully!';
+                $data['status'] = 'Login Successful. Redirecting ...';
                 
                 $this->load->view('templates/header', $data);
                 $this->load->view('login/index', $data);
                 $this->load->view('templates/footer');
 
-                redirect('/users');
+                $this->output->set_header('refresh:5;url=/main');
             }
             else
             {
@@ -35,6 +35,8 @@ class Login extends CI_Controller
                 $this->load->view('templates/header', $data);
                 $this->load->view('login/index', $data);
                 $this->load->view('templates/footer');
+
+                
             }
         }
     }
