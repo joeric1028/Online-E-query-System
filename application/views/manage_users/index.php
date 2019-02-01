@@ -3,7 +3,10 @@
     <div class="card">  
       <div class="card-body d-flex justify-content-between">
         <h2> Manage Users </h2>
-        <span class="my-auto"><button class="btn btn-success" data-toggle="modal" data-target="#myModal">Add User</button></span>
+        <span class="my-auto">
+          <button class="btn btn-danger" id="deleteUserBtn" style="display: none">Delete User</button>
+          <button class="btn btn-success" data-toggle="modal" data-target="#myModal">Add User</button>
+        </span>
       </div>
     </div>
   </div>
@@ -13,15 +16,7 @@
     <div class="card">
       <div class="card-body">
         <section>
-        <?php 
-        // foreach ($users as $user): 
-        //   echo $user->firstname; 
-        //   echo $user->middlename;
-        //   echo $user->lastname;  
-        //   endforeach; 
-        // echo json_encode( $users );
-        ?>
-          <table cellpadding="0" cellspacing="0" border="0" id="user-table">
+          <table cellpadding="0" cellspacing="0" border="0" id="userTable">
             <thead>
                 <tr>
                   <th>ID No.</th>
@@ -103,10 +98,11 @@
     // jQuery call to show add user modal
     $('#myModal').on('shown.bs.modal', function () {
       $('#myInput').trigger('focus')
-    })
+    });
 
     // DataTable initializer to fill in the data in the table
-		$('#user-table').DataTable(
+    var deleteButton = document.getElementById("deleteUserBtn");
+		$('#userTable').DataTable(
 		{
       'select': true,
 			'ajax': {
@@ -121,6 +117,14 @@
 				{ "data": "sex"},
         { "data": "type"},
 			]
+    }).on('select', function() {
+      if (deleteButton.style.display === "none" && $('.selected').length > 0) {
+        deleteButton.style.display = "inline-block";
+      }
+    }).on('deselect', function() {
+      if (deleteButton.style.display === "inline-block" && $('.selected').length == 0) {
+        deleteButton.style.display = "none";
+      };
     });
     
     // Hides modal on clicking save changes
