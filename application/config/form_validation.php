@@ -43,6 +43,13 @@ $config = array(
                     'label' => 'MessageBody',
                     'rules' => 'required'
             )
-    )
+	),
+	'login' => array(
+		array(
+			'field' => 'username',
+			'label' => 'Username',
+			'rules' => 'required'
+		),
+	)
 );
 ?>
