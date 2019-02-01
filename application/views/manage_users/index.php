@@ -108,7 +108,7 @@
 		{
       'select': true,
 			'ajax': {
-				url: '/users/list',
+				url: '/api/user_list',
 				dataSrc: ''
 			},
 			'columns': [
