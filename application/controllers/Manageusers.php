@@ -19,11 +19,4 @@ class Manageusers extends CI_Controller {
         $this->load->view('manage_users/index', $data);
         $this->load->view('templates/footer');
     }
-    public function user_list()
-    {
-        header("Content-Type: application/json; charset=UTF-8");
-        $data = json_encode($this->User_model->get_users());
-
-        echo $data;
-    }
 }

@@ -53,7 +53,6 @@ $route['default_controller'] = 'welcome';
 
 $route['main'] = 'main';
 $route['login'] = 'login';
-$route['users/list'] = 'manageusers/user_list';
 $route['users'] = 'manageusers';
 $route['accounts'] = 'accounts';
 $route['grades'] = 'grades';
@@ -62,6 +61,7 @@ $route['news/(:any)'] = 'news/view/$1';
 $route['news'] = 'news';
 $route['welcome'] = 'welcome';
 $route['(:any)'] = 'pages/view/$1';
+$route['api/(:any)'] = 'api/$1';
 
 
 $route['404_override'] = '';
