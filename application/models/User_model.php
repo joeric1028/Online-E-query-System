@@ -28,14 +28,15 @@ class User_model extends CI_Model {
 	public function create_user()
 	{
 		$data = array(
-        	'idnumber' => $this->input->post('username'),
+        	'idnumber' => $this->input->post('idnumber'),
         	'firstname' => $this->input->post('firstname'),
         	'middlename' => $this->input->post('middlename'),
         	'lastname' => $this->input->post('lastname'),
         	'sex' => $this->input->post('sex'),
         	'type' => $this->input->post('type'),
-        	'password' => $this->input->post('password')
+        	//'password' => $this->input->post('password')
 		);
+
 		
 		$query = $this->db->get_where('users', array('idnumber' => $data['idnumber']));
 		
@@ -43,7 +44,9 @@ class User_model extends CI_Model {
 		{
 			if ($data['idnumber'] == $row->idnumber)
 			{
-				return false; //error: User exist. Can't create user.
+				$errorMessage = "User exist. Can't create user";
+				$error = array('error' => $errorMessage);
+				return json_encode($error); //error: User exist. Can't create user.
 			}
 		}
 
@@ -52,10 +55,14 @@ class User_model extends CI_Model {
 
 		if ($query == false)
 		{
-			return false;
+			$errorMessage = "Unable to proceed. Can't create user";
+			$error = array('error' => $errorMessage);
+			return json_encode($error);
 		}
 		else {
-			return true;
+			$successMessage = "User not found. Can create user.";
+			$error = array('success' => $errorMessage);
+			return json_encode($success);
 		}
 	}
 

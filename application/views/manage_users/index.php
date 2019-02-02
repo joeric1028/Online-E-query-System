@@ -37,7 +37,7 @@
 <div id="myModal" class="modal fade" tabindex="-1" role="dialog">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
-    <form name="adduserform" action="">
+    <form name="adduserform" id="adduserform" action="" method="post">
       <div class="modal-header">
         <h5 class="modal-title">Add User</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -80,7 +80,7 @@
         </div>
         <div class="form-group">
           <label class="form-label">User Type</label>
-          <select class="form-control custom-select" name="type">
+          <select class="form-control custom-select" name="type" id="type">
             <option value="Teacher">Teacher</option>
             <option value="Parent">Parent</option>
             <option value="Administrator">Administrator</option>
@@ -88,8 +88,12 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button type="submit" class="btn btn-primary" id="addUser">Add</button>
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+	  <label class="error form-label text-success" id="statussuccess">User has been created!</label>
+	  <label class="error form-label text-danger" id="statuserror">Creating User account failed! Please try again!</label>
+		<button type="submit" class="btn btn-primary" id="addUser">Add</button>
+		<button type="button" class="error btn btn-primary" id="addAnotherUser">Add Another User?</button>
+		<button type="button" class="error btn btn-secondary" data-dismiss="modal" id="addAnotherUser">Close</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" id="addUserCancel">Cancel</button>
       </div>
       </form>
     </div>
@@ -100,7 +104,8 @@
 	$(document).ready( function () {
     	// jQuery call to show add user modal
     	$('#myModal').on('shown.bs.modal', function () {
-      		$('#myInput').trigger('focus')
+      		$('#myInput').trigger('focus');
+			  $("input#firstname").focus();
     	});
 
     	// DataTable initializer to fill in the data in the table
@@ -109,7 +114,7 @@
 			{
 				'select': true,
 						'ajax': {
-							url: "<?php echo base_url('api/user_list');?>",
+							url: "<?php echo base_url('api/user_list')?>",
 							dataSrc: ''
 						},
 						'columns': [
@@ -137,11 +142,13 @@
 
 		$('.error').hide();
 
-		$('#addUser').click(function() {
+		$('#addUser').click(function(event) {
       		// validate and process form here
+
+			event.preventDefault();
       
-      		$('.error').hide();
-		
+			$('.error').hide();
+
 			var firstname = $("input#firstname").val();
 		
 			if (firstname == "") {
@@ -171,19 +178,37 @@
 			}
 
 			if (firstname == "" || middlename == "" || lastname == "" || idnumber == "") {
-				return false;
+				return;
 			}
-
-			// $.ajax({
-			// 	type: "POST",
-			// 	url: "<?php echo base_url('users/create');?>",
-			// 	data: dataString,
-			// 	success: function() {
-			// 		alert('Hello');
-			// 	}
-			// });
 			
-  			// return false;      
+			var formData = {
+        	    'firstname'      : firstname,
+        	    'middlename'     : middlename,
+				'lastname'       : lastname,
+				'sex'            : $("input#gender").val(),
+				'type'           : $("select#type").val(),
+    	        'idnumber'       : idnumber
+        	};
+      
+			$.ajax({
+				type: "POST",
+				url: "<?php echo base_url('users/create');?>",
+				data: formData,
+				error: function(xhr) {
+					alert("An error occured: " + xhr.status + " " + xhr.statusText);
+					$("label#statuserror").show();
+					$("button#addAnotherUser").hide();
+					$("button#addUser").show();
+					$("button#addUserCancel").show();
+				},
+				success: function() {
+					$("label#statussuccess").show();
+					$("button#addAnotherUser").show();
+					$("button#addUser").hide();
+					$("button#addUserCancel").hide();
+				}
+			});
+			
     	});
   	});
 </script>
