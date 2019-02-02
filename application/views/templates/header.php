@@ -6,13 +6,13 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title><?php echo $title; ?></title>
-        <link rel="stylesheet" href="assets/css/bootstrap.min.css" />
-        <link rel="stylesheet" href="assets/css/custom.css" />
-        <link rel="stylesheet" href="assets/plugins/fontawesome-free-5.6.3-web/css/all.min.css" />
-        <link rel="stylesheet" type="text/css" href="assets/plugins/DataTables/datatables.css"/>
-        <script type="text/javascript" src="assets/js/jquery-3.3.1.js"></script>
-        <script type="text/javascript" src="assets/js/bootstrap.js"></script>
-        <script type="text/javascript" charset="utf8" src="assets/plugins/DataTables/datatables.min.js"></script>
+        <link rel="stylesheet" href="<?php echo base_url('assets/css/bootstrap.min.css');?>" />
+        <link rel="stylesheet" href="<?php echo base_url('assets/css/custom.css');?>" />
+        <link rel="stylesheet" href="<?php echo base_url('assets/plugins/fontawesome-free-5.6.3-web/css/all.min.css');?>" />
+        <link rel="stylesheet" type="text/css" href="<?php echo base_url('assets/plugins/DataTables/datatables.css');?>"/>
+        <script type="text/javascript" src="<?php echo base_url('assets/js/jquery-3.3.1.js');?>"></script>
+        <script type="text/javascript" src="<?php echo base_url('assets/js/bootstrap.js');?>"></script>
+        <script type="text/javascript" charset="utf8" src="<?php echo base_url('assets/plugins/DataTables/datatables.min.js');?>"></script>
 
         <script>
             $("#menu-toggle").click(function(e) {
@@ -22,7 +22,7 @@
         </script>
     </head>
     <body>
-      <img src="assets/img/backgrounds/bg.jpg" id="bg-image" />
+      <img src="<?php echo base_url('assets/img/backgrounds/bg.jpg');?>" id="bg-image" />
     <nav class="navbar navbar-inverse navbar-expand-lg navbar-dark bg-primary sticky-top">
       <ul class="navbar-nav mr-auto">
         <li class="nav-item">

@@ -54,6 +54,7 @@ $route['default_controller'] = 'welcome';
 $route['main'] = 'main';
 $route['login'] = 'login';
 $route['users'] = 'manageusers';
+$route['users/create'] = 'manageusers/createuser';
 $route['accounts'] = 'accounts';
 $route['grades'] = 'grades';
 $route['calendar'] = 'schoolcalendar';
