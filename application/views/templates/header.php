@@ -51,27 +51,27 @@
                 <div class="d-flex align-items-center "><h6>Welcome, JV Ty!</h6></div>
               </li>
               <li>
-                <a <?php if($activePage === "dashboard"):?>class="active"<?php endif;?> href="main">
+                <a <?php if($activePage === "dashboard"):?>class="active"<?php endif;?> href="<?php echo site_url('main')?>">
                   <i class="fas fa-home"></i> Home 
                 </a>
               </li>
               <li>
-                <a <?php if($activePage === "users"):?>class="active"<?php endif;?> href="users">
+                <a <?php if($activePage === "users"):?>class="active"<?php endif;?> href="<?php echo site_url('users')?>">
                   <i class="fas fa-users"></i> Manage Users  
                 </a>
               </li>
               <li>
-                <a <?php if($activePage === "accounts"):?>class="active"<?php endif;?> href="accounts">
+                <a <?php if($activePage === "accounts"):?>class="active"<?php endif;?> href="<?php echo site_url('accounts')?>">
                   <i class="fas fa-briefcase"></i> Accounts
                 </a>
               </li>
               <li>
-                <a <?php if($activePage === "grades"):?>class="active"<?php endif;?> href="grades">
+                <a <?php if($activePage === "grades"):?>class="active"<?php endif;?> href="<?php echo site_url('grades')?>">
                   <i class="fas fa-list-ol"></i> Grades
                 </a>
               </li>
               <li>
-                <a <?php if($activePage === "calendar"):?>class="active"<?php endif;?> href="calendar">
+                <a <?php if($activePage === "calendar"):?>class="active"<?php endif;?> href="<?php echo site_url('calendar')?>">
                   <i class="fas fa-calendar"></i> School Calendar
                 </a>
               </li>
