@@ -4,7 +4,7 @@
       <div class="card-body d-flex justify-content-between">
         <h2> Manage Users </h2>
         <span class="my-auto">
-          <button class="btn btn-danger" id="deleteUserBtn" style="display: none">Delete User</button>
+          <button class="btn btn-danger" id="deleteUserBtn" style="display: none" data-toggle="modal" data-target="#deleteUserModal">Delete User</button>
           <button class="btn btn-success" data-toggle="modal" data-target="#myModal">Add User</button>
         </span>
       </div>
@@ -89,7 +89,7 @@
       </div>
       <div class="modal-footer">
 	  <label class="error form-label text-success" id="statussuccess">User has been created!</label>
-	  <label class="error form-label text-danger" id="statuserror">Creating User account failed! Please try again!</label>
+	  <label class="error form-label text-danger" id="statuserror">Creating user account failed! Please try again!</label>
 		<button type="submit" class="btn btn-primary" id="addUser">Add</button>
 		<button type="button" class="error btn btn-primary" id="addAnotherUser">Add Another User?</button>
 		<button type="button" class="error btn btn-secondary" data-dismiss="modal" id="addAnotherUser">Close</button>
@@ -100,17 +100,50 @@
   </div>
 </div>
 
+<div id="deleteUserModal" class="modal fade" tabindex="-1" role="dialog">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+    	<div class="modal-content">
+    		<form name="delete" id="delete" action="" method="post">
+      			<div class="modal-header">
+        			<h5 class="modal-title">Delete User</h5>
+        			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          			<span aria-hidden="true">&times;</span>
+        			</button>
+      			</div>
+      			<div class="modal-body">
+        			<div class="form-group">
+						<div class="form-label">Are you sure you want to delete?</div>
+					</div>
+		  		<div class="form-group">  
+		  			<div class="form-label">ID Number &nbsp&nbsp: &nbsp&nbsp<label id="deleteId"></label></div>
+					<div class="form-label">Name &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp: &nbsp&nbsp<label id="deleteName"></label></div>
+				</div>
+      			<div class="modal-footer">
+	  				<label class="error form-label text-success" id="deleteStatusSuccess">User has been deleted!</label>
+	  				<label class="error form-label text-danger" id="deleteStatusError">Deleting user account failed! Please try again!</label>
+					<button type="submit" class="btn btn-primary" id="deleteUser">Delete</button>
+        			<button type="button" class="btn btn-secondary" data-dismiss="modal" id="deleteUserCancel">Cancel</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+      
+
 <script>
-	$(document).ready( function () {
+	$(document).ready(function () {
     	// jQuery call to show add user modal
     	$('#myModal').on('shown.bs.modal', function () {
       		$('#myInput').trigger('focus');
-			  $("input#firstname").focus();
+			$("input#firstname").focus();
     	});
+
+		$('#deleteUserModal').on('shown.bs.modal');
 
     	// DataTable initializer to fill in the data in the table
     	var deleteButton = document.getElementById("deleteUserBtn");
-			$('#userTable').DataTable(
+		var deleteid;
+		var table = $('#userTable').DataTable(
 			{
 				'select': true,
 						'ajax': {
@@ -141,6 +174,13 @@
     	// });
 
 		$('.error').hide();
+		$('#deleteUserBtn').click(function() {
+			console.log('delete button requested');
+			var data = table.row(deleteid).data();
+						console.log('tested' + data);
+			$('#deleteId').text(data['idnumber']);
+			$('#deleteName').text(data['firstname'] + ' ' + data['middlename'] + ' ' + data['lastname']);
+		});
 
 		$('#addUser').click(function(event) {
       		// validate and process form here

@@ -24,7 +24,7 @@ class Login extends CI_Controller
                 $this->load->view('login/index', $data);
                 $this->load->view('templates/footer');
 
-                $this->output->set_header('refresh:5;url=/main');
+                $this->output->set_header('refresh:5;url=' . site_url('main'));
             }
             else
             {
