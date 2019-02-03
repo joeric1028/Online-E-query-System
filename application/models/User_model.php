@@ -60,7 +60,7 @@ class User_model extends CI_Model {
 			return json_encode($error);
 		}
 		else {
-			$successMessage = "User not found. Can create user.";
+			$successMessage = "Creating user account has been successful.";
 			$error = array('success' => $errorMessage);
 			return json_encode($success);
 		}
@@ -124,20 +124,22 @@ class User_model extends CI_Model {
 	public function delete_user()
 	{
 		$data = array(
-        	'idnumber' => $this->input->post('username'),
-        	'firstname' => $this->input->post('firstname'),
-        	'middlename' => $this->input->post('middlename'),
-        	'lastname' => $this->input->post('lastname'),
-        	'sex' => $this->input->post('sex'),
-        	'type' => $this->input->post('type'),
-        	'password' => $this->input->post('password')
+        	'id' => $this->input->post('id')
 		);
 		
-		$query = $this->db->delete('users', array('idnumber' => $data['idnumber']));
+		$query = $this->db->delete('users', $data);
 		
 		if ($query == false)
 		{
-			return false;
+			$errorMessage = "Unable to proceed. Can't delete user";
+			$error = array('error' => $errorMessage);
+			return json_encode($error);
+		}
+		else
+		{
+			$successMessage = "Deleting user account has been successful.";
+			$error = array('success' => $errorMessage);
+			return json_encode($success);
 		}
 	}
 }

@@ -16,15 +16,15 @@
     <div class="card">
       <div class="card-body">
         <section>
-          <table cellpadding="0" cellspacing="0" border="0" id="userTable">
+          <table cellpadding="0" cellspacing="0" id="userTable">
             <thead>
                 <tr>
-                  <th>ID No.</th>
-                  <th>First name</th>
-                  <th>Middle name</th>
-                  <th>Last Name</th>
-                  <th>Gender</th>
-                  <th>User Type</th>
+                  	<th>ID No.</th>
+                  	<th>First name</th>
+                  	<th>Middle name</th>
+                  	<th>Last Name</th>
+                  	<th>Gender</th>
+                  	<th>User Type</th>
                 </tr>
             </thead>
           </table>
@@ -114,7 +114,7 @@
         			<div class="form-group">
 						<div class="form-label">Are you sure you want to delete?</div>
 					</div>
-		  		<div class="form-group">  
+		  		<div class="form-group">
 		  			<div class="form-label">ID Number &nbsp&nbsp: &nbsp&nbsp<label id="deleteId"></label></div>
 					<div class="form-label">Name &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp: &nbsp&nbsp<label id="deleteName"></label></div>
 				</div>
@@ -142,7 +142,6 @@
 
     	// DataTable initializer to fill in the data in the table
     	var deleteButton = document.getElementById("deleteUserBtn");
-		var deleteid;
 		var table = $('#userTable').DataTable(
 			{
 				'select': true,
@@ -157,7 +156,8 @@
 							{ "data": "lastname"},
 							{ "data": "sex"},
 							{ "data": "type"},
-						]
+						],
+            			"rowid": "id"
     		}).on('select', function() {
       			if (deleteButton.style.display === "none" && $('.selected').length > 0) {
         			deleteButton.style.display = "inline-block";
@@ -165,7 +165,7 @@
     		}).on('deselect', function() {
       			if (deleteButton.style.display === "inline-block" && $('.selected').length == 0) {
         			deleteButton.style.display = "none";
-      			};
+      			}
     		});
     
     	//Hides modal on clicking Add user
@@ -174,12 +174,35 @@
     	// });
 
 		$('.error').hide();
+		
+		var indexid;
+		$('#userTable tbody').on('click', 'tr', function () {
+			indexid = table.row(this).index();
+		});
+
 		$('#deleteUserBtn').click(function() {
-			console.log('delete button requested');
-			var data = table.row(deleteid).data();
-						console.log('tested' + data);
+			var data = table.row(indexid).data();
 			$('#deleteId').text(data['idnumber']);
 			$('#deleteName').text(data['firstname'] + ' ' + data['middlename'] + ' ' + data['lastname']);
+		});
+
+		$('#deleteUser').click(function() {
+			var formData = {
+    	        'id'       : table.row(indexid).data()['id']
+        	};
+
+			$.ajax({
+				type: "POST",
+				url: "<?php echo base_url('users/delete');?>",
+				data: formData,
+				error: function(xhr) {
+					alert("An error occured: " + xhr.status + " " + xhr.statusText);
+					$("label#deleteStatusError").show();
+				},
+				success: function() {
+					$("label#deleteStatusSuccess").show();
+				}
+			});
 		});
 
 		$('#addUser').click(function(event) {
@@ -234,8 +257,7 @@
 				type: "POST",
 				url: "<?php echo base_url('users/create');?>",
 				data: formData,
-				error: function(xhr) {
-					alert("An error occured: " + xhr.status + " " + xhr.statusText);
+				error: function() {
 					$("label#statuserror").show();
 					$("button#addAnotherUser").hide();
 					$("button#addUser").show();

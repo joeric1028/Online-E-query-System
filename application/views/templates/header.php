@@ -12,7 +12,7 @@
         <link rel="stylesheet" type="text/css" href="<?php echo base_url('assets/plugins/DataTables/datatables.css');?>"/>
         <script type="text/javascript" src="<?php echo base_url('assets/js/jquery-3.3.1.js');?>"></script>
         <script type="text/javascript" src="<?php echo base_url('assets/js/bootstrap.js');?>"></script>
-        <script type="text/javascript" charset="utf8" src="<?php echo base_url('assets/plugins/DataTables/datatables.min.js');?>"></script>
+        <script type="text/javascript" charset="utf8" src="<?php echo base_url('assets/plugins/DataTables/datatables.js');?>"></script>
 
         <script>
             $("#menu-toggle").click(function(e) {

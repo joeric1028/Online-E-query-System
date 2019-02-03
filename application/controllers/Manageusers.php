@@ -22,4 +22,9 @@ class Manageusers extends CI_Controller {
     {
         $this->User_model->create_user();
     }
+
+    public function deleteuser()
+    {
+        $this->User_model->delete_user();
+    }
 }
