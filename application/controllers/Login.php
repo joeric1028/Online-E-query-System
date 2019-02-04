@@ -6,6 +6,7 @@ class Login extends CI_Controller
         $data['status'] = '';
         $data['errorstatus'] = '';
         $data['title'] = 'Login';
+        $data['activePage'] = '';
 
 
         if ($this->form_validation->run('login') === FALSE)
