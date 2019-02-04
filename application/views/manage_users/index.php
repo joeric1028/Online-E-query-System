@@ -81,18 +81,18 @@
         <div class="form-group">
           <label class="form-label">User Type</label>
           <select class="form-control custom-select" name="type" id="type">
-            <option value="Teacher">Teacher</option>
-            <option value="Parent">Parent</option>
-            <option value="Administrator">Administrator</option>
+            <option id='optionTeacher' value="Teacher">Teacher</option>
+            <option id='optionParent' value="Parent">Parent</option>
+            <option id='optionAdministrator' value="Administrator">Administrator</option>
           </select>
         </div>
       </div>
       <div class="modal-footer">
-	  <label class="error form-label text-success" id="statussuccess">User has been created!</label>
-	  <label class="error form-label text-danger" id="statuserror">Creating user account failed! Please try again!</label>
+	  <label class="error form-label text-success" id="statussuccess"></label>
+	  <label class="error form-label text-danger" id="statuserror"></label>
 		<button type="submit" class="btn btn-primary" id="addUser">Add</button>
-		<button type="button" class="error btn btn-primary" id="addAnotherUser">Add Another User?</button>
-		<button type="button" class="error btn btn-secondary" data-dismiss="modal" id="addAnotherUser">Close</button>
+		<button type="button" class="error btn btn-primary" id="addAnotherUserAdd">Add Another User?</button>
+		<button type="button" class="error btn btn-secondary" data-dismiss="modal" id="addAnotherUserClose">Close</button>
         <button type="button" class="btn btn-secondary" data-dismiss="modal" id="addUserCancel">Cancel</button>
       </div>
       </form>
@@ -119,8 +119,8 @@
 					<div class="form-label">Name &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp: &nbsp&nbsp<label id="deleteName"></label></div>
 				</div>
       			<div class="modal-footer">
-	  				<label class="error form-label text-success" id="deleteStatusSuccess">User has been deleted!</label>
-	  				<label class="error form-label text-danger" id="deleteStatusError">Deleting user account failed! Please try again!</label>
+	  				<label class="error form-label text-success" id="deleteStatusSuccess"></label>
+	  				<label class="error form-label text-danger" id="deleteStatusError"></label>
 					<button type="submit" class="btn btn-primary" id="deleteUser">Delete</button>
         			<button type="button" class="btn btn-secondary" data-dismiss="modal" id="deleteUserCancel">Cancel</button>
 				</div>
@@ -167,11 +167,6 @@
         			deleteButton.style.display = "none";
       			}
     		});
-    
-    	//Hides modal on clicking Add user
-    	// $('#addUser').on('click', function() {
-    	//   $('#myModal').modal('hide');
-    	// });
 
 		$('.error').hide();
 		
@@ -180,13 +175,16 @@
 			indexid = table.row(this).index();
 		});
 
+		//Delete User Button
 		$('#deleteUserBtn').click(function() {
 			var data = table.row(indexid).data();
 			$('#deleteId').text(data['idnumber']);
 			$('#deleteName').text(data['firstname'] + ' ' + data['middlename'] + ' ' + data['lastname']);
 		});
 
-		$('#deleteUser').click(function() {
+		//Delete User Form - Delete Button
+		$('#deleteUser').click(function(event) {
+			event.preventDefault();
 			var formData = {
     	        'id'       : table.row(indexid).data()['id']
         	};
@@ -195,16 +193,27 @@
 				type: "POST",
 				url: "<?php echo base_url('users/delete');?>",
 				data: formData,
-				error: function(xhr) {
-					alert("An error occured: " + xhr.status + " " + xhr.statusText);
+				dataType: "json",
+				error: function() {
 					$("label#deleteStatusError").show();
 				},
-				success: function() {
-					$("label#deleteStatusSuccess").show();
+				success: function(data) {
+					if (data['success'] == 'Deleting user account has been successful.')
+					{
+						$("label#deleteStatusSuccess").show();
+						$("label#deleteStatusSuccess").text(data['success']);
+						setTimeout(function() {location.reload()}, 3000);
+					}
+					else
+					{
+						$("label#deleteStatusError").show();
+						$("label#deleteStatusError").text(data['error']);
+					}
 				}
 			});
 		});
 
+		// Add User Button
 		$('#addUser').click(function(event) {
       		// validate and process form here
 
@@ -259,20 +268,37 @@
 				data: formData,
 				error: function() {
 					$("label#statuserror").show();
-					$("button#addAnotherUser").hide();
+					$("button#addAnotherUserAdd").hide();
+					$("button#addAnotherUserClose").hide();
 					$("button#addUser").show();
 					$("button#addUserCancel").show();
 				},
 				success: function() {
 					$("label#statussuccess").show();
-					$("button#addAnotherUser").show();
+					$("button#addAnotherUserAdd").show();
+					$("button#addAnotherUserClose").show();
 					$("button#addUser").hide();
 					$("button#addUserCancel").hide();
+
+					if (data['success'] == 'Creating user account has been successful.')
+					{
+						$("label#statussuccess").show();
+						$("label#statussuccess").text(data['success']);
+
+						table.ajax.reload();
+						table.ajax.draw();
+					}
+					else
+					{
+						$("label#statuserror").show();
+						$("label#statuserror").text(data['error']);
+					}
 				}
 			});
     	});
 
-		$('#addAnotherUser').click(function() {
+		// Add Another User Form - Add Button
+		$('#addAnotherUserAdd').click(function() {
 			$("input#firstname").val('');
 			$("input#middlename").val('');
 			$("input#lastname").val('');
@@ -281,25 +307,52 @@
 			$("select#type").val('Teacher');
 
 			$("label#statussuccess").hide();
-			$("button#addAnotherUser").hide();
+			$("button#addAnotherUserAdd").hide();
+			$("button#addAnotherUserClose").hide();
 			$("button#addUser").show();
 			$("button#addUserCancel").show();
+
+			table.ajax.reload();
+			table.ajax.draw();
 		});
 
+		
+		// Add Another User Form - Close Button
+		$('#addAnotherUserClose').click(function() {
+			$("input#firstname").val('');
+			$("input#middlename").val('');
+			$("input#lastname").val('');
+			$("input#idnumber").val('');
+			document.getElementById("gender").checked = true;
+			document.getElementById("optionTeacher").selected = true;
+
+			$("label#statussuccess").hide();
+			$("button#addAnotherUserAdd").hide();
+			$("button#addAnotherUserClose").hide();
+			$("button#addUser").show();
+			$("button#addUserCancel").show();
+			
+			table.ajax.reload();
+			table.ajax.draw();
+		});
+
+		// Add User Form - Cancel Button
 		$('#addUserCancel').click(function() {
 			$("input#firstname").val('');
 			$("input#middlename").val('');
 			$("input#lastname").val('');
 			$("input#idnumber").val('');
-			$("input#gender").val('Male');
-			$("select#type").val('Teacher');
+			document.getElementById("gender").checked = true;
+			document.getElementById("optionTeacher").selected = true;
 
 			$("label#statussuccess").hide();
-			$("button#addAnotherUser").hide();
+			$("button#addAnotherUserAdd").hide();
+			$("button#addAnotherUserClose").hide();
 			$("button#addUser").show();
 			$("button#addUserCancel").show();
 			
 			table.ajax.reload();
+			table.ajax.draw();
 		});
 		
   	});

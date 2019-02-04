@@ -46,7 +46,8 @@ class User_model extends CI_Model {
 			{
 				$errorMessage = "User exist. Can't create user";
 				$error = array('error' => $errorMessage);
-				return json_encode($error); //error: User exist. Can't create user.
+				echo json_encode($error); //error: User exist. Can't create user.
+				exit();
 			}
 		}
 
@@ -57,12 +58,12 @@ class User_model extends CI_Model {
 		{
 			$errorMessage = "Unable to proceed. Can't create user";
 			$error = array('error' => $errorMessage);
-			return json_encode($error);
+			echo json_encode($error);
 		}
 		else {
 			$successMessage = "Creating user account has been successful.";
-			$error = array('success' => $errorMessage);
-			return json_encode($success);
+			$success = array('success' => $successMessage);
+			echo json_encode($success);
 		}
 	}
 
@@ -129,17 +130,19 @@ class User_model extends CI_Model {
 		
 		$query = $this->db->delete('users', $data);
 		
+		header("Content-Type: application/json; charset=UTF-8");
+
 		if ($query == false)
 		{
 			$errorMessage = "Unable to proceed. Can't delete user";
 			$error = array('error' => $errorMessage);
-			return json_encode($error);
+			echo json_encode($error);
 		}
 		else
 		{
 			$successMessage = "Deleting user account has been successful.";
-			$error = array('success' => $errorMessage);
-			return json_encode($success);
+			$error = array('success' => $successMessage);
+			echo json_encode($error);
 		}
 	}
 }

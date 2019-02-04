@@ -8,7 +8,6 @@ class Login extends CI_Controller
         $data['title'] = 'Login';
         $data['activePage'] = '';
 
-
         if ($this->form_validation->run('login') === FALSE)
         {
             $this->load->view('templates/header', $data);
@@ -34,8 +33,6 @@ class Login extends CI_Controller
                 $this->load->view('templates/header', $data);
                 $this->load->view('login/index', $data);
                 $this->load->view('templates/footer');
-
-                
             }
         }
     }
