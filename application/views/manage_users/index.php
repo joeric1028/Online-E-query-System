@@ -270,7 +270,37 @@
 					$("button#addUserCancel").hide();
 				}
 			});
-			
     	});
+
+		$('#addAnotherUser').click(function() {
+			$("input#firstname").val('');
+			$("input#middlename").val('');
+			$("input#lastname").val('');
+			$("input#idnumber").val('');
+			$("input#gender").val('Male');
+			$("select#type").val('Teacher');
+
+			$("label#statussuccess").hide();
+			$("button#addAnotherUser").hide();
+			$("button#addUser").show();
+			$("button#addUserCancel").show();
+		});
+
+		$('#addUserCancel').click(function() {
+			$("input#firstname").val('');
+			$("input#middlename").val('');
+			$("input#lastname").val('');
+			$("input#idnumber").val('');
+			$("input#gender").val('Male');
+			$("select#type").val('Teacher');
+
+			$("label#statussuccess").hide();
+			$("button#addAnotherUser").hide();
+			$("button#addUser").show();
+			$("button#addUserCancel").show();
+			
+			table.ajax.reload();
+		});
+		
   	});
 </script>
