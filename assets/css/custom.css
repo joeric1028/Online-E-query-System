@@ -9,10 +9,48 @@
 }
 
 
+.bg-blue {
+    background-color: #467fcf !important;
+}
+
+.bg-green {
+    background-color: #5eba00 !important;
+}
+
+.bg-orange {
+    background-color: #fd9644 !important;
+}
+
+.bg-purple {
+    background-color: #a55eea !important;
+}
+
+.bg-red {
+    background-color: #cd201f !important;
+}
+
+.bg-teal {
+    background-color: #2bcbba !important;
+}
+
+.bg-yellow {
+    background-color: #f1c40f !important;
+}
+
 .card { 
     opacity: 0.9;
     margin-bottom: 1.5rem;
     position: relative;
+}
+
+.card-status {
+    position: absolute;
+    top: -1px;
+    left: -1px;
+    right: -1px;
+    height: 3px;
+    border-radius: 3px 3px 0 0;
+    background: rgba(0, 40, 100, 0.12);
 }
 
 .fas {
@@ -71,7 +109,7 @@ table{
     margin-top: 0px;
     border: 10px solid rgba(0,0,0,1);
 }
-th{
+thead.customTh > tr > th{
     padding: 20px 15px;
     text-align: left;
     font-weight: 500;
@@ -83,7 +121,7 @@ th{
 #calendarTable > td{
     border-bottom: solid 0px rgba(0,3,0,0.0)!important;
 }
-td{
+tbody.customTd > tr > td{
     padding: 15px;
     text-align: left;
     vertical-align:middle;
@@ -200,7 +238,7 @@ body {
 .sidebar-nav li a:hover {
     text-decoration: none;
     color: #000;
-    background: rgba(255, 255, 255);
+    background: rgba(255, 255, 255, 0.3);
 }
 .sidebar-nav li a:active, .sidebar-nav li a:focus {
     text-decoration: none;
@@ -245,3 +283,6 @@ body {
    }
 }
 /* SIDEBAR CSS */
+
+/*  BACKGROUND COLORS */
+

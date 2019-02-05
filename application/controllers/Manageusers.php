@@ -1,5 +1,5 @@
 <?php
-class Manageusers extends CI_Controller {
+class ManageUsers extends CI_Controller {
 
     public function __construct()
     {
@@ -8,8 +8,6 @@ class Manageusers extends CI_Controller {
 
     public function index()
     {
-        $activePage = "offnungszeiten.php";
-
         $data['title'] = 'Manage Users';
         $data['activePage'] = 'users';
 

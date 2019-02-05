@@ -5,7 +5,7 @@
         <h2> Manage Users </h2>
         <span class="my-auto">
           <button class="btn btn-danger" id="deleteUserBtn" style="display: none" data-toggle="modal" data-target="#deleteUserModal">Delete User</button>
-          <button class="btn btn-success" data-toggle="modal" data-target="#myModal">Add User</button>
+          <button class="btn btn-success" data-toggle="modal" data-target="#addUserModal">Add User</button>
         </span>
       </div>
     </div>
@@ -17,7 +17,7 @@
       <div class="card-body">
         <section>
           <table cellpadding="0" cellspacing="0" id="userTable">
-            <thead>
+            <thead class="customTh">
                 <tr>
                   	<th>ID No.</th>
                   	<th>First name</th>
@@ -26,7 +26,9 @@
                   	<th>Gender</th>
                   	<th>User Type</th>
                 </tr>
-            </thead>
+						</thead>
+						<tbody class="customTd">
+						</tbody>
           </table>
         </section>
       </div>
@@ -34,7 +36,7 @@
   </div>
 </div>
 
-<div id="myModal" class="modal fade" tabindex="-1" role="dialog">
+<div id="addUserModal" class="modal fade" tabindex="-1" role="dialog">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
     <form name="adduserform" id="adduserform" action="" method="post">
@@ -133,7 +135,7 @@
 <script>
 	$(document).ready(function () {
     	// jQuery call to show add user modal
-    	$('#myModal').on('shown.bs.modal', function () {
+    	$('#addUserModal').on('shown.bs.modal', function () {
       		$('#myInput').trigger('focus');
 			$("input#firstname").focus();
     	});
@@ -145,6 +147,7 @@
 		var table = $('#userTable').DataTable(
 			{
 				'select': true,
+				'responsive': true,
 						'ajax': {
 							url: "<?php echo base_url('api/user_list')?>",
 							dataSrc: ''
@@ -188,7 +191,8 @@
 			var formData = {
     	        'id'       : table.row(indexid).data()['id']
         	};
-
+					
+			$('#deleteUser').prop("disabled", true);
 			$.ajax({
 				type: "POST",
 				url: "<?php echo base_url('users/delete');?>",
@@ -211,6 +215,8 @@
 					}
 				}
 			});
+			$('#deleteUser').removeAttr("disabled");
+
 		});
 
 		// Add User Button
@@ -222,7 +228,7 @@
 			$('.error').hide();
 
 			var firstname = $("input#firstname").val();
-		
+
 			if (firstname == "") {
 				$("label#firstname_error").show();
 				$("input#firstname").focus();
