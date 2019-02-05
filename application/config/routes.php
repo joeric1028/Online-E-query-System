@@ -53,9 +53,17 @@ $route['default_controller'] = 'welcome';
 
 $route['main'] = 'main';
 $route['login'] = 'login';
+
 $route['users'] = 'manageusers';
+$route['users/create'] = 'manageusers/createuser';
+$route['users/delete'] = 'manageusers/deleteuser';
+
+$route['students'] = 'managestudents';
+
 $route['accounts'] = 'accounts';
+
 $route['grades'] = 'grades';
+
 $route['calendar'] = 'schoolcalendar';
 $route['news/(:any)'] = 'news/view/$1';
 $route['news'] = 'news';

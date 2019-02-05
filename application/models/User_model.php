@@ -28,14 +28,15 @@ class User_model extends CI_Model {
 	public function create_user()
 	{
 		$data = array(
-        	'idnumber' => $this->input->post('username'),
+        	'idnumber' => $this->input->post('idnumber'),
         	'firstname' => $this->input->post('firstname'),
         	'middlename' => $this->input->post('middlename'),
         	'lastname' => $this->input->post('lastname'),
         	'sex' => $this->input->post('sex'),
         	'type' => $this->input->post('type'),
-        	'password' => $this->input->post('password')
+        	//'password' => $this->input->post('password')
 		);
+
 		
 		$query = $this->db->get_where('users', array('idnumber' => $data['idnumber']));
 		
@@ -43,7 +44,10 @@ class User_model extends CI_Model {
 		{
 			if ($data['idnumber'] == $row->idnumber)
 			{
-				return false; //error: User exist. Can't create user.
+				$errorMessage = "User exist. Can't create user";
+				$error = array('error' => $errorMessage);
+				echo json_encode($error); //error: User exist. Can't create user.
+				exit();
 			}
 		}
 
@@ -52,10 +56,14 @@ class User_model extends CI_Model {
 
 		if ($query == false)
 		{
-			return false;
+			$errorMessage = "Unable to proceed. Can't create user";
+			$error = array('error' => $errorMessage);
+			echo json_encode($error);
 		}
 		else {
-			return true;
+			$successMessage = "Creating user account has been successful.";
+			$success = array('success' => $successMessage);
+			echo json_encode($success);
 		}
 	}
 
@@ -117,20 +125,24 @@ class User_model extends CI_Model {
 	public function delete_user()
 	{
 		$data = array(
-        	'idnumber' => $this->input->post('username'),
-        	'firstname' => $this->input->post('firstname'),
-        	'middlename' => $this->input->post('middlename'),
-        	'lastname' => $this->input->post('lastname'),
-        	'sex' => $this->input->post('sex'),
-        	'type' => $this->input->post('type'),
-        	'password' => $this->input->post('password')
+        	'id' => $this->input->post('id')
 		);
 		
-		$query = $this->db->delete('users', array('idnumber' => $data['idnumber']));
+		$query = $this->db->delete('users', $data);
 		
+		header("Content-Type: application/json; charset=UTF-8");
+
 		if ($query == false)
 		{
-			return false;
+			$errorMessage = "Unable to proceed. Can't delete user";
+			$error = array('error' => $errorMessage);
+			echo json_encode($error);
+		}
+		else
+		{
+			$successMessage = "Deleting user account has been successful.";
+			$error = array('success' => $successMessage);
+			echo json_encode($error);
 		}
 	}
 }
