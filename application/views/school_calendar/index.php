@@ -14,14 +14,13 @@
             <div class="card-header">School Events</div>
             <div class="card-body">
                 <table id="calendarTable"> 
-                    <thead>
+                    <thead class="customTh">
                         <tr>
                             <th style="width: 40%">School Year 2017 - 2018</th>
                             <th style="width: 60%"></th>
                         </tr>
                     </thead>
-                    <tbody>
-                    </tbody>
+                    <tbody class="customTd">
                         <tr>
                             <td>August 27</td>
                             <td>National Heroes Day</td>
@@ -30,6 +29,7 @@
                             <td>November 1 - November 2</td>
                             <td>All Saints Day</td>
                         </tr>
+                    </tbody>
                 </table>
             </div>
         </div>    
