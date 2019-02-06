@@ -83,9 +83,9 @@
       </div>
       <div class="modal-footer">
 	  <label class="error form-label text-success" id="statussuccess"></label>
-	  <label class="error form-label text-danger" id="statuserror"></label>
+      <label class="error form-label text-danger" id="statuserror"></label>
+      <button type="submit" class="btn btn-primary" id="addevent">Add</button>
       <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-        <button type="submit" class="btn btn-primary" id="addUser">Add</button>
       </div>
       </form>
     </div>
@@ -93,8 +93,6 @@
 </div>
 
 <script>
-    
-
     $('#addEventModal').on('shown.bs.modal', function () {
         $('#myInput').trigger('focus');
         $("input#firstname").focus();
