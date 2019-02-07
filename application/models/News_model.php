@@ -27,7 +27,7 @@ class News_model extends CI_Model {
 		
 		$numberdays = cal_days_in_month(CAL_GREGORIAN, $data['month'], $data['year']);
 
-		$query = $this->db->query("SELECT * FROM 'schoolactivities' WHERE 'startdate' BETWEEN '"+ $data['year'] + "-" + $data['month'] + "-" + $data['day']"' AND '"+ $data['year'] + "-" + $data['month'] + "-" + $numberdays +"';");
+		$query = $this->db->query("SELECT * FROM 'schoolactivities' WHERE 'startdate' BETWEEN '" + $data['year'] + "-" + $data['month'] + "-" + $data['day'] + "' AND '"+ $data['year'] + "-" + $data['month'] + "-" + $numberdays +"';");
 
 		if ($query) {
 			echo json_encode($query->row_array());

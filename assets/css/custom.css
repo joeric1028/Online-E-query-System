@@ -38,9 +38,21 @@
 }
 
 .card { 
-    opacity: 0.9;
+    /*opacity: 0.9;*/
     margin-bottom: 1.5rem;
     position: relative;
+}
+
+.card-options {
+    margin-left: auto;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-order: 100;
+    order: 100;
+    margin-right: -.5rem;
+    color: #9aa0ac;
+    -ms-flex-item-align: center;
+    align-self: center;
 }
 
 .card-status {
@@ -52,6 +64,29 @@
     border-radius: 3px 3px 0 0;
     background: rgba(0, 40, 100, 0.12);
 }
+
+.card-title {
+    font-size: 1.125rem;
+    line-height: 1.2;
+    font-weight: 400;
+    margin-bottom: 1.5rem;
+}
+  
+.card-title a {
+    color: inherit;
+}
+
+.card-title:only-child {
+    margin-bottom: 0;
+}
+
+.custom-close {
+    display: none;
+}
+
+/* .list-group-item:hover > .custom-close {
+    
+} */
 
 .fas {
     margin-right: 5px;
