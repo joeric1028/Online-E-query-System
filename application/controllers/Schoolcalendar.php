@@ -10,4 +10,15 @@ class SchoolCalendar extends CI_Controller {
         $this->load->view('school_calendar/index', $data);
         $this->load->view('templates/footer');
     }
+
+    public function upcomingevent()
+    {
+        $this->News_model->get_upcomingEvent();
+    }
+
+    public function createevent()
+    {
+        header("Content-Type: application/json; charset=UTF-8");
+        $this->News_model->create_event();
+    }
 }

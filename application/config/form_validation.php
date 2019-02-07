@@ -70,6 +70,18 @@
 				'label' => 'Password',
 				'rules' => 'required'
 			)
+		),
+		'event' => array(
+			array(
+				'field' => 'eventname',
+				'label' => 'Name',
+				'rules' => 'required'
+					),
+					array(
+				'field' => 'eventdate',
+				'label' => 'Date of Occurance',
+				'rules' => 'required'
+			)
 		)
 	);
 ?>
