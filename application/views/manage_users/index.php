@@ -136,8 +136,7 @@
 	$(document).ready(function () {
     	// jQuery call to show add user modal
     	$('#addUserModal').on('shown.bs.modal', function () {
-      		$('#myInput').trigger('focus');
-			$("input#firstname").focus();
+					$("input#firstname").focus();
     	});
 
 		$('#deleteUserModal').on('shown.bs.modal');
@@ -227,20 +226,13 @@
       
 			$('.error').hide();
 
-			var firstname = $("input#firstname").val();
+			var idnumber = $("input#idnumber").val();
 
-			if (firstname == "") {
-				$("label#firstname_error").show();
-				$("input#firstname").focus();
+			if (idnumber == "") {
+				$("label#idnumber_error").show();
+				$("input#idnumber").focus();
 			}
-		
-			var middlename = $("input#middlename").val();
-		
-			if (middlename == "") {
-				$("label#middlename_error").show();
-				$("input#middlename").focus();
-			}
-		
+
 			var lastname = $("input#lastname").val();
 			
 			if (lastname == "") {
@@ -248,11 +240,18 @@
 				$("input#lastname").focus();
 			}
 
-			var idnumber = $("input#idnumber").val();
+			var middlename = $("input#middlename").val();
+		
+			if (middlename == "") {
+				$("label#middlename_error").show();
+				$("input#middlename").focus();
+			}
 
-			if (idnumber == "") {
-				$("label#idnumber_error").show();
-				$("input#idnumber").focus();
+			var firstname = $("input#firstname").val();
+
+			if (firstname == "") {
+				$("label#firstname_error").show();
+				$("input#firstname").focus();
 			}
 
 			if (firstname == "" || middlename == "" || lastname == "" || idnumber == "") {
@@ -279,7 +278,7 @@
 					$("button#addUser").show();
 					$("button#addUserCancel").show();
 				},
-				success: function() {
+				success: function(data) {
 					$("label#statussuccess").show();
 					$("button#addAnotherUserAdd").show();
 					$("button#addAnotherUserClose").show();

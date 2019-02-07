@@ -16,7 +16,6 @@
         <script type="text/javascript" charset="utf8" src="<?php echo base_url('assets/plugins/DataTables/datatables.js');?>"></script>
         <script type="text/javascript" charset="utf8" src="<?php echo base_url('assets/plugins/moment.js/moment.min.js');?>"></script>
         <script type="text/javascript" charset="utf8" src="<?php echo base_url('assets/plugins/daterangepicker/daterangepicker.js');?>"></script>
-
         <script>
             $("#menu-toggle").click(function(e) {
                 e.preventDefault();
@@ -25,6 +24,7 @@
         </script>
     </head>
     <body>
+    
       <img src="<?php echo base_url('assets/img/backgrounds/bg.jpg');?>" id="bg-image" />
       <nav class="navbar navbar-inverse navbar-expand-lg navbar-dark bg-primary sticky-top">
         <ul class="navbar-nav mr-auto">

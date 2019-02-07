@@ -65,7 +65,7 @@
     <form name="adduserform" id="adduserform" action="" method="post">
       <div class="modal-header">
         <h5 class="modal-title">Add Event</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="addeventclosex">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
@@ -85,7 +85,8 @@
 	  <label class="error form-label text-success" id="statussuccess"></label>
       <label class="error form-label text-danger" id="statuserror"></label>
       <button type="submit" class="btn btn-primary" id="addevent">Add</button>
-      <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+      <button type="button" class="error btn btn-primary" id="addanothereventadd">Add Another Event?</button>
+      <button type="button" class="btn btn-secondary" data-dismiss="modal" id="addeventclose">Cancel</button>
       </div>
       </form>
     </div>
@@ -93,17 +94,134 @@
 </div>
 
 <script>
-    $('#addEventModal').on('shown.bs.modal', function () {
-        $('#myInput').trigger('focus');
-        $("input#firstname").focus();
-    });
+    $(document).ready(function () {
+        $('#addEventModal').on('shown.bs.modal', function () {
+            $("input#eventname").focus();
+            $("input#eventname").val('');
+            $('.error').hide();
+            $('#addeventclose').text('Cancel');
+            $("button#addevent").show();
+        });
 
-    $('.error').hide();
+        $("input#eventname").val('');
+        $('.error').hide();
+        $('#addeventclose').text('Cancel');
+        $("button#addevent").show();
 
-    $('input[name="eventdate"]').daterangepicker({
-        opens: 'right',
-        drops: 'down'
-    }, function(start, end, label) {
-        console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+        $('input[name="eventdate"]').daterangepicker({
+            opens: 'right',
+            drops: 'down'
+        }, function(start, end, label) {
+            console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+        });
+
+        // Add Event Button
+		$('#addevent').click(function(event) {
+      		// validate and process form here
+
+			event.preventDefault();
+      
+			$('.error').hide();
+
+			var name = $("input#eventname").val();
+
+			if (name == "") {
+				$("label#eventname_error").show();
+				$("input#eventname").focus();
+			}
+		
+            var splitdate = $("input#eventdate").val().split('-');
+            var start = splitdate[0];
+            var end = splitdate[1];
+            
+            if (start == "") {
+				$("label#eventdate_error").show();
+				$("input#eventdate").focus();
+            }
+            
+            if (end == "") {
+				$("label#eventdate_error").show();
+				$("input#eventdate").focus();
+			}
+
+			if (name == "" || start == "" || end == "") {
+				return;
+            }
+            
+            var splitstart = new Date(start);
+            var splitend = new Date(end); 
+            var start = splitstart.getFullYear() + '-' + splitstart.getMonth() + '-' + splitstart.getDate();
+            var end = splitend.getFullYear() + '-' + splitend.getMonth() + '-' + splitend.getDate();
+			
+			var formData = {
+        	    'name'          : name,
+        	    'startdate'     : start,
+                'enddate'       : end,
+                'start'         : splitstart.getFullYear(),
+        	};
+            
+            $("button#addeventclose").text('Cancel');
+
+			$.ajax({
+				type: "POST",
+				url: "<?php echo base_url('calendar/create');?>",
+				data: formData,
+				error: function() {
+					$("label#statuserror").show();
+					$("button#addanothereventadd").hide();
+					$("button#addevent").show();
+				},
+				success: function(data) {
+                    $("label#statussuccess").show();
+                    $("label#statuserror").hide();
+
+					if (data['success'] == 'Creating event has been successful.')
+					{
+						$("label#statussuccess").show();
+                        $("label#statussuccess").text(data['success']);
+                        $("button#addanothereventadd").show();
+                        $("button#addevent").hide();
+                        $("button#addeventclose").text('Close');
+					}
+					else
+					{
+						$("label#statuserror").show();
+                        $("label#statuserror").text(data['error']);
+                        $("button#addanothereventadd").hide();
+                        $("button#addevent").show();
+					}
+				}
+			});
+        });
+        
+        // Add Another Event Button
+		$('#addanothereventadd').click(function(event) {
+            // validate and process form here
+
+            $("input#eventname").val('');
+            $("label#statuserror").hide();
+            $("label#statussuccess").hide();
+			$("button#addanothereventadd").hide();
+            $("button#addevent").show();
+            $('#addeventclose').text('Cancel');
+        });
+
+        $('#addeventclose').click(function(event) {
+            // validate and process form here
+            $('#addeventclose').text('Cancel');
+            $("input#eventname").val('');
+            $('.error').hide();
+            $("button#addevent").show();
+            $('.error').hide();
+        });
+
+        $('#addeventclosex').click(function(event) {
+            // validate and process form here
+            $('#addeventclose').text('Cancel');
+            $("input#eventname").val('');
+            $('.error').hide();
+            $("button#addevent").show();
+            $('.error').hide();
+        });
     });
 </script>
