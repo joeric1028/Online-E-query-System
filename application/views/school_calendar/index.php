@@ -39,7 +39,7 @@
             <div class="card-header"> Upcoming Events </div>
             <div class="card-body">
                 <div class="row">
-                    <div class="col-4">
+                    <!-- <div class="col-4">
                         Feb 2    
                     </div>
                     <div class="col-8">
@@ -52,7 +52,12 @@
                     </div>
                     <div class="col-8">
                         Valentines Day
-                    </div>
+                    </div> 
+                </div> -->
+                <div class="loader" id="loader-4">
+                    <span></span>
+                    <span></span>
+                    <span></span>
                 </div>
             </div>
         </div>
