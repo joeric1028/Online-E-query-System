@@ -13,6 +13,7 @@ class SchoolCalendar extends CI_Controller {
 
     public function upcomingevent()
     {
+        header("Content-Type: application/json; charset=UTF-8");
         $this->News_model->get_upcomingEvent();
     }
 

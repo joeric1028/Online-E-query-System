@@ -38,7 +38,7 @@
         <div class="card">
             <div class="card-header"> Upcoming Events </div>
             <div class="card-body">
-                <div class="row">
+                <div class="row" id="upcomingEvent">
                     <!-- <div class="col-4">
                         Feb 2    
                     </div>
@@ -54,12 +54,13 @@
                         Valentines Day
                     </div> 
                 </div> -->
-                <div class="loader" id="loader-4">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </div>
             </div>
+            <div id="loaderevent">
+            <div class="loader disable-selection" id="loader-4">
+            <span></span>
+            <span></span>
+            <span></span>
+            </div></div>
         </div>
     </div>   
 </div>
@@ -110,6 +111,8 @@
 
         $("input#eventname").val('');
         $('.error').hide();
+        $('#upcomingEvent').hide();
+        
         $('#addeventclose').text('Cancel');
         $("button#addevent").show();
 
@@ -119,6 +122,44 @@
         }, function(start, end, label) {
             console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
         });
+
+        var date = new Date();
+        var formData = {
+        	    'year'      : date.getFullYear(),
+        	    'month'     : (date.getMonth()+1),
+                'day'       : date.getDate(),
+        	};
+        
+        $.ajax({
+				type: "GET",
+				url: "<?php echo base_url('calendar/upcoming');?>",
+                data: formData,
+                beforeSend: function() {
+                    $('#upcomingEvent').hide();
+                    $('#loaderevent').show();
+                },
+				error: function() {
+                    alert( "error occured!" );
+				},
+				success: function(data) {
+
+					if (data['success'] == 'Creating event has been successful.')
+					{
+						$("label#statussuccess").show();
+                        $("label#statussuccess").text(data['success']);
+                        $("button#addanothereventadd").show();
+                        $("button#addevent").hide();
+                        $("button#addeventclose").text('Close');
+					}
+					else
+					{
+						$("label#statuserror").show();
+                        $("label#statuserror").text(data['error']);
+                        $("button#addanothereventadd").hide();
+                        $("button#addevent").show();
+					}
+				}
+			});
 
         // Add Event Button
 		$('#addevent').click(function(event) {
@@ -155,9 +196,9 @@
             
             var splitstart = new Date(start);
             var splitend = new Date(end); 
-            var start = splitstart.getFullYear() + '-' + splitstart.getMonth() + '-' + splitstart.getDate();
-            var end = splitend.getFullYear() + '-' + splitend.getMonth() + '-' + splitend.getDate();
-			
+            var start = splitstart.getFullYear() + '-' + (splitstart.getMonth()+1) + '-' + splitstart.getDate();
+            var end = splitend.getFullYear() + '-' + (splitend.getMonth()+1) + '-' + splitend.getDate();
+
 			var formData = {
         	    'name'          : name,
         	    'startdate'     : start,

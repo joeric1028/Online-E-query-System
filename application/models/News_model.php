@@ -19,15 +19,24 @@ class News_model extends CI_Model {
 
 	public function get_upcomingEvent()
 	{
-		// $splitdate = explode( '-', $this->input->post('eventdate'));
-		// $data = array(
-        // 	'name' => $this->input->post('eventname'),
-        // 	'startdate' => $splitdate[0],
-        // 	'enddate' => $splitdate[1]
-		// );
+		$data = array(
+        	'year' => $this->input->post('year'),
+        	'month' => $this->input->post('month'),
+        	'day' => $this->input->post('day')
+		);
+		
+		$numberdays = cal_days_in_month(CAL_GREGORIAN, $data['month'], $data['year']);
 
-		// $query = $this->db->get_where('schoolactivities', array('slug' => $slug));
-		// return $query->row_array();
+		$query = $this->db->query("SELECT * FROM 'schoolactivities' WHERE 'startdate' BETWEEN '"+ $data['year'] + "-" + $data['month'] + "-" + $data['day']"' AND '"+ $data['year'] + "-" + $data['month'] + "-" + $numberdays +"';");
+
+		if ($query) {
+			echo json_encode($query->row_array());
+		}
+		else
+		{
+
+		}
+		
 	}
 
 	public function create_event()
