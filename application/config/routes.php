@@ -67,6 +67,7 @@ $route['grades'] = 'grades';
 $route['calendar'] = 'schoolcalendar';
 $route['calendar/create'] = 'schoolcalendar/createevent';
 $route['calendar/upcoming'] = 'schoolcalendar/upcomingevent';
+$route['calendar/school'] = 'schoolcalendar/schoolevent';
 
 $route['news/(:any)'] = 'news/view/$1';
 $route['news'] = 'news';

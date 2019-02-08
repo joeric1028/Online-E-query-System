@@ -52,6 +52,48 @@ class News_model extends CI_Model {
 		}
 	}
 
+	public function get_schoolEvent()
+	{
+		$data = array(
+			$this->input->post('year') . '-6-1',
+			($this->input->post('year')+1) . '-3-1'
+		);
+
+		$sqlactivities = "SELECT * FROM `schoolactivities` WHERE `startdate` BETWEEN ? AND ? ORDER BY `startdate` ASC;";
+		$queryactivities = $this->db->query($sqlactivities, $data);
+
+		$resultactivities = $queryactivities->result();
+		echo json_encode($data);
+
+		$sqlyear = "SELECT * FROM `schoolyear` WHERE `id` = ? ;";
+		$queryyear = $this->db->query($sqlyear, 3);
+
+		if ($queryactivities && $queryyear)
+		{
+			$result = array( 'data' => array('schoolactivities' => $queryactivities->result(), 
+											'schoolyear' => $queryyear->result())
+							);
+
+			if ($queryactivities->first_row() != null)
+			{
+				//echo json_encode($result);
+			}
+			else {
+				$errorMessage = 'No event this school year.';
+				$error = array('warning' => $errorMessage);
+	
+				echo json_encode($error);
+			}
+		}
+		else
+		{
+			$errorMessage = 'Unable to display.';
+			$error = array('error' => $errorMessage);
+	
+			echo json_encode($error);
+		}
+	}
+
 	public function create_event()
 	{
 		$query = $this->db->get_where('schoolyear', array('start' => $this->input->post('start')));

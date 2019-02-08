@@ -14,12 +14,12 @@
             <div class="card-header">School Events</div>
             <div class="card-body">
                 <table id="calendarTable"> 
-                    <thead class="customTh">
-                        <tr>
+                    <!-- <thead class="customTh">
+                         <tr>
                             <th style="width: 40%">School Year 2017 - 2018</th>
                             <th style="width: 60%"></th>
                         </tr>
-                    </thead>
+                    </thead> 
                     <tbody class="customTd">
                         <tr>
                             <td>August 27</td>
@@ -29,8 +29,15 @@
                             <td>November 1 - November 2</td>
                             <td>All Saints Day</td>
                         </tr>
-                    </tbody>
+                    </tbody> -->
                 </table>
+                <div id="loaderschoolevent">
+                        <div class="loader disable-selection" id="loader-4">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                    </div>
             </div>
         </div>    
     </div> 
@@ -39,23 +46,8 @@
             <div class="card-header"> Upcoming Events </div>
                 <div class="card-body">
                     <div class="container" id="upcomingEvent">
-                    <!-- <div class="col-4">
-                        Feb 2    
                     </div>
-                    <div class="col-8">
-                        All Bats Day
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-4">
-                        Feb 14    
-                    </div>
-                    <div class="col-8">
-                        Valentines Day
-                    </div> 
-                </div> -->
-                    </div>
-                    <div id="loaderevent">
+                    <div id="loaderupcomingevent">
                         <div class="loader disable-selection" id="loader-4">
                             <span></span>
                             <span></span>
@@ -113,6 +105,7 @@
         $("input#eventname").val('');
         $('.error').hide();
         $('#upcomingEvent').hide();
+        $('table#calendarTable').hide();
         
         $('#addeventclose').text('Cancel');
         $("button#addevent").show();
@@ -138,17 +131,17 @@
                 data: formData,
                 beforeSend: function() {
                     $('#upcomingEvent').hide();
-                    $('#loaderevent').show();
+                    $('#loaderupcomingevent').show();
                     $('#upcomingEvent').html('');
                 },
 				error: function(xhr, status, error) {
                     $('#upcomingEvent').show();
-                    $('#loaderevent').hide();
+                    $('#loaderupcomingevent').hide();
                     alert( "error occured!\n"+error );
 				},
 				success: function(data) {
                     $('#upcomingEvent').show();
-                    $('#loaderevent').hide();
+                    $('#loaderupcomingevent').hide();
 					if (data.error != undefined)
 					{
                         var error = $('<div class="container"></div>').text(data.error);
@@ -173,6 +166,84 @@
                                 var name = $('<div class="col-8"></div>').text(data.data[i].name);
                                 row.append(date, name);
                                 $("div#upcomingEvent").append(row);
+                            }
+                        }
+					}
+				}
+			});
+
+            // For School Events
+            $.ajax({
+				type: "POST",
+				url: "<?php echo site_url('calendar/school');?>",
+                data: formData,
+                beforeSend: function() {
+                    $('table#calendarTable').hide();
+                    $('#loaderschoolevent').show();
+                    $('table#calendarTable').html('');
+                },
+				error: function(xhr, status, error) {
+                    $('table#calendarTable').show();
+                    $('#loaderschoolevent').hide();
+                    alert( "error occured!\n"+error );
+				},
+				success: function(data) {
+                    $('table#calendarTable').show();
+                    $('#loaderschoolevent').hide();
+					if (data.error != undefined)
+					{
+                        var error = $('<div class="container"></div>').text(data.error);
+                        $("table#calendarTable").append(error);
+					} 
+                    else
+					{
+                        if(data.warning != undefined)
+                        {
+                            alert('test warning');
+                            var error = $('<div class="container"></div>').text(data.warning);
+                            $("table#calendarTable").append(error);
+                        }
+                        else
+                        {
+                    //         <!-- <thead class="customTh">
+                    //      <tr>
+                    //         <th style="width: 40%">School Year 2017 - 2018</th>
+                    //         <th style="width: 60%"></th>
+                    //     </tr>
+                    // </thead> 
+                    // <tbody class="customTd">
+                    //     <tr>
+                    //         <td>August 27</td>
+                    //         <td>National Heroes Day</td>
+                    //     </tr>
+                    //     <tr>
+                    //         <td>November 1 - November 2</td>
+                    //         <td>All Saints Day</td>
+                    //     </tr>
+                    // </tbody> -->
+
+
+                            var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+                            var table = $("table#calendarTable");
+
+                            var thead = $('<thead class="customTh"></thead>');
+                            var tr1 = $('<tr><tr/>')
+                            var th1 = $('<th style="width: 40%"></th>').text('School Year '+ data.data.schoolyear[0].start +' - '+ data.data.schoolyear[0].end);
+                            var th2 = $('<th style="width: 60%"></th>');
+                            
+                            table.append(thead, tr1, th1, th2);
+
+                            for (var i = 0; i < data.data.length; i++) {
+                                var getmonthday = new Date(data.data[i].startdate);
+
+                                
+
+                                var row = $('<div class="row"></div>');
+                                var date = $('<div class="col-4"></div>').text(months[getmonthday.getMonth()] + ' ' + getmonthday.getDate());
+                                var name = $('<div class="col-8"></div>').text(data.data[i].name);
+                                row.append(date, name);
+                                //table.append(row);
                             }
                         }
 					}

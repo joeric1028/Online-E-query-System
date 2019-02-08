@@ -17,6 +17,12 @@ class SchoolCalendar extends CI_Controller {
         $this->News_model->get_upcomingEvent();
     }
 
+    public function schoolevent()
+    {
+        header("Content-Type: application/json; charset=UTF-8");
+        $this->News_model->get_schoolEvent();
+    }
+
     public function createevent()
     {
         header("Content-Type: application/json; charset=UTF-8");
