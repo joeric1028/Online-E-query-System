@@ -25,24 +25,23 @@ class News_model extends CI_Model {
 			$this->input->post('year') . '-' . $this->input->post('month') . '-' . $date
 		);
 
-		$sql = "SELECT * FROM `schoolactivities` WHERE `startdate` BETWEEN ? AND ? ;";
+		$sql = "SELECT * FROM `schoolactivities` WHERE `startdate` BETWEEN ? AND ? ORDER BY `startdate` ASC;";
 		$query = $this->db->query($sql, $data);
 
 		if ($query)
 		{
 			$result = array( 'data' => $query->result());
 
-			if ($result != null)
+			if ($query->first_row() != null)
 			{
 				echo json_encode($result);
 			}
 			else {
-				$errorMessage = 'No event this month';
+				$errorMessage = 'No event this month.';
 				$error = array('warning' => $errorMessage);
 	
 				echo json_encode($error);
 			}
-			
 		}
 		else
 		{

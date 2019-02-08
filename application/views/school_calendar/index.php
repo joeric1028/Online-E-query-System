@@ -117,6 +117,7 @@
         $('#addeventclose').text('Cancel');
         $("button#addevent").show();
 
+        //Upcoming Event
         $('input[name="eventdate"]').daterangepicker({
             opens: 'right',
             drops: 'down'
@@ -130,7 +131,7 @@
         	    'month'     : (date.getMonth()+1),
                 'day'       : date.getDate(),
         	};
-        
+            
         $.ajax({
 				type: "POST",
 				url: "<?php echo site_url('calendar/upcoming');?>",
