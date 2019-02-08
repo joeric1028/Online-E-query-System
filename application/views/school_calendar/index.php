@@ -205,12 +205,6 @@
                         }
                         else
                         {
-                    //         <!-- <thead class="customTh">
-                    //      <tr>
-                    //         <th style="width: 40%">School Year 2017 - 2018</th>
-                    //         <th style="width: 60%"></th>
-                    //     </tr>
-                    // </thead> 
                     // <tbody class="customTd">
                     //     <tr>
                     //         <td>August 27</td>
@@ -228,23 +222,29 @@
                             var table = $("table#calendarTable");
 
                             var thead = $('<thead class="customTh"></thead>');
-                            var tr1 = $('<tr><tr/>')
+                            
                             var th1 = $('<th style="width: 40%"></th>').text('School Year '+ data.data.schoolyear[0].start +' - '+ data.data.schoolyear[0].end);
                             var th2 = $('<th style="width: 60%"></th>');
+                            var tbody = $('<tbody class="customTd"></tbody>');
                             
-                            table.append(thead, tr1, th1, th2);
+                            thead.append(th1,th2);
+                            table.append(thead);
 
-                            for (var i = 0; i < data.data.length; i++) {
-                                var getmonthday = new Date(data.data[i].startdate);
+                            console.log(data.data.schoolactivities.length);
+                            for (var i = 0; i < data.data.schoolactivities.length; i++)
+                            {
+                                var getstartmonthday = new Date(data.data.schoolactivities[i].startdate);
+                                var getendmonthday = new Date(data.data.schoolactivities[i].enddate);
 
-                                
+                                var tr = $('<tr id="'+ i +'"></tr>');
 
-                                var row = $('<div class="row"></div>');
-                                var date = $('<div class="col-4"></div>').text(months[getmonthday.getMonth()] + ' ' + getmonthday.getDate());
-                                var name = $('<div class="col-8"></div>').text(data.data[i].name);
-                                row.append(date, name);
-                                //table.append(row);
+                                var td1 = $('<td></td>').text(months[getstartmonthday.getMonth()] + ' ' + getstartmonthday.getDate() + ' - ' + months[getendmonthday.getMonth()] + ' ' + getendmonthday.getDate());
+                                var td2 = $('<td></td>').text(data.data.schoolactivities[i].name);
+                                tr.append(td1, td2);
+                                tbody.append(tr);
                             }
+
+                            table.append(tbody);
                         }
 					}
 				}

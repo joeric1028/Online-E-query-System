@@ -54,19 +54,25 @@ class News_model extends CI_Model {
 
 	public function get_schoolEvent()
 	{
+		if ($this->input->post('month') <= 3)
+		{
+			$year = ($this->input->post('year')-1);
+		}
+		else
+		{
+			$year = $this->input->post('year');
+		}
+
 		$data = array(
-			$this->input->post('year') . '-6-1',
-			($this->input->post('year')+1) . '-3-1'
+			$year . '-6-1',
+			($year+1) . '-3-1'
 		);
 
 		$sqlactivities = "SELECT * FROM `schoolactivities` WHERE `startdate` BETWEEN ? AND ? ORDER BY `startdate` ASC;";
 		$queryactivities = $this->db->query($sqlactivities, $data);
 
-		$resultactivities = $queryactivities->result();
-		echo json_encode($data);
-
 		$sqlyear = "SELECT * FROM `schoolyear` WHERE `id` = ? ;";
-		$queryyear = $this->db->query($sqlyear, 3);
+		$queryyear = $this->db->query($sqlyear, $queryactivities->first_row()->schoolyear_id);
 
 		if ($queryactivities && $queryyear)
 		{
@@ -76,9 +82,10 @@ class News_model extends CI_Model {
 
 			if ($queryactivities->first_row() != null)
 			{
-				//echo json_encode($result);
+				echo json_encode($result);
 			}
-			else {
+			else 
+			{
 				$errorMessage = 'No event this school year.';
 				$error = array('warning' => $errorMessage);
 	
