@@ -205,18 +205,6 @@
                         }
                         else
                         {
-                    // <tbody class="customTd">
-                    //     <tr>
-                    //         <td>August 27</td>
-                    //         <td>National Heroes Day</td>
-                    //     </tr>
-                    //     <tr>
-                    //         <td>November 1 - November 2</td>
-                    //         <td>All Saints Day</td>
-                    //     </tr>
-                    // </tbody> -->
-
-
                             var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
                             var table = $("table#calendarTable");
