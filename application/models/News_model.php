@@ -19,24 +19,38 @@ class News_model extends CI_Model {
 
 	public function get_upcomingEvent()
 	{
+		$date = cal_days_in_month(CAL_GREGORIAN, $this->input->post('month'), $this->input->post('year'));
 		$data = array(
-        	'year' => $this->input->post('year'),
-        	'month' => $this->input->post('month'),
-        	'day' => $this->input->post('day')
+			$this->input->post('year') . '-' . $this->input->post('month') . '-' . $this->input->post('day'),
+			$this->input->post('year') . '-' . $this->input->post('month') . '-' . $date
 		);
-		
-		$numberdays = cal_days_in_month(CAL_GREGORIAN, $data['month'], $data['year']);
 
-		$query = $this->db->query("SELECT * FROM 'schoolactivities' WHERE 'startdate' BETWEEN '" + $data['year'] + "-" + $data['month'] + "-" + $data['day'] + "' AND '"+ $data['year'] + "-" + $data['month'] + "-" + $numberdays +"';");
+		$sql = "SELECT * FROM `schoolactivities` WHERE `startdate` BETWEEN ? AND ? ;";
+		$query = $this->db->query($sql, $data);
 
-		if ($query) {
-			echo json_encode($query->row_array());
+		if ($query)
+		{
+			$result = array( 'data' => $query->result());
+
+			if ($result != null)
+			{
+				echo json_encode($result);
+			}
+			else {
+				$errorMessage = 'No event this month';
+				$error = array('warning' => $errorMessage);
+	
+				echo json_encode($error);
+			}
+			
 		}
 		else
 		{
-
+			$errorMessage = 'Unable to display.';
+			$error = array('error' => $errorMessage);
+	
+			echo json_encode($error);
 		}
-		
 	}
 
 	public function create_event()

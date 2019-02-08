@@ -37,8 +37,8 @@
     <div class="col-4">
         <div class="card">
             <div class="card-header"> Upcoming Events </div>
-            <div class="card-body">
-                <div class="row" id="upcomingEvent">
+                <div class="card-body">
+                    <div class="container" id="upcomingEvent">
                     <!-- <div class="col-4">
                         Feb 2    
                     </div>
@@ -54,16 +54,17 @@
                         Valentines Day
                     </div> 
                 </div> -->
-            </div>
-            <div id="loaderevent">
-            <div class="loader disable-selection" id="loader-4">
-            <span></span>
-            <span></span>
-            <span></span>
-            </div></div>
+                    </div>
+                    <div id="loaderevent">
+                        <div class="loader disable-selection" id="loader-4">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>   
         </div>
-    </div>   
-</div>
 
 <div id="addEventModal" class="modal fade" tabindex="-1" role="dialog">
   <div class="modal-dialog" role="document">
@@ -131,32 +132,48 @@
         	};
         
         $.ajax({
-				type: "GET",
-				url: "<?php echo base_url('calendar/upcoming');?>",
+				type: "POST",
+				url: "<?php echo site_url('calendar/upcoming');?>",
                 data: formData,
                 beforeSend: function() {
                     $('#upcomingEvent').hide();
                     $('#loaderevent').show();
+                    $('#upcomingEvent').html('');
                 },
-				error: function() {
-                    alert( "error occured!" );
+				error: function(xhr, status, error) {
+                    $('#upcomingEvent').show();
+                    $('#loaderevent').hide();
+                    alert( "error occured!\n"+error );
 				},
 				success: function(data) {
+                    $('#upcomingEvent').show();
+                    $('#loaderevent').hide();
+					if (data.error != undefined)
+					{
+                        var error = $('<div class="container"></div>').text(data.error);
+                        $("div#upcomingEvent").append(error);
+					} 
+                    else
+					{
+                        if(data.warning != undefined)
+                        {
+                            alert('test warning');
+                            var error = $('<div class="container"></div>').text(data.warning);
+                            $("div#upcomingEvent").append(error);
+                        }
+                        else
+                        {
+                            var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sept", "Oct", "Nov", "Dec"];
 
-					if (data['success'] == 'Creating event has been successful.')
-					{
-						$("label#statussuccess").show();
-                        $("label#statussuccess").text(data['success']);
-                        $("button#addanothereventadd").show();
-                        $("button#addevent").hide();
-                        $("button#addeventclose").text('Close');
-					}
-					else
-					{
-						$("label#statuserror").show();
-                        $("label#statuserror").text(data['error']);
-                        $("button#addanothereventadd").hide();
-                        $("button#addevent").show();
+                            for (var i = 0; i < data.data.length; i++) {
+                                var getmonthday = new Date(data.data[i].startdate);
+                                var row = $('<div class="row"></div>');
+                                var date = $('<div class="col-4"></div>').text(months[getmonthday.getMonth()] + ' ' + getmonthday.getDate());
+                                var name = $('<div class="col-8"></div>').text(data.data[i].name);
+                                row.append(date, name);
+                                $("div#upcomingEvent").append(row);
+                            }
+                        }
 					}
 				}
 			});
@@ -210,7 +227,7 @@
 
 			$.ajax({
 				type: "POST",
-				url: "<?php echo base_url('calendar/create');?>",
+				url: "<?php echo site_url('calendar/create');?>",
 				data: formData,
 				error: function() {
 					$("label#statuserror").show();
