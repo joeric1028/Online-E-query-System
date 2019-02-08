@@ -49,7 +49,7 @@ class Grades_model extends CI_Model {
 			
 		if ($query->row(0) == null)
 		{	
-			$errorMessage = "No Grade yet.";
+			$errorMessage = 'NG';
 			$error = array('warning' => $errorMessage);
 			echo json_encode($error);
 		}

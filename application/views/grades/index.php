@@ -196,13 +196,14 @@
                         }
                         else
                         {
+                            var ng = 'NG';
                             if (data.data[0].firstgrading != null)
                             {
                                 $('div#1stgrading').text(data.data[0].firstgrading);
                             }
                             else
                             {
-                                $('div#1stgrading').text("No Grade yet.");
+                                $('div#1stgrading').text(ng);
                             }
 
                             if (data.data[0].secondgrading != null)
@@ -211,7 +212,7 @@
                             }
                             else
                             {
-                                $('div#2ndgrading').text("No Grade yet.");
+                                $('div#2ndgrading').text('NG');
                             }
 
                             if (data.data[0].thirdgrading != null)
@@ -220,7 +221,7 @@
                             }
                             else
                             {
-                                $('div#3rdgrading').text("No Grade yet.");
+                                $('div#3rdgrading').text('NG');
                             }
 
                             if (data.data[0].fourthgrading != null)
@@ -229,7 +230,7 @@
                             }
                             else
                             {
-                                $('div#4thgrading').text("No Grade yet.");
+                                $('div#4thgrading').text('NG');
                             }
                         }
 					}
