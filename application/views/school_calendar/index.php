@@ -280,7 +280,6 @@
         	    'name'          : name,
         	    'startdate'     : start,
                 'enddate'       : end,
-                'start'         : splitstart.getFullYear(),
         	};
             
             $("button#addeventclose").text('Cancel');

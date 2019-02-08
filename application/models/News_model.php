@@ -103,11 +103,22 @@ class News_model extends CI_Model {
 
 	public function create_event()
 	{
-		$query = $this->db->get_where('schoolyear', array('start' => $this->input->post('start')));
+		$date = explode('-', $this->input->post('startdate'));
+
+		if ($date[1] <= 3)
+		{
+			$year = ($date[0]-1);
+		}
+		else
+		{
+			$year = $date[0];
+		}
+
+		$query = $this->db->get_where('schoolyear', array('start' => $year));
 
 		foreach ($query->result() as $row)
 		{
-			if ($this->input->post('start') == $row->start)
+			if ($year == $row->start)
 			{
 				$data = array(
 					'name' => $this->input->post('name'),
@@ -135,8 +146,8 @@ class News_model extends CI_Model {
 
 		// If current school year has no data
 		$schoolyeardata = array(
-			'start' => $this->input->post('start'),
-			'end' => ($this->input->post('start')+1)
+			'start' => $year,
+			'end' => ($year+1)
 		);
 
 		$query = $this->db->insert('schoolyear', $schoolyeardata);
@@ -148,11 +159,11 @@ class News_model extends CI_Model {
 			echo json_encode($error);
 		}
 		else {
-			$query = $this->db->get_where('schoolyear', array('start' => $this->input->post('start')));
+			$query = $this->db->get_where('schoolyear', array('start' => $year));
 
 			foreach ($query->result() as $row)
 			{
-				if ($this->input->post('start') == $row->start)
+				if ($year == $row->start)
 				{
 					$data = array(
 						'name' => $this->input->post('name'),
