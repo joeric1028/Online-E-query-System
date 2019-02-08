@@ -217,8 +217,7 @@
                             
                             thead.append(th1,th2);
                             table.append(thead);
-
-                            console.log(data.data.schoolactivities.length);
+                            
                             for (var i = 0; i < data.data.schoolactivities.length; i++)
                             {
                                 var getstartmonthday = new Date(data.data.schoolactivities[i].startdate);

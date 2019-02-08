@@ -63,6 +63,7 @@ $route['students'] = 'managestudents';
 $route['accounts'] = 'accounts';
 
 $route['grades'] = 'grades';
+$route['grades/view'] = 'grades/getgrades';
 
 $route['calendar'] = 'schoolcalendar';
 $route['calendar/create'] = 'schoolcalendar/createevent';

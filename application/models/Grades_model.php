@@ -36,7 +36,7 @@ class Grades_model extends CI_Model {
 		$query = $this->db->insert('grades', $data);
 	}
 
-	public function read_grades($data)
+	public function read_grades()
 	{
 		$where = array(
         	'schoolyear_id' => $this->input->post('schoolyear_id'),
@@ -45,24 +45,20 @@ class Grades_model extends CI_Model {
 
 		$query = $this->db->get_where('grades', $where);
 		
-		foreach ($query->result() as $row)
-		{
-			if ($where['student_id'] == $row->student_id && $where['schoolyear_id'] == $row->schoolyear_id)
-			{
-				//success: User exist. Read user.
-				$data = array(
-					'firstgrading' => $row->firstgrading,
-					'secondgrading' => $row->secondgrading,
-					'middlename' => $row->middlename,
-					'thirdgrading' => $row->thirdgrading,
-					'fourthgrading' => $row->fourthgrading,
-					'schoolyear_id' => $row->schoolyear_id,
-					'student_id' => $row->student_id
-				);
-				return $data;
-			}
+		$result = $query->result();
+			
+		if ($query->row(0) == null)
+		{	
+			$errorMessage = "No Grade yet.";
+			$error = array('warning' => $errorMessage);
+			echo json_encode($error);
 		}
-		return false; //error: user not exist. Can't read user.
+		else {
+			$data = array(
+				'data' => $result
+			);
+			echo json_encode($data);
+		}
 	}
 
 	public function update_grades()
