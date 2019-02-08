@@ -19,15 +19,38 @@ class News_model extends CI_Model {
 
 	public function get_upcomingEvent()
 	{
-		// $splitdate = explode( '-', $this->input->post('eventdate'));
-		// $data = array(
-        // 	'name' => $this->input->post('eventname'),
-        // 	'startdate' => $splitdate[0],
-        // 	'enddate' => $splitdate[1]
-		// );
+		$date = cal_days_in_month(CAL_GREGORIAN, $this->input->post('month'), $this->input->post('year'));
+		$data = array(
+			$this->input->post('year') . '-' . $this->input->post('month') . '-' . $this->input->post('day'),
+			$this->input->post('year') . '-' . $this->input->post('month') . '-' . $date
+		);
 
-		// $query = $this->db->get_where('schoolactivities', array('slug' => $slug));
-		// return $query->row_array();
+		$sql = "SELECT * FROM `schoolactivities` WHERE `startdate` BETWEEN ? AND ? ;";
+		$query = $this->db->query($sql, $data);
+
+		if ($query)
+		{
+			$result = array( 'data' => $query->result());
+
+			if ($result != null)
+			{
+				echo json_encode($result);
+			}
+			else {
+				$errorMessage = 'No event this month';
+				$error = array('warning' => $errorMessage);
+	
+				echo json_encode($error);
+			}
+			
+		}
+		else
+		{
+			$errorMessage = 'Unable to display.';
+			$error = array('error' => $errorMessage);
+	
+			echo json_encode($error);
+		}
 	}
 
 	public function create_event()

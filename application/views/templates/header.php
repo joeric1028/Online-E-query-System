@@ -6,16 +6,18 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title><?php echo $title; ?></title>
-        <link rel="stylesheet" href="<?php echo base_url('assets/css/bootstrap.min.css');?>" />
+        <link rel="stylesheet" href="<?php echo base_url('assets/css/bootstrap.min.css');?>" id="bootstrap-css" />
         <link rel="stylesheet" href="<?php echo base_url('assets/css/custom.css');?>" />
         <link rel="stylesheet" href="<?php echo base_url('assets/plugins/fontawesome-free-5.6.3-web/css/all.min.css');?>" />
         <link rel="stylesheet" type="text/css" href="<?php echo base_url('assets/plugins/DataTables/datatables.css');?>"/>
         <link rel="stylesheet" type="text/css" href="<?php echo base_url('assets/plugins/daterangepicker/daterangepicker.css');?>"/>
         <script type="text/javascript" src="<?php echo base_url('assets/plugins/jquery-3.3.1/jquery-3.3.1.js');?>"></script>
-        <script type="text/javascript" src="<?php echo base_url('assets/js/bootstrap.js');?>"></script>
+        <script type="text/javascript" charset="utf8" src="<?php echo base_url('assets/plugins/popper.js/popper.js');?>"></script>
         <script type="text/javascript" charset="utf8" src="<?php echo base_url('assets/plugins/DataTables/datatables.js');?>"></script>
         <script type="text/javascript" charset="utf8" src="<?php echo base_url('assets/plugins/moment.js/moment.min.js');?>"></script>
         <script type="text/javascript" charset="utf8" src="<?php echo base_url('assets/plugins/daterangepicker/daterangepicker.js');?>"></script>
+        <script type="text/javascript" src="<?php echo base_url('assets/js/bootstrap.min.js');?>"></script>
+
         <script>
             $("#menu-toggle").click(function(e) {
                 e.preventDefault();
@@ -86,6 +88,7 @@
                   <i class="fas fa-sign-out-alt"></i> Log Out
                 </a>
               </li>
+              <li>
           </ul>
         </div>
         <!-- /#sidebar-wrapper -->

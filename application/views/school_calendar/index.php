@@ -37,9 +37,9 @@
     <div class="col-4">
         <div class="card">
             <div class="card-header"> Upcoming Events </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-4">
+                <div class="card-body">
+                    <div class="container" id="upcomingEvent">
+                    <!-- <div class="col-4">
                         Feb 2    
                     </div>
                     <div class="col-8">
@@ -52,12 +52,19 @@
                     </div>
                     <div class="col-8">
                         Valentines Day
+                    </div> 
+                </div> -->
+                    </div>
+                    <div id="loaderevent">
+                        <div class="loader disable-selection" id="loader-4">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </div>   
         </div>
-    </div>   
-</div>
 
 <div id="addEventModal" class="modal fade" tabindex="-1" role="dialog">
   <div class="modal-dialog" role="document">
@@ -105,6 +112,8 @@
 
         $("input#eventname").val('');
         $('.error').hide();
+        $('#upcomingEvent').hide();
+        
         $('#addeventclose').text('Cancel');
         $("button#addevent").show();
 
@@ -114,6 +123,60 @@
         }, function(start, end, label) {
             console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
         });
+
+        var date = new Date();
+        var formData = {
+        	    'year'      : date.getFullYear(),
+        	    'month'     : (date.getMonth()+1),
+                'day'       : date.getDate(),
+        	};
+        
+        $.ajax({
+				type: "POST",
+				url: "<?php echo site_url('calendar/upcoming');?>",
+                data: formData,
+                beforeSend: function() {
+                    $('#upcomingEvent').hide();
+                    $('#loaderevent').show();
+                    $('#upcomingEvent').html('');
+                },
+				error: function(xhr, status, error) {
+                    $('#upcomingEvent').show();
+                    $('#loaderevent').hide();
+                    alert( "error occured!\n"+error );
+				},
+				success: function(data) {
+                    $('#upcomingEvent').show();
+                    $('#loaderevent').hide();
+					if (data.error != undefined)
+					{
+                        var error = $('<div class="container"></div>').text(data.error);
+                        $("div#upcomingEvent").append(error);
+					} 
+                    else
+					{
+                        if(data.warning != undefined)
+                        {
+                            alert('test warning');
+                            var error = $('<div class="container"></div>').text(data.warning);
+                            $("div#upcomingEvent").append(error);
+                        }
+                        else
+                        {
+                            var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sept", "Oct", "Nov", "Dec"];
+
+                            for (var i = 0; i < data.data.length; i++) {
+                                var getmonthday = new Date(data.data[i].startdate);
+                                var row = $('<div class="row"></div>');
+                                var date = $('<div class="col-4"></div>').text(months[getmonthday.getMonth()] + ' ' + getmonthday.getDate());
+                                var name = $('<div class="col-8"></div>').text(data.data[i].name);
+                                row.append(date, name);
+                                $("div#upcomingEvent").append(row);
+                            }
+                        }
+					}
+				}
+			});
 
         // Add Event Button
 		$('#addevent').click(function(event) {
@@ -150,9 +213,9 @@
             
             var splitstart = new Date(start);
             var splitend = new Date(end); 
-            var start = splitstart.getFullYear() + '-' + splitstart.getMonth() + '-' + splitstart.getDate();
-            var end = splitend.getFullYear() + '-' + splitend.getMonth() + '-' + splitend.getDate();
-			
+            var start = splitstart.getFullYear() + '-' + (splitstart.getMonth()+1) + '-' + splitstart.getDate();
+            var end = splitend.getFullYear() + '-' + (splitend.getMonth()+1) + '-' + splitend.getDate();
+
 			var formData = {
         	    'name'          : name,
         	    'startdate'     : start,
@@ -164,7 +227,7 @@
 
 			$.ajax({
 				type: "POST",
-				url: "<?php echo base_url('calendar/create');?>",
+				url: "<?php echo site_url('calendar/create');?>",
 				data: formData,
 				error: function() {
 					$("label#statuserror").show();
