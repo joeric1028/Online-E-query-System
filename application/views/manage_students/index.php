@@ -26,10 +26,10 @@
         <div class="card" id="subjectCard">
             <div class="card-header d-flex justify-content-between">
                 <span>Subjects</span>
-                <button class="btn btn-outline-success btn-sm" type="button" id="addSubjectBtn" data-toggle="modal" data-target="#addSubjectModal">Add Subject</button>    
+                <button class="btn btn-outline-success btn-sm" type="button" id="addSubjectBtn" disabled data-toggle="modal" data-target="#addSubjectModal">Add Subject</button>    
             </div>
             <div class="card-body">
-                <ul class="list-group">
+                <ul class="list-group custom-list-group">
                     <li class="list-group-item">
                         Filipino
                         <button type="button" class="close custom-close" aria-label="Close">

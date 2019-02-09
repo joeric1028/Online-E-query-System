@@ -61,32 +61,32 @@
 <div id="addEventModal" class="modal fade" tabindex="-1" role="dialog">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
-    <form name="adduserform" id="adduserform" action="" method="post">
-      <div class="modal-header">
-        <h5 class="modal-title">Add Event</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="addeventclosex">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <div class="form-group">
-          <label class="form-label">Name</label>
-          <input type="text" class="form-control" name="eventname" id="eventname">
-          <label class="error text-danger" for="eventname" id="eventname_error">This field is required.</label>
+      <form name="adduserform" id="adduserform" action="" method="post">
+        <div class="modal-header">
+            <h5 class="modal-title">Add Event</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="addeventclosex">
+            <span aria-hidden="true">&times;</span>
+            </button>
         </div>
-        <div class="form-group">
-          <label class="form-label">Date of Occurance</label>
-          <input type="text" class="form-control" name="eventdate" id="eventdate">
-          <label class="error text-danger" for="eventdate" id="eventdate_error">This field is required.</label>
+        <div class="modal-body">
+            <div class="form-group">
+            <label class="form-label">Name</label>
+            <input type="text" class="form-control" name="eventname" id="eventname">
+            <label class="error text-danger" for="eventname" id="eventname_error">This field is required.</label>
+            </div>
+            <div class="form-group">
+            <label class="form-label">Date of Occurance</label>
+            <input type="text" class="form-control" name="eventdate" id="eventdate">
+            <label class="error text-danger" for="eventdate" id="eventdate_error">This field is required.</label>
+            </div>
         </div>
-      </div>
-      <div class="modal-footer">
-	  <label class="error form-label text-success" id="statussuccess"></label>
-      <label class="error form-label text-danger" id="statuserror"></label>
-      <button type="submit" class="btn btn-primary" id="addevent">Add</button>
-      <button type="button" class="error btn btn-primary" id="addanothereventadd">Add Another Event?</button>
-      <button type="button" class="btn btn-secondary" data-dismiss="modal" id="addeventclose">Cancel</button>
-      </div>
+        <div class="modal-footer">
+            <label class="error form-label text-success" id="statussuccess"></label>
+            <label class="error form-label text-danger" id="statuserror"></label>
+            <button type="submit" class="btn btn-primary" id="addevent">Add</button>
+            <button type="button" class="error btn btn-primary" id="addanothereventadd">Add Another Event?</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal" id="addeventclose">Cancel</button>
+        </div>
       </form>
     </div>
   </div>

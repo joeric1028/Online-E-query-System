@@ -1,16 +1,118 @@
 <div class="row">
     <div class="col-12">
         <div class="card">
-            <div class="card-body d-flex justify-content-between">
+            <div class="card-body">
                 <h2>Grades</h2>
-                <span class="my-auto"><button class="btn btn-success" data-toggle="modal" data-target="#myModal">Manage Grades</button></span>
-            </div>
-            <div class="card-footer">
-                <span> Grade 6 - Bougainvillea </span>
             </div>
         </div>
     </div>
 </div>
+<!-- Teacher's Row -->
+<div class="row"> 
+    <div class="col-4">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between">
+                <span>Students</span>
+                <div class="dropdown">
+                    <button class="btn btn-primary btn-sm dropdown-toggle" type="button" id="sectionDropdownBtn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" value="Grade 1">
+                        Grade 1
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="sectionDropdownBtn">
+                        <a class="dropdown-item" href="#" data-value="1">Grade 1</a>
+                        <a class="dropdown-item" href="#" data-value="2">Grade 2</a>
+                        <a class="dropdown-item" href="#" data-value="3">Grade 3</a>
+                        <a class="dropdown-item" href="#" data-value="4">Grade 4</a>
+                        <a class="dropdown-item" href="#" data-value="5">Grade 5</a>
+                        <a class="dropdown-item" href="#" data-value="6">Grade 6</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card-body">
+                
+                <ul class="list-group custom-list-group">
+                    <li class="list-group-item">Jose Mari Chan</li>
+                    <li class="list-group-item">Kyle Shem Kun</li>
+                    <li class="list-group-item">Jv Ty San</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="col-8">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between">
+                <span>Subjects</span>
+                <div>
+                    <button class="btn btn-primary btn-sm" type="button" id="saveBtn">
+                        Save
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <table cellpadding="0" cellspacing="0" id="subjectTable">
+                    <thead class="customTh">
+                        <tr>
+                            <th style="width:40%"></th>
+                            <th>1st</th>
+                            <th>2nd</th>
+                            <th>3rd</th>
+                            <th>4th</th>
+                        </tr>
+                    </thead>
+                    <tbody class="customTd">
+                        <tr>
+                            <td>Mathematics</td>
+                            <td>
+                                <input maxlength="3" onkeypress="enableSaveBtnOnChange()" type="text" class="form-control" name="1st">
+                            </td>
+                            <td>
+                                <input maxlength="3" type="text" class="form-control" name="2nd">
+                            </td>
+                            <td>
+                                <input maxlength="3" type="text" class="form-control" name="3rd">
+                            </td>
+                            <td>
+                                <input maxlength="3" type="text" class="form-control" name="4th">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Science</td>
+                            <td>
+                                <input maxlength="3" type="text" class="form-control" name="1st">
+                            </td>
+                            <td>
+                                <input maxlength="3" type="text" class="form-control" name="2nd">
+                            </td>
+                            <td>
+                                <input maxlength="3" type="text" class="form-control" name="3rd">
+                            </td>
+                            <td>
+                                <input maxlength="3" type="text" class="form-control" name="4th">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>English</td>
+                            <td>
+                                <input maxlength="3" type="text" class="form-control" name="1st">
+                            </td>
+                            <td>
+                                <input maxlength="3" type="text" class="form-control" name="2nd">
+                            </td>
+                            <td>
+                                <input maxlength="3" type="text" class="form-control" name="3rd">
+                            </td>
+                            <td>
+                                <input maxlength="3" type="text" class="form-control" name="4th">
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Parent's Row -->
 <div class="row">
     <div class="col-3">
         <div class="card">
@@ -96,13 +198,19 @@
                             <th style="width: 12%">Final Grade</th>
                         </tr>
                     </thead>
-                    <tbody class="customTd">
+                        <tbody class="customTd">
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
+</div>
+
 <script>
+    function enableSaveBtnOnChange() {
+        $('#saveBtn').attr('disabled',false);
+    }
+
     $(document).ready(function () {
         var table = $('#userTable').DataTable({
             'select': true,
@@ -236,5 +344,30 @@
 					}
 				}
 			});
+    });
+
+    $('#saveBtn').click(function(){
+        // Insert AJAX here ^-^ (  0)>
+        // Disable when ajax sucess
+        $(this).attr('disabled',true);
+    });
+
+    $('.dropdown-menu a').click(function(){
+        $('#sectionDropdownBtn.btn:first-child').text($(this).text());
+        $('#sectionDropdownBtn.btn:first-child').val($(this).text());
+    });
+
+    $('.list-group li').mouseenter(function(){
+        if($('.btn:first-child').val() != "All Levels") {
+            $(this).find('.custom-close').show();
+        }
+    }).mouseleave(function(){
+        $(this).find('.custom-close').hide();
+    });
+
+    $('.list-group li').click(function(e) {
+        e.preventDefault()
+        $(this).parent().find('li').removeClass('active');
+        $(this).addClass('active');
     });
 </script>
