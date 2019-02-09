@@ -63,10 +63,12 @@ $route['students'] = 'managestudents';
 $route['accounts'] = 'accounts';
 
 $route['grades'] = 'grades';
+$route['grades/view'] = 'grades/getgrades';
 
 $route['calendar'] = 'schoolcalendar';
 $route['calendar/create'] = 'schoolcalendar/createevent';
 $route['calendar/upcoming'] = 'schoolcalendar/upcomingevent';
+$route['calendar/school'] = 'schoolcalendar/schoolevent';
 
 $route['news/(:any)'] = 'news/view/$1';
 $route['news'] = 'news';

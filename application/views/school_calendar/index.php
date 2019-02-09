@@ -14,23 +14,14 @@
             <div class="card-header">School Events</div>
             <div class="card-body">
                 <table id="calendarTable"> 
-                    <thead class="customTh">
-                        <tr>
-                            <th style="width: 40%">School Year 2017 - 2018</th>
-                            <th style="width: 60%"></th>
-                        </tr>
-                    </thead>
-                    <tbody class="customTd">
-                        <tr>
-                            <td>August 27</td>
-                            <td>National Heroes Day</td>
-                        </tr>
-                        <tr>
-                            <td>November 1 - November 2</td>
-                            <td>All Saints Day</td>
-                        </tr>
-                    </tbody>
                 </table>
+                <div id="loaderschoolevent">
+                        <div class="loader disable-selection" id="loader-4">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                    </div>
             </div>
         </div>    
     </div> 
@@ -39,23 +30,8 @@
             <div class="card-header"> Upcoming Events </div>
                 <div class="card-body">
                     <div class="container" id="upcomingEvent">
-                    <!-- <div class="col-4">
-                        Feb 2    
                     </div>
-                    <div class="col-8">
-                        All Bats Day
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-4">
-                        Feb 14    
-                    </div>
-                    <div class="col-8">
-                        Valentines Day
-                    </div> 
-                </div> -->
-                    </div>
-                    <div id="loaderevent">
+                    <div id="loaderupcomingevent">
                         <div class="loader disable-selection" id="loader-4">
                             <span></span>
                             <span></span>
@@ -69,32 +45,32 @@
 <div id="addEventModal" class="modal fade" tabindex="-1" role="dialog">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
-    <form name="adduserform" id="adduserform" action="" method="post">
-      <div class="modal-header">
-        <h5 class="modal-title">Add Event</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="addeventclosex">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <div class="form-group">
-          <label class="form-label">Name</label>
-          <input type="text" class="form-control" name="eventname" id="eventname">
-          <label class="error text-danger" for="eventname" id="eventname_error">This field is required.</label>
+      <form name="adduserform" id="adduserform" action="" method="post">
+        <div class="modal-header">
+            <h5 class="modal-title">Add Event</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="addeventclosex">
+            <span aria-hidden="true">&times;</span>
+            </button>
         </div>
-        <div class="form-group">
-          <label class="form-label">Date of Occurance</label>
-          <input type="text" class="form-control" name="eventdate" id="eventdate">
-          <label class="error text-danger" for="eventdate" id="eventdate_error">This field is required.</label>
+        <div class="modal-body">
+            <div class="form-group">
+            <label class="form-label">Name</label>
+            <input type="text" class="form-control" name="eventname" id="eventname">
+            <label class="error text-danger" for="eventname" id="eventname_error">This field is required.</label>
+            </div>
+            <div class="form-group">
+            <label class="form-label">Date of Occurance</label>
+            <input type="text" class="form-control" name="eventdate" id="eventdate">
+            <label class="error text-danger" for="eventdate" id="eventdate_error">This field is required.</label>
+            </div>
         </div>
-      </div>
-      <div class="modal-footer">
-	  <label class="error form-label text-success" id="statussuccess"></label>
-      <label class="error form-label text-danger" id="statuserror"></label>
-      <button type="submit" class="btn btn-primary" id="addevent">Add</button>
-      <button type="button" class="error btn btn-primary" id="addanothereventadd">Add Another Event?</button>
-      <button type="button" class="btn btn-secondary" data-dismiss="modal" id="addeventclose">Cancel</button>
-      </div>
+        <div class="modal-footer">
+            <label class="error form-label text-success" id="statussuccess"></label>
+            <label class="error form-label text-danger" id="statuserror"></label>
+            <button type="submit" class="btn btn-primary" id="addevent">Add</button>
+            <button type="button" class="error btn btn-primary" id="addanothereventadd">Add Another Event?</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal" id="addeventclose">Cancel</button>
+        </div>
       </form>
     </div>
   </div>
@@ -113,10 +89,12 @@
         $("input#eventname").val('');
         $('.error').hide();
         $('#upcomingEvent').hide();
+        $('table#calendarTable').hide();
         
         $('#addeventclose').text('Cancel');
         $("button#addevent").show();
 
+        //Upcoming Event
         $('input[name="eventdate"]').daterangepicker({
             opens: 'right',
             drops: 'down'
@@ -130,24 +108,24 @@
         	    'month'     : (date.getMonth()+1),
                 'day'       : date.getDate(),
         	};
-        
+            
         $.ajax({
 				type: "POST",
 				url: "<?php echo site_url('calendar/upcoming');?>",
                 data: formData,
                 beforeSend: function() {
                     $('#upcomingEvent').hide();
-                    $('#loaderevent').show();
+                    $('#loaderupcomingevent').show();
                     $('#upcomingEvent').html('');
                 },
 				error: function(xhr, status, error) {
                     $('#upcomingEvent').show();
-                    $('#loaderevent').hide();
+                    $('#loaderupcomingevent').hide();
                     alert( "error occured!\n"+error );
 				},
 				success: function(data) {
                     $('#upcomingEvent').show();
-                    $('#loaderevent').hide();
+                    $('#loaderupcomingevent').hide();
 					if (data.error != undefined)
 					{
                         var error = $('<div class="container"></div>').text(data.error);
@@ -173,6 +151,71 @@
                                 row.append(date, name);
                                 $("div#upcomingEvent").append(row);
                             }
+                        }
+					}
+				}
+			});
+
+            // For School Events
+            $.ajax({
+				type: "POST",
+				url: "<?php echo site_url('calendar/school');?>",
+                data: formData,
+                beforeSend: function() {
+                    $('table#calendarTable').hide();
+                    $('#loaderschoolevent').show();
+                    $('table#calendarTable').html('');
+                },
+				error: function(xhr, status, error) {
+                    $('table#calendarTable').show();
+                    $('#loaderschoolevent').hide();
+                    alert( "error occured!\n"+error );
+				},
+				success: function(data) {
+                    $('table#calendarTable').show();
+                    $('#loaderschoolevent').hide();
+					if (data.error != undefined)
+					{
+                        var error = $('<div class="container"></div>').text(data.error);
+                        $("table#calendarTable").append(error);
+					} 
+                    else
+					{
+                        if(data.warning != undefined)
+                        {
+                            alert('test warning');
+                            var error = $('<div class="container"></div>').text(data.warning);
+                            $("table#calendarTable").append(error);
+                        }
+                        else
+                        {
+                            var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+                            var table = $("table#calendarTable");
+
+                            var thead = $('<thead class="customTh"></thead>');
+                            
+                            var th1 = $('<th style="width: 40%"></th>').text('School Year '+ data.data.schoolyear[0].start +' - '+ data.data.schoolyear[0].end);
+                            var th2 = $('<th style="width: 60%"></th>');
+                            var tbody = $('<tbody class="customTd"></tbody>');
+                            
+                            thead.append(th1,th2);
+                            table.append(thead);
+                            
+                            for (var i = 0; i < data.data.schoolactivities.length; i++)
+                            {
+                                var getstartmonthday = new Date(data.data.schoolactivities[i].startdate);
+                                var getendmonthday = new Date(data.data.schoolactivities[i].enddate);
+
+                                var tr = $('<tr id="'+ i +'"></tr>');
+
+                                var td1 = $('<td></td>').text(months[getstartmonthday.getMonth()] + ' ' + getstartmonthday.getDate() + ' - ' + months[getendmonthday.getMonth()] + ' ' + getendmonthday.getDate());
+                                var td2 = $('<td></td>').text(data.data.schoolactivities[i].name);
+                                tr.append(td1, td2);
+                                tbody.append(tr);
+                            }
+
+                            table.append(tbody);
                         }
 					}
 				}
@@ -220,7 +263,6 @@
         	    'name'          : name,
         	    'startdate'     : start,
                 'enddate'       : end,
-                'start'         : splitstart.getFullYear(),
         	};
             
             $("button#addeventclose").text('Cancel');

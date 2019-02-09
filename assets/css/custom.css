@@ -106,6 +106,15 @@
     max-width: 500px;
 }
 
+.list-group.custom-list-group > .list-group-item {
+    border: 0px solid #fff;
+}
+
+.list-group.custom-list-group > .list-group-item:hover:not(.active) {
+    color: #212529;
+    background-color: rgb(238, 238, 238);
+}
+
 .profile-name {
     text-align: center;
 }

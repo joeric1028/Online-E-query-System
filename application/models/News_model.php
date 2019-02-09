@@ -25,24 +25,72 @@ class News_model extends CI_Model {
 			$this->input->post('year') . '-' . $this->input->post('month') . '-' . $date
 		);
 
-		$sql = "SELECT * FROM `schoolactivities` WHERE `startdate` BETWEEN ? AND ? ;";
+		$sql = "SELECT * FROM `schoolactivities` WHERE `startdate` BETWEEN ? AND ? ORDER BY `startdate` ASC;";
 		$query = $this->db->query($sql, $data);
 
 		if ($query)
 		{
 			$result = array( 'data' => $query->result());
 
-			if ($result != null)
+			if ($query->first_row() != null)
 			{
 				echo json_encode($result);
 			}
 			else {
-				$errorMessage = 'No event this month';
+				$errorMessage = 'No event this month.';
 				$error = array('warning' => $errorMessage);
 	
 				echo json_encode($error);
 			}
-			
+		}
+		else
+		{
+			$errorMessage = 'Unable to display.';
+			$error = array('error' => $errorMessage);
+	
+			echo json_encode($error);
+		}
+	}
+
+	public function get_schoolEvent()
+	{
+		if ($this->input->post('month') <= 3)
+		{
+			$year = ($this->input->post('year')-1);
+		}
+		else
+		{
+			$year = $this->input->post('year');
+		}
+
+		$data = array(
+			$year . '-6-1',
+			($year+1) . '-3-1'
+		);
+
+		$sqlactivities = "SELECT * FROM `schoolactivities` WHERE `startdate` BETWEEN ? AND ? ORDER BY `startdate` ASC;";
+		$queryactivities = $this->db->query($sqlactivities, $data);
+
+		$sqlyear = "SELECT * FROM `schoolyear` WHERE `id` = ? ;";
+		$queryyear = $this->db->query($sqlyear, $queryactivities->first_row()->schoolyear_id);
+
+		if ($queryactivities && $queryyear)
+		{
+			$result = array( 'data' => array('schoolactivities' => $queryactivities->result(), 
+											'schoolyear' => $queryyear->result())
+							);
+
+			if ($queryactivities->first_row() != null)
+			{
+				echo json_encode($result);
+			}
+			else 
+			{
+				$errorMessage = 'No event this school year.';
+				$error = array('warning' => $errorMessage);
+	
+				echo json_encode($error);
+			}
 		}
 		else
 		{
@@ -55,11 +103,22 @@ class News_model extends CI_Model {
 
 	public function create_event()
 	{
-		$query = $this->db->get_where('schoolyear', array('start' => $this->input->post('start')));
+		$date = explode('-', $this->input->post('startdate'));
+
+		if ($date[1] <= 3)
+		{
+			$year = ($date[0]-1);
+		}
+		else
+		{
+			$year = $date[0];
+		}
+
+		$query = $this->db->get_where('schoolyear', array('start' => $year));
 
 		foreach ($query->result() as $row)
 		{
-			if ($this->input->post('start') == $row->start)
+			if ($year == $row->start)
 			{
 				$data = array(
 					'name' => $this->input->post('name'),
@@ -87,8 +146,8 @@ class News_model extends CI_Model {
 
 		// If current school year has no data
 		$schoolyeardata = array(
-			'start' => $this->input->post('start'),
-			'end' => ($this->input->post('start')+1)
+			'start' => $year,
+			'end' => ($year+1)
 		);
 
 		$query = $this->db->insert('schoolyear', $schoolyeardata);
@@ -100,11 +159,11 @@ class News_model extends CI_Model {
 			echo json_encode($error);
 		}
 		else {
-			$query = $this->db->get_where('schoolyear', array('start' => $this->input->post('start')));
+			$query = $this->db->get_where('schoolyear', array('start' => $year));
 
 			foreach ($query->result() as $row)
 			{
-				if ($this->input->post('start') == $row->start)
+				if ($year == $row->start)
 				{
 					$data = array(
 						'name' => $this->input->post('name'),
