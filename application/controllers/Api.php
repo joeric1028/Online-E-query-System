@@ -8,4 +8,11 @@ class Api extends CI_Controller {
 
         echo $data;
     }
+
+    public function logout()
+    {
+        $this->User_model->logout();
+
+        redirect('login');
+    }
 }

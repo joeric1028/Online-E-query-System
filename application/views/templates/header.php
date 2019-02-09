@@ -51,7 +51,16 @@
                 </div>
               </li>
               <li>
-                <div class="d-flex align-items-center "><h6>Welcome, JV Ty!</h6></div>
+                <div class="d-flex align-items-center "><h6>Welcome, <?php 
+                if ($this->session->has_userdata('logged_in'))
+                {
+                  echo $firstname;
+                }
+                else
+                {
+                  echo 'Guest';
+                } 
+                ?>!</h6></div>
               </li>
               <li>
                 <a <?php if($activePage === "dashboard"):?>class="active"<?php endif;?> href="<?php echo site_url('main')?>">
@@ -84,7 +93,7 @@
                 </a>
               </li>
               <li>
-                <a href="<?php echo site_url('login')?>">
+                <a href="<?php echo site_url('logout')?>">
                   <i class="fas fa-sign-out-alt"></i> Log Out
                 </a>
               </li>

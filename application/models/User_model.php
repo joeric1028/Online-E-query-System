@@ -19,10 +19,39 @@ class User_model extends CI_Model {
 		{
 			if ($data['idnumber'] == $row->idnumber && $data['password'] == $row->password)
 			{
+				$newdata = array(
+					'idnumber'  => $row->idnumber,
+					'id'     => $row->id,
+					'type'     => $row->type,
+					'firstname'     => $row->firstname,
+					'middlename'     => $row->middlename,
+					'lastname'     => $row->lastname,
+					'sex'     => $row->sex,
+					'logged_in' => TRUE
+				);	
+			
+				$this->session->set_userdata($newdata);
+
 				return true;
 			}
 		}
 		return false;
+	}
+
+	public function logout()
+	{
+		$unsetdata = array(
+			'idnumber',
+			'id',
+			'type',
+			'firstname',
+			'middlename',
+			'lastname',
+			'sex',
+				'logged_in'
+		);
+
+		$this->session->unset_userdata($unsetdata);
 	}
 
 	public function create_user()
