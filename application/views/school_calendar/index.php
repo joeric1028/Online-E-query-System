@@ -14,22 +14,6 @@
             <div class="card-header">School Events</div>
             <div class="card-body">
                 <table id="calendarTable"> 
-                    <!-- <thead class="customTh">
-                         <tr>
-                            <th style="width: 40%">School Year 2017 - 2018</th>
-                            <th style="width: 60%"></th>
-                        </tr>
-                    </thead> 
-                    <tbody class="customTd">
-                        <tr>
-                            <td>August 27</td>
-                            <td>National Heroes Day</td>
-                        </tr>
-                        <tr>
-                            <td>November 1 - November 2</td>
-                            <td>All Saints Day</td>
-                        </tr>
-                    </tbody> -->
                 </table>
                 <div id="loaderschoolevent">
                         <div class="loader disable-selection" id="loader-4">
