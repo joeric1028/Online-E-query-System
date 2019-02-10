@@ -5,7 +5,7 @@ class ManageStudents extends CI_Controller {
     {
         if (!$this->session->has_userdata('logged_in'))
         {
-            $this->output->set_header('refresh:3;url=' . site_url('login'));
+            redirect('login');
         }
 
         $data = array(

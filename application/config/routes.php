@@ -76,9 +76,7 @@ $route['news'] = 'news';
 $route['welcome'] = 'welcome';
 $route['(:any)'] = 'pages/view/$1';
 
-
 $route['api/(:any)'] = 'api/$1';
-
 
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
