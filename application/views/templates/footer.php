@@ -10,15 +10,6 @@
             </div>
         </footer>
         <script>
-        <?php
-            if ($this->session->has_userdata('logged_in')) {
-                echo "$('#wrapper').addClass('toggled');";
-                echo "$('#menu-toggle').show();";
-            } else {
-                echo "$('#wrapper').removeClass('toggled');";
-                echo "$('#menu-toggle').hide();";
-            }
-        ?>
         $(document).ready(function () {
             var USER_TYPE = "<?php echo $type?>";
 
@@ -48,6 +39,81 @@
                     }
                 });
             });
+
+            //Change password
+            $('button#submitpassword').click(function (event) {
+                event.preventDefault();
+                
+                $('.error').hide();
+
+                var retypePassword = $("input#retypePassword").val();
+                if (retypePassword == "") {
+                    $("label#retypepassword_error").show();
+                    $("input#retypePassword").focus();
+                }
+
+                var newPassword = $("input#newPassword").val();
+                
+                if (newPassword == "") {
+                    $("label#newpassword_error").show();
+                    $("input#newPassword").focus();
+                }
+
+                var currentPassword = $("input#currentPassword").val();
+
+                if (currentPassword == "") {
+                    $("label#currentpassword_error").show();
+                    $("input#currentPassword").focus();
+                }
+
+                if (currentPassword == "" || newPassword == "" || retypePassword == "") {
+                    return;
+                }
+                
+                var formData = {
+                    'currentpassword'       : currentPassword,
+                    'newpassword'            : newPassword,
+                    'confirmnewpassword'    : retypePassword
+                };
+
+                $.ajax({
+				type: "POST",
+				url: "<?php echo base_url('api/changepassword');?>",
+				data: formData,
+				error: function() {
+					$("label#changepasswordstatuserror").show();
+				},
+				success: function(data) {
+					$("label#changepasswordstatussuccess").show();
+
+					if (data.success != undefined)
+					{
+						$("label#changepasswordstatussuccess").show();
+						$("label#changepasswordstatussuccess").text(data.success);
+					}
+					else
+					{
+						$("label#changepasswordstatuserror").show();
+                        if (data.warning != undefined)
+                        {
+                            $("label#changepasswordstatuserror").text(data.warning);
+                        }
+                        else
+                        {
+						    $("label#changepasswordstatuserror").text(data.error);
+                        }
+					}
+				}
+			});
+
+            $('a#changepasswordbtn').click(function(){
+                $('.error').hide();
+                
+                $('input#currentPassword').val('');
+                $('input#newPassword').val('');
+                $('input#retypePassword').val('');
+            });
+        });    
         </script>
     </body>
 </html>

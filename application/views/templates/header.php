@@ -26,7 +26,14 @@
       <nav class="navbar navbar-inverse navbar-expand-lg navbar-dark bg-primary sticky-top">
         <ul class="navbar-nav mr-auto">
           <li class="nav-item">
-            <a class="btn btn-light-outline nav-link" id="menu-toggle"><span class="fas fa-bars"></span></a>
+            <a class="btn btn-light-outline nav-link" id="menu-toggle" style="<?php 
+                    if ($this->session->has_userdata('logged_in')){
+                      if (current_url() == site_url('login'))
+                      echo 'display: none;';
+                    } else {
+                      echo 'display: none;';
+                    } 
+                  ?>"><span class="fas fa-bars"></span></a>
           </li>
           <li class="nav-item">
             <a class="navbar-brand" href="#">Online E-Query System</a>
@@ -36,7 +43,14 @@
           <a class="navbar-brand" href="#">Butuan City Mission Academy</a>
         </div>
       </nav>
-      <div id="wrapper" class="">
+      <div id="wrapper" class="<?php 
+                    if ($this->session->has_userdata('logged_in')){
+                      if (current_url() != site_url('login'))
+                      echo 'toggled';
+                    } else {
+                      echo '';
+                    } 
+                  ?>">
         <!-- Sidebar -->
         <div id="sidebar-wrapper">
           <ul class="sidebar-nav">
@@ -107,7 +121,7 @@
                 </a>
               </li>
               <li>
-                <a href=""  data-toggle="modal" data-target="#changePasswordModal">
+                <a href=""  data-toggle="modal" data-target="#changePasswordModal" id="changepasswordbtn">
                   <i class="fas fa-key"></i> Change Password
                 </a>
               </li>
@@ -155,27 +169,31 @@
                   <span aria-hidden="true">&times;</span>
                 </button>
               </div>
+              <form name="changepassword" id="changepassword" action="" method="post">
               <div class="modal-body">
                 <div class="form-group">
                   <label class="form-label">Current Password</label>
-                  <input type="text" class="form-control" name="currentPassword" id="currentPassword">
+                  <input type="password" class="form-control" name="currentPassword" id="currentPassword" size="25">
                   <label class="error text-danger" for="currentPassword" id="currentpassword_error">This field is required.</label>
                 </div>
                 <div class="form-group">
                   <label class="form-label">New Password</label>
-                  <input type="text" class="form-control" name="newPassword" id="newPassword">
+                  <input type="password" class="form-control" name="newPassword" id="newPassword" size="25">
                   <label class="error text-danger" for="newPassword" id="newpassword_error">This field is required.</label>
                 </div>
                 <div class="form-group">
                   <label class="form-label">Retype New Password</label>
-                  <input type="text" class="form-control" name="retypePassword" id="retypePassword">
+                  <input type="password" class="form-control" name="retypePassword" id="retypePassword" size="25">
                   <label class="error text-danger" for="retypePassword" id="retypepassword_error">This field is required.</label>
                 </div>
               </div>
               <div class="modal-footer">
+                <label class="error form-label text-success" id="changepasswordstatussuccess"></label>
+	              <label class="error form-label text-danger" id="changepasswordstatuserror"></label>
+                <button type="submit" class="btn btn-primary" id="submitpassword">Save changes</button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
               </div>
+              </form>
             </div>
           </div>
         </div>

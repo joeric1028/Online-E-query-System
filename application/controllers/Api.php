@@ -51,4 +51,10 @@ class Api extends CI_Controller {
             echo json_encode($data);
         } 
     }
+
+    public function changepassword()
+    {
+        header("Content-Type: application/json; charset=UTF-8");
+        $this->User_model->changepassword();
+    }
 }

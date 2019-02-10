@@ -38,6 +38,68 @@ class User_model extends CI_Model {
 		return false;
 	}
 
+	public function changepassword() {
+
+		$where = array(
+        	'idnumber' => $this->session->idnumber,
+        	'id' => $this->session->id
+		);
+		
+		$query = $this->db->get_where('users', $where);
+		
+		if ($query->first_row())
+		{
+			$result = $query->first_row();
+
+			if ($where['idnumber'] == $result->idnumber && $where['id'] == $result->id && password_verify($this->input->post('currentpassword'), $result->password))
+			{
+				if ($this->input->post('newpassword') == $this->input->post('confirmnewpassword'))
+				{
+					$newdata = array(
+						'password' => password_hash($this->input->post('confirmnewpassword'), PASSWORD_DEFAULT)
+					);
+
+					$query = $this->db->update('users', $newdata, $where);
+
+					if ($query)
+					{
+						$successMessage = 'Password successfuly changed!';
+						$success = array('success' => $successMessage);
+				
+						echo json_encode($success);
+					}
+					else
+					{
+						$errorMessage = 'Unable to changed password.';
+						$error = array('error' => $errorMessage);
+				
+						echo json_encode($error);
+					}
+				}
+				else
+				{
+					$errorMessage = 'New password is not matched with new confirm password.';
+					$error = array('warning' => $errorMessage);
+				
+					echo json_encode($error);
+				}
+			}
+			else {
+				$errorMessage = 'Wrong current password.';
+				$error = array('warning' => $errorMessage);
+				
+				echo json_encode($error);
+			}
+		}
+		else
+		{
+			$errorMessage = 'Error occured!';
+			$error = array('error' => $errorMessage);
+				
+			echo json_encode($error);
+		}
+	}
+
 	public function logout()
 	{
 		$unsetdata = array(
@@ -64,7 +126,6 @@ class User_model extends CI_Model {
         	'sex' => $this->input->post('sex'),
         	'type' => $this->input->post('type')
 		);
-
 		
 		$query = $this->db->get_where('users', array('idnumber' => $data['idnumber']));
 		
