@@ -8,6 +8,28 @@
     </div>
 </div>
 <div class="row">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-header">Select User</div>
+      <div class="card-body">
+        <table cellpadding="0" cellspacing="0" id="userTable">
+          <thead class="customTh">
+              <tr>
+                  <th>ID No.</th>
+                  <th>First name</th>
+                  <th>Middle name</th>
+                  <th>Last Name</th>
+                  <th>Grade</th>
+              </tr>
+          </thead>
+          <tbody class="customTd">
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row">
     <div class="col-4">
         <div class="card">
             <div class="card-header d-flex justify-content-between">
@@ -143,4 +165,32 @@
 
 <script>
     $('.error').hide();
+    var table = $('#userTable').DataTable(
+			{
+				'select': {
+          style: 'single'
+        },
+				'responsive': true,
+						'ajax': {
+							url: "",
+							dataSrc: ''
+						},
+						'columns': [
+							{ "data": "idnumber"},
+							{ "data": "firstname"},
+							{ "data": "middlename"},
+							{ "data": "lastname"},
+							{ "data": "sex"},
+							{ "data": "type"},
+						],
+            			"rowid": "id"
+    		}).on('select', function() {
+      			if (deleteButton.style.display === "none" && $('.selected').length > 0) {
+        			deleteButton.style.display = "inline-block";
+      			}
+    		}).on('deselect', function() {
+      			if (deleteButton.style.display === "inline-block" && $('.selected').length == 0) {
+        			deleteButton.style.display = "none";
+      			}
+    		});
 </script>

@@ -8,6 +8,5 @@
                 {
                   echo 'Guest';
                 }?>!</h1>
-        <div> Welcome boi </div>
     </div>
 </div>
