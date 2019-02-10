@@ -17,7 +17,7 @@ class User_model extends CI_Model {
 		
 		foreach ($query->result() as $row)
 		{
-			if ($data['idnumber'] == $row->idnumber && $data['password'] == $row->password)
+			if ($data['idnumber'] == $row->idnumber && password_verify($data['password'], $row->password))
 			{
 				$newdata = array(
 					'idnumber'  => $row->idnumber,
@@ -48,7 +48,7 @@ class User_model extends CI_Model {
 			'middlename',
 			'lastname',
 			'sex',
-				'logged_in'
+			'logged_in'
 		);
 
 		$this->session->unset_userdata($unsetdata);
@@ -62,8 +62,7 @@ class User_model extends CI_Model {
         	'middlename' => $this->input->post('middlename'),
         	'lastname' => $this->input->post('lastname'),
         	'sex' => $this->input->post('sex'),
-        	'type' => $this->input->post('type'),
-        	//'password' => $this->input->post('password')
+        	'type' => $this->input->post('type')
 		);
 
 		

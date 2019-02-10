@@ -13,8 +13,10 @@
         <?php
             if ($this->session->has_userdata('logged_in')) {
                 echo "$('#wrapper').addClass('toggled');";
+                echo "$('#menu-toggle').show();";
             } else {
                 echo "$('#wrapper').removeClass('toggled');";
+                echo "$('#menu-toggle').hide();";
             }
         ?>
         $(document).ready(function () {
