@@ -10,6 +10,13 @@
             </div>
         </footer>
         <script>
+        <?php
+            if ($this->session->has_userdata('logged_in')) {
+                echo "$('#wrapper').addClass('toggled');";
+            } else {
+                echo "$('#wrapper').removeClass('toggled');";
+            }
+        ?>
         $(document).ready(function () {
             var USER_TYPE = "<?php echo $type?>";
 
@@ -38,14 +45,6 @@
                         $('img#pic').attr('style', 'opacity:1;');
                     }
                 });
-
-                <?php
-                    if ($this->session->has_userdata('logged_in')) {
-                        echo "$('#wrapper').addClass('toggled');";
-                    } else {
-                        echo "$('#wrapper').removeClass('toggled');";
-                    }
-                ?>
             });
         </script>
     </body>
