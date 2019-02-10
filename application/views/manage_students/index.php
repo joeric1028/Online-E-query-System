@@ -107,7 +107,7 @@
   </div>
 </div>
 
-<div id="addStudentModal" class="modal fade" tabindex="-1" role="dialog">
+<div id="addStudentModal" class="modal fade" role="dialog">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
     <form name="addStudentform" id="addStudentform" action="" method="post">
@@ -137,6 +137,11 @@
           <label class="form-label">ID Number</label>
           <input type="text" class="form-control" name="idnumber" id="idnumber">
           <label class="error text-danger" for="idnumber" id="idnumber_error">This field is required.</label>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Parent</label>
+          <select class="form-control select2" name="selectParent" id="selectParent" style="width: 100%;height: 100px"><option></option></select>
+          <label class="error text-danger" for="selectParent" id="selectparent_error">This field is required.</label>
         </div>
         <div class="form-group">
           <div class="form-label">Gender</div>
@@ -178,6 +183,7 @@
 
 
 <script>
+  $(document).ready(function () {
     $('.error').hide();
     $('#addSubjectModal').on('shown.bs.modal', function () {
         $('#subjectname').trigger('focus')
@@ -211,4 +217,14 @@
             $(this).addClass('active');
         }
     });
+
+    $('#selectParent').select2({
+        placeholder: 'Select a Parent',
+        ajax: {
+          url: 'https://api.github.com/search/repositories',
+          dataType: 'json'
+          // Additional AJAX parameters go here; see the end of this chapter for the full code of this example
+        }
+    });
+  });
 </script>

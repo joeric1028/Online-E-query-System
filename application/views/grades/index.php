@@ -244,8 +244,6 @@
             'student_id'        : 1,
             'schoolyear_id'     : 3
         };
-
-        
         
         // For Grades
         $.ajax({
