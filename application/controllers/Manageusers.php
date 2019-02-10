@@ -1,15 +1,26 @@
 <?php
-class ManageUsers extends CI_Controller {
-
-    public function __construct()
-    {
-        parent::__construct();
-    }
+class ManageUsers extends CI_Controller
+{
 
     public function index()
     {
-        $data['title'] = 'Manage Users';
-        $data['activePage'] = 'users';
+        if (!$this->session->has_userdata('logged_in'))
+        {
+            redirect('login');
+        }
+
+        $data = array(
+            'idnumber'  => $this->session->idnumber,
+            'id'     => $this->session->id,
+            'type'     => $this->session->type,
+            'firstname'     => $this->session->firstname,
+            'middlename'     => $this->session->middlename,
+            'lastname'     => $this->session->lastname,
+            'sex'     => $this->session->sex,
+            'logged_in' => $this->session->logged_in,
+            'title' =>  'Manage Users',
+            'activePage' => 'users'
+        );
 
         $this->load->view('templates/header', $data);
         $this->load->view('manage_users/index', $data);

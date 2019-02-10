@@ -3,8 +3,23 @@ class SchoolCalendar extends CI_Controller {
 
     public function index()
     {
-        $data['title'] = 'Welcome to E-Query System!';
-        $data['activePage'] = "calendar";
+        if (!$this->session->has_userdata('logged_in'))
+        {
+            redirect('login');
+        }
+
+        $data = array(
+            'idnumber'  => $this->session->idnumber,
+            'id'     => $this->session->id,
+            'type'     => $this->session->type,
+            'firstname'     => $this->session->firstname,
+            'middlename'     => $this->session->middlename,
+            'lastname'     => $this->session->lastname,
+            'sex'     => $this->session->sex,
+            'logged_in' => $this->session->logged_in,
+            'title' =>  'Welcome to E-Query System!',
+            'activePage' => 'calendar'
+        );
 
         $this->load->view('templates/header', $data);
         $this->load->view('school_calendar/index', $data);

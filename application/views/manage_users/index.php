@@ -131,7 +131,6 @@
 	</div>
 </div>
       
-
 <script>
 	$(document).ready(function () {
     	// jQuery call to show add user modal

@@ -1,17 +1,25 @@
 <?php
 class Main extends CI_Controller {
 
-    public function __construct()
-    {
-        parent::__construct();
-        $this->load->model('Student_model');
-    }
-
     public function index()
     {
-        $data['news'] = $this->Student_model->get_student();
-        $data['title'] = 'Welcome to E-Query System!';
-        $data['activePage'] = "dashboard";
+        if (!$this->session->has_userdata('logged_in'))
+        {
+            redirect('login');
+        }
+
+        $data = array(
+            'idnumber'  => $this->session->idnumber,
+            'id'     => $this->session->id,
+            'type'     => $this->session->type,
+            'firstname'     => $this->session->firstname,
+            'middlename'     => $this->session->middlename,
+            'lastname'     => $this->session->lastname,
+            'sex'     => $this->session->sex,
+            'logged_in' => $this->session->logged_in,
+            'title' =>  'Welcome to E-Query System!',
+            'activePage' => 'dashboard'
+        );
 
         $this->load->view('templates/header', $data);
         $this->load->view('main/index', $data);

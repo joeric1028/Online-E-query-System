@@ -88,6 +88,10 @@
     
 } */
 
+.error {
+    display: none;
+}
+
 .fas {
     margin-right: 5px;
     left: 0px;
@@ -131,6 +135,80 @@
     -webkit-border-radius: 50% !important;
     -moz-border-radius: 50% !important;
     border-radius: 50% !important;
+}
+
+.image {
+    opacity: 1;
+    display: block;
+    width: 100%;
+    height: auto;
+    transition: .5s ease;
+    backface-visibility: hidden;
+  }
+
+  .overlay {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    width: 100%;
+    opacity: 0;
+    transition: .5s ease;
+  }
+
+  .overlayprof {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    width: 100%;
+  }
+  
+.profcon:hover .overlay {
+    opacity: 1;
+}
+
+.profcon:hover .image {
+    opacity: 0.3;
+  }
+
+/* Container needed to position the button. Adjust the width as needed */
+.profcon {
+    position: relative;
+    width: 100%;
+  }
+/* Style the button and place it in the middle of the container/image */
+.profcon .btn {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    background-color: #555;
+    color: white;
+    font-size: 11px;
+    padding: 1px 1px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    width: 20%;
+    height: 20%;
+  }
+  
+.profcon .btn:hover {
+    background-color: black;
+}
+
+.profcon .loaderprof {
+    position: absolute;
+    top: 55%;
+    left: 64%;
+    transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
   }
 
 /* TABLE CSS */
@@ -229,10 +307,10 @@ body {
 }
 #wrapper {
     padding-left: 0;
-    -webkit-transition: all 0.5s ease;
+    /* -webkit-transition: all 0.5s ease;
     -moz-transition: all 0.5s ease;
     -o-transition: all 0.5s ease;
-    transition: all 0.5s ease;
+    transition: all 0.5s ease; */
 }
 #wrapper.toggled {
     padding-left: 250px;
@@ -246,10 +324,10 @@ body {
     margin-left: -250px;
     overflow-y: auto;
     background: rgb(228, 228, 228);
-    -webkit-transition: all 0.5s ease;
+    /* -webkit-transition: all 0.5s ease;
     -moz-transition: all 0.5s ease;
     -o-transition: all 0.5s ease;
-    transition: all 0.5s ease;
+    transition: all 0.5s ease; */
 }
 #wrapper.toggled #sidebar-wrapper {
     width: 250px;

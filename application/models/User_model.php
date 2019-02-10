@@ -17,12 +17,103 @@ class User_model extends CI_Model {
 		
 		foreach ($query->result() as $row)
 		{
-			if ($data['idnumber'] == $row->idnumber && $data['password'] == $row->password)
+			if ($data['idnumber'] == $row->idnumber && password_verify($data['password'], $row->password))
 			{
+				$newdata = array(
+					'idnumber'  => $row->idnumber,
+					'id'     => $row->id,
+					'type'     => $row->type,
+					'firstname'     => $row->firstname,
+					'middlename'     => $row->middlename,
+					'lastname'     => $row->lastname,
+					'sex'     => $row->sex,
+					'logged_in' => TRUE
+				);	
+			
+				$this->session->set_userdata($newdata);
+
 				return true;
 			}
 		}
 		return false;
+	}
+
+	public function changepassword() {
+
+		$where = array(
+        	'idnumber' => $this->session->idnumber,
+        	'id' => $this->session->id
+		);
+		
+		$query = $this->db->get_where('users', $where);
+		
+		if ($query->first_row())
+		{
+			$result = $query->first_row();
+
+			if ($where['idnumber'] == $result->idnumber && $where['id'] == $result->id && password_verify($this->input->post('currentpassword'), $result->password))
+			{
+				if ($this->input->post('newpassword') == $this->input->post('confirmnewpassword'))
+				{
+					$newdata = array(
+						'password' => password_hash($this->input->post('confirmnewpassword'), PASSWORD_DEFAULT)
+					);
+
+					$query = $this->db->update('users', $newdata, $where);
+
+					if ($query)
+					{
+						$successMessage = 'Password successfuly changed!';
+						$success = array('success' => $successMessage);
+				
+						echo json_encode($success);
+					}
+					else
+					{
+						$errorMessage = 'Unable to changed password.';
+						$error = array('error' => $errorMessage);
+				
+						echo json_encode($error);
+					}
+				}
+				else
+				{
+					$errorMessage = 'New password is not matched with new confirm password.';
+					$error = array('warning' => $errorMessage);
+				
+					echo json_encode($error);
+				}
+			}
+			else {
+				$errorMessage = 'Wrong current password.';
+				$error = array('warning' => $errorMessage);
+				
+				echo json_encode($error);
+			}
+		}
+		else
+		{
+			$errorMessage = 'Error occured!';
+			$error = array('error' => $errorMessage);
+				
+			echo json_encode($error);
+		}
+	}
+
+	public function logout()
+	{
+		$unsetdata = array(
+			'idnumber',
+			'id',
+			'type',
+			'firstname',
+			'middlename',
+			'lastname',
+			'sex',
+			'logged_in'
+		);
+
+		$this->session->unset_userdata($unsetdata);
 	}
 
 	public function create_user()
@@ -33,10 +124,8 @@ class User_model extends CI_Model {
         	'middlename' => $this->input->post('middlename'),
         	'lastname' => $this->input->post('lastname'),
         	'sex' => $this->input->post('sex'),
-        	'type' => $this->input->post('type'),
-        	//'password' => $this->input->post('password')
+        	'type' => $this->input->post('type')
 		);
-
 		
 		$query = $this->db->get_where('users', array('idnumber' => $data['idnumber']));
 		
