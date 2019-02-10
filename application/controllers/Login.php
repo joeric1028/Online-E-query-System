@@ -25,9 +25,9 @@ class Login extends CI_Controller
         } 
         else
         {
-
             if ($this->User_model->authenticate_user())
             {
+                $data['firstname'] = $this->session->firstname;
                 $data['status'] = 'Login Successful. Redirecting ...';
                 
                 $this->load->view('templates/header', $data);
