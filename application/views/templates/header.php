@@ -17,12 +17,36 @@
         <script type="text/javascript" charset="utf8" src="<?php echo base_url('assets/plugins/moment.js/moment.min.js');?>"></script>
         <script type="text/javascript" charset="utf8" src="<?php echo base_url('assets/plugins/daterangepicker/daterangepicker.js');?>"></script>
         <script type="text/javascript" src="<?php echo base_url('assets/js/bootstrap.min.js');?>"></script>
-
         <script>
             $("#menu-toggle").click(function(e) {
                 e.preventDefault();
                 $("#wrapper").toggleClass("toggled");
             });
+
+			$(document).ready(function ()
+			{
+				$.ajax({
+					type: "GET",
+					url: "<?php echo site_url('api/get_pic');?>",
+					beforeSend: function() {
+						$('#profile').show();
+						$('div#loaderprof').show();
+						$('img#pic').attr('style', 'opacity:0.2;');
+					},
+					error: function() {
+						$('#profile').hide();
+						$('div#loaderprof').hide();
+						alert('error occured');
+					},
+					success: function(data) {
+						$('#profile').show();
+						$('div#loaderprof').hide();
+						$('img#pic').attr('src', data.data.pic);
+						$('img#pic').attr('style', 'opacity:1;');
+					}
+				});
+			});
+            
         </script>
     </head>
     <body>
@@ -30,9 +54,9 @@
       <img src="<?php echo base_url('assets/img/backgrounds/bg.jpg');?>" id="bg-image" />
       <nav class="navbar navbar-inverse navbar-expand-lg navbar-dark bg-primary sticky-top">
         <ul class="navbar-nav mr-auto">
-          <!--<li class="nav-item">
+          <li class="nav-item">
             <a href="#menu-toggle" class="btn btn-light-outline nav-link" id="menu-toggle"><span class="fas fa-bars"></span></a>
-          </li>-->
+          </li>
           <li class="nav-item">
             <a class="navbar-brand" href="#">Online E-Query System</a>
           </li>
@@ -45,11 +69,27 @@
         <!-- Sidebar -->
         <div id="sidebar-wrapper">
           <ul class="sidebar-nav">
-              <li>
-                <div class="profile-userpic ">
-                  <img class="d-flex align-items-center" src="https://scontent.fceb1-1.fna.fbcdn.net/v/t1.0-9/37058989_2277003782315410_7144235440386605056_n.jpg?_nc_cat=111&_nc_ht=scontent.fceb1-1.fna&oh=9c091a921cdfb63f441e1659dfcf5c47&oe=5CFEB225" class="img-responsive" alt="">
-                </div>
-              </li>
+              	<li>
+                	<div class="profile-userpic">
+                  		<div class="profcon">
+						  	<div id="profile">
+                    			<img id="pic" class="d-flex align-items-center image" class="img-responsive" alt="" style="opacity:0.2;" src="<?php echo base_url('assets/img/profilepictures/avatarM.png')?>">
+                    			<div class="overlay" id="profile">
+                      				<button class="btn img-responsive" id="profile">Update</button>
+                    			</div>
+							</div>
+							<div id="loaderprof">
+								<div class="loaderprof">
+                        			<div class="loader disable-selection loaderprof" id="loader-4" style="width:200px;">
+                            			<span></span>
+                        		    	<span></span>
+                            			<span></span>
+									</div>
+                        		</div>
+                    		</div>
+                  		</div>
+                	</div>
+              	</li>
               <li>
                 <div class="d-flex align-items-center "><h6>Welcome, <?php 
                 if ($this->session->has_userdata('logged_in'))

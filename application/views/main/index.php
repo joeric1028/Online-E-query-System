@@ -7,7 +7,7 @@
                 else
                 {
                   echo 'Guest';
-                }?>!</h1>
-        <div> Welcome boi </div>
+                }
+                ?>!</h1>
     </div>
 </div>
