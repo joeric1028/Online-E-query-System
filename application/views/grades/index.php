@@ -8,6 +8,7 @@
     </div>
 </div>
 <!-- Teacher's Row -->
+<?php if($type == "Teacher" || $type == "Administrator"): ?>
 <div class="row"> 
     <div class="col-4">
         <div class="card">
@@ -27,9 +28,7 @@
                     </div>
                 </div>
             </div>
-            
             <div class="card-body">
-                
                 <ul class="list-group custom-list-group">
                     <li class="list-group-item">Jose Mari Chan</li>
                     <li class="list-group-item">Kyle Shem Kun</li>
@@ -111,6 +110,7 @@
         </div>
     </div>
 </div>
+<?php endif;?>
 
 <!-- Parent's Row -->
 <div class="row">

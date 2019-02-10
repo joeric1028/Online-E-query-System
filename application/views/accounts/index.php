@@ -7,34 +7,38 @@
         </div>
     </div>
 </div>
-<div class="row">
-  <div class="col-12">
-    <div class="card">
-      <div class="card-header">Select User</div>
-      <div class="card-body">
-        <table cellpadding="0" cellspacing="0" id="userTable">
-          <thead class="customTh">
-              <tr>
-                  <th>ID No.</th>
-                  <th>First name</th>
-                  <th>Middle name</th>
-                  <th>Last Name</th>
-                  <th>Grade</th>
-              </tr>
-          </thead>
-          <tbody class="customTd">
-          </tbody>
-        </table>
+<?php if($type == "Treasurer"): ?>
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">Select User</div>
+        <div class="card-body">
+          <table cellpadding="0" cellspacing="0" id="userTable">
+            <thead class="customTh">
+                <tr>
+                    <th>ID No.</th>
+                    <th>First name</th>
+                    <th>Middle name</th>
+                    <th>Last Name</th>
+                    <th>Grade</th>
+                </tr>
+            </thead>
+            <tbody class="customTd">
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </div>
-</div>
-<div class="row">
+  <?php endif;?>
+  <div class="row">
     <div class="col-4">
         <div class="card">
             <div class="card-header d-flex justify-content-between">
                 <span class="my-auto">Assessment</span>
-                <button class="btn btn-outline-success btn-sm" data-toggle="modal" data-target="#addAssessmentModal">Add Assessment</button>
+                <?php if($type == "Treasurer" || $type == "Administrator"): ?>
+                  <button class="btn btn-outline-success btn-sm" data-toggle="modal" data-target="#addAssessmentModal">Add Assessment</button>
+                <?php endif; ?>
             </div>
             <div class="card-body">
                 <table cellpadding="0" cellspacing="0" id="accountTable">
@@ -58,7 +62,9 @@
         <div class="card">
             <div class="card-header d-flex justify-content-between">
                 <span class="my-auto">Schedule of Payments</span>
-                <button class="btn btn-outline-success btn-sm" data-toggle="modal" data-target="#addScheduleModal">Add Schedule</button>
+                <?php if($type == "Treasurer" || $type == "Administrator"): ?>
+                  <button class="btn btn-outline-success btn-sm" data-toggle="modal" data-target="#addScheduleModal">Add Schedule</button>
+                <?php endif;?>
             </div>
             <div class="card-body">
                 <table cellpadding="0" cellspacing="0" id="accountTable">

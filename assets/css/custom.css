@@ -307,10 +307,10 @@ body {
 }
 #wrapper {
     padding-left: 0;
-    -webkit-transition: all 0.5s ease;
+    /* -webkit-transition: all 0.5s ease;
     -moz-transition: all 0.5s ease;
     -o-transition: all 0.5s ease;
-    transition: all 0.5s ease;
+    transition: all 0.5s ease; */
 }
 #wrapper.toggled {
     padding-left: 250px;
@@ -324,10 +324,10 @@ body {
     margin-left: -250px;
     overflow-y: auto;
     background: rgb(228, 228, 228);
-    -webkit-transition: all 0.5s ease;
+    /* -webkit-transition: all 0.5s ease;
     -moz-transition: all 0.5s ease;
     -o-transition: all 0.5s ease;
-    transition: all 0.5s ease;
+    transition: all 0.5s ease; */
 }
 #wrapper.toggled #sidebar-wrapper {
     width: 250px;

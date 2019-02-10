@@ -17,37 +17,6 @@
         <script type="text/javascript" charset="utf8" src="<?php echo base_url('assets/plugins/moment.js/moment.min.js');?>"></script>
         <script type="text/javascript" charset="utf8" src="<?php echo base_url('assets/plugins/daterangepicker/daterangepicker.js');?>"></script>
         <script type="text/javascript" src="<?php echo base_url('assets/js/bootstrap.min.js');?>"></script>
-        <script>
-            $("#menu-toggle").click(function(e) {
-                e.preventDefault();
-                $("#wrapper").toggleClass("toggled");
-            });
-
-			$(document).ready(function ()
-			{
-				$.ajax({
-					type: "GET",
-					url: "<?php echo site_url('api/get_pic');?>",
-					beforeSend: function() {
-						$('#profile').show();
-						$('div#loaderprof').show();
-						$('img#pic').attr('style', 'opacity:0.2;');
-					},
-					error: function() {
-						$('#profile').hide();
-						$('div#loaderprof').hide();
-						alert('error occured');
-					},
-					success: function(data) {
-						$('#profile').show();
-						$('div#loaderprof').hide();
-						$('img#pic').attr('src', data.data.pic);
-						$('img#pic').attr('style', 'opacity:1;');
-					}
-				});
-			});
-            
-        </script>
     </head>
     <body>
     
@@ -55,7 +24,7 @@
       <nav class="navbar navbar-inverse navbar-expand-lg navbar-dark bg-primary sticky-top">
         <ul class="navbar-nav mr-auto">
           <li class="nav-item">
-            <a href="#menu-toggle" class="btn btn-light-outline nav-link" id="menu-toggle"><span class="fas fa-bars"></span></a>
+            <a class="btn btn-light-outline nav-link" id="menu-toggle"><span class="fas fa-bars"></span></a>
           </li>
           <li class="nav-item">
             <a class="navbar-brand" href="#">Online E-Query System</a>
@@ -65,69 +34,72 @@
           <a class="navbar-brand" href="#">Butuan City Mission Academy</a>
         </div>
       </nav>
-      <div id="wrapper" class="toggled">
+      <div id="wrapper" class="">
         <!-- Sidebar -->
         <div id="sidebar-wrapper">
           <ul class="sidebar-nav">
-              	<li>
-                	<div class="profile-userpic">
-                  		<div class="profcon">
-						  	<div id="profile">
-                    			<img id="pic" class="d-flex align-items-center image" class="img-responsive" alt="" style="opacity:0.2;" src="<?php echo base_url('assets/img/profilepictures/avatarM.png')?>">
-                    			<div class="overlay" id="profile">
-                      				<button class="btn img-responsive" id="profile">Update</button>
-                    			</div>
-							</div>
-							<div id="loaderprof">
-								<div class="loaderprof">
-                        			<div class="loader disable-selection loaderprof" id="loader-4" style="width:200px;">
-                            			<span></span>
-                        		    	<span></span>
-                            			<span></span>
-									</div>
-                        		</div>
-                    		</div>
-                  		</div>
-                	</div>
-              	</li>
-              <li>
-                <div class="d-flex align-items-center "><h6>Welcome, <?php 
-                if ($this->session->has_userdata('logged_in'))
-                {
-                  echo $firstname;
-                }
-                else
-                {
-                  echo 'Guest';
-                } 
-                ?>!</h6></div>
+            <li>
+              <div class="profile-userpic">
+                  <div class="profcon">
+                    <div id="profile">
+                      <img id="pic" class="d-flex align-items-center image" class="img-responsive" alt="" style="opacity:0.2;" src="<?php echo base_url('assets/img/profilepictures/avatarM.png')?>">
+                      <div class="overlay" id="profile">
+                          <button class="btn img-responsive" id="profile">Update</button>
+                      </div>
+                    </div>
+                    <div id="loaderprof">
+                      <div class="loaderprof">
+                        <div class="loader disable-selection loaderprof" id="loader-4" style="width:200px;">
+                          <span></span>
+                          <span></span>
+                          <span></span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </li>
               <li>
+                <div class="d-flex align-items-center "><h6>Welcome, 
+                  <?php 
+                    if ($this->session->has_userdata('logged_in')){
+                      echo $firstname;
+                    } else {
+                      echo 'Guest';
+                    } 
+                  ?>!</h6></div>
+              </li>
+              <li id="dashboardLink">
                 <a <?php if($activePage === "dashboard"):?>class="active"<?php endif;?> href="<?php echo site_url('main')?>">
                   <i class="fas fa-home"></i> Home 
                 </a>
               </li>
-              <li>
-                <a <?php if($activePage === "users"):?>class="active"<?php endif;?> href="<?php echo site_url('users')?>">
-                  <i class="fas fa-users"></i> Manage Users  
-                </a>
-              </li>
-              <li>
-                <a <?php if($activePage === "students"):?>class="active"<?php endif;?> href="<?php echo site_url('students')?>">
-                  <i class="fas fa-user-graduate"></i> Manage Students  
-                </a>
-              </li>
-              <li>
-                <a <?php if($activePage === "accounts"):?>class="active"<?php endif;?> href="<?php echo site_url('accounts')?>">
-                  <i class="fas fa-briefcase"></i> Accounts
-                </a>
-              </li>
-              <li>
+              <?php if($type == "Administrator"): ?>
+                <li id="usersLink">
+                  <a <?php if($activePage === "users"):?>class="active"<?php endif;?> href="<?php echo site_url('users')?>">
+                    <i class="fas fa-users"></i> Manage Users  
+                  </a>
+                </li>
+              <?php endif; if($type != "Teacher"):?>
+                <li id="accountsLink">
+                  <a <?php if($activePage === "accounts"):?>class="active"<?php endif;?> href="<?php echo site_url('accounts')?>">
+                    <i class="fas fa-briefcase"></i> Accounts
+                  </a>
+                </li>
+              <?php endif; if($type == "Teacher" || $type == "Administrator"):?>
+                <li id="studentsLink">
+                  <a <?php if($activePage === "students"):?>class="active"<?php endif;?> href="<?php echo site_url('students')?>">
+                    <i class="fas fa-user-graduate"></i> Manage Classes  
+                  </a>
+                </li>
+              <?php endif; if($type != "Treasurer"):?>
+              <li id="gradesLink">
                 <a <?php if($activePage === "grades"):?>class="active"<?php endif;?> href="<?php echo site_url('grades')?>">
                   <i class="fas fa-list-ol"></i> Grades
                 </a>
               </li>
-              <li>
+              <?php endif;?>
+              <li id="calendarLink">
                 <a <?php if($activePage === "calendar"):?>class="active"<?php endif;?> href="<?php echo site_url('calendar')?>">
                   <i class="fas fa-calendar"></i> School Calendar
                 </a>
