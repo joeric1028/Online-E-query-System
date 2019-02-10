@@ -88,6 +88,10 @@
     
 } */
 
+.error {
+    display: none;
+}
+
 .fas {
     margin-right: 5px;
     left: 0px;

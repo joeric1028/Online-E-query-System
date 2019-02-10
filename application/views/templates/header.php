@@ -133,6 +133,11 @@
                 </a>
               </li>
               <li>
+                <a href=""  data-toggle="modal" data-target="#changePasswordModal">
+                  <i class="fas fa-key"></i> Change Password
+                </a>
+              </li>
+              <li>
                 <a href="<?php echo site_url('logout')?>">
                   <i class="fas fa-sign-out-alt"></i> Log Out
                 </a>
@@ -142,11 +147,11 @@
         </div>
         <!-- /#sidebar-wrapper -->
         <!-- Upload Profile Picture Modal -->
-        <div class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+        <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
           <div class="modal-dialog modal-sm modal-dialog-centered">
             <div class="modal-content">
               <div class="modal-header">  
-                <h5 class="modal-title" id="exampleModalLabel">Update Profile Picture</h5>
+                <h5 class="modal-title">Update Profile Picture</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
@@ -158,6 +163,40 @@
                     <input type="file" class="form-control-file" id="uploadPic">
                   </div>
                 </form>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Change Password Modal -->
+        <div id="changePasswordModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+              <div class="modal-header">  
+                <h5 class="modal-title" id="exampleModalLabel">Change Password</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <div class="form-group">
+                  <label class="form-label">Current Password</label>
+                  <input type="text" class="form-control" name="currentPassword" id="currentPassword">
+                  <label class="error text-danger" for="currentPassword" id="currentpassword_error">This field is required.</label>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">New Password</label>
+                  <input type="text" class="form-control" name="newPassword" id="newPassword">
+                  <label class="error text-danger" for="newPassword" id="newpassword_error">This field is required.</label>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Retype New Password</label>
+                  <input type="text" class="form-control" name="retypePassword" id="retypePassword">
+                  <label class="error text-danger" for="retypePassword" id="retypepassword_error">This field is required.</label>
+                </div>
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
