@@ -57,4 +57,10 @@ class Api extends CI_Controller {
         header("Content-Type: application/json; charset=UTF-8");
         $this->User_model->changepassword();
     }
+
+    public function changepic()
+    {
+        header("Content-Type: application/json; charset=UTF-8");
+        $this->User_model->changepic();
+    }
 }

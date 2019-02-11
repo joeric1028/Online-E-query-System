@@ -3,6 +3,11 @@ class ManageStudents extends CI_Controller {
 
     public function index()
     {
+        if(!is_https())
+        {
+            redirect('students', 'location', 301);
+        }
+
         if (!$this->session->has_userdata('logged_in'))
         {
             redirect('login');
