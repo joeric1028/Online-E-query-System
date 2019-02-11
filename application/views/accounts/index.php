@@ -7,7 +7,7 @@
         </div>
     </div>
 </div>
-<?php if($type == "Treasurer"): ?>
+<?php if($type == "Treasurer" || $type == "Administrator"): ?>
   <div class="row">
     <div class="col-12">
       <div class="card">
