@@ -21,7 +21,6 @@
         <script type="text/javascript" src="<?php echo base_url('assets/js/bootstrap.min.js');?>"></script>
     </head>
     <body>
-    
       <img src="<?php echo base_url('assets/img/backgrounds/bg.jpg');?>" id="bg-image" />
       <nav class="navbar navbar-inverse navbar-expand-lg navbar-dark bg-primary sticky-top">
         <ul class="navbar-nav mr-auto">
@@ -60,7 +59,7 @@
                     <div id="profile">
                       <img id="pic" class="d-flex align-items-center image" class="img-responsive" alt="" style="opacity:0.2;" src="<?php echo base_url('assets/img/profilepictures/avatarM.png')?>">
                       <div class="overlay" id="profile">
-                          <button class="btn img-responsive" id="profile">Update</button>
+                          <button class="btn img-responsive" data-toggle="modal" data-target="#UploadProfilePictureModal" id="profile">Update</button>
                       </div>
                     </div>
                     <div id="loaderprof">
@@ -135,7 +134,7 @@
         </div>
         <!-- /#sidebar-wrapper -->
         <!-- Upload Profile Picture Modal -->
-        <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+        <div id="UploadProfilePictureModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
           <div class="modal-dialog modal-sm modal-dialog-centered">
             <div class="modal-content">
               <div class="modal-header">  
@@ -145,17 +144,19 @@
                 </button>
               </div>
               <div class="modal-body">
-                <form>
+              <form action="" id="profilesubmit" enctype="multipart/form-data" method="post" accept-charset="utf-8">
                   <div class="form-group">
                     <label for="uploadPic">Upload Picture</label>
-                    <input type="file" class="form-control-file" id="uploadPic">
+                    <input type="file" class="form-control-file" id="image_file" name="file" size="20">
                   </div>
-                </form>
               </div>
               <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
+                <label class="error form-label text-success" id="profilestatussuccess"></label>
+	              <label class="error form-label text-danger" id="profilestatuserror"></label>
+                <input type="submit" class="btn btn-primary" id="submitprofile" value="Upload">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" id="closeprofile">Close</button>
               </div>
+              </form>
             </div>
           </div>
         </div>

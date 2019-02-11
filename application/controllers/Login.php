@@ -3,6 +3,11 @@ class Login extends CI_Controller
 {
     public function index()
     {
+        if(!is_https())
+        {
+            redirect('login', 'location', 301);
+        }
+
         $data['status'] = '';
         $data['errorstatus'] = '';
         $data['title'] = 'Login';

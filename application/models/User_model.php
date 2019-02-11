@@ -20,13 +20,14 @@ class User_model extends CI_Model {
 			if ($data['idnumber'] == $row->idnumber && password_verify($data['password'], $row->password))
 			{
 				$newdata = array(
-					'idnumber'  => $row->idnumber,
-					'id'     => $row->id,
-					'type'     => $row->type,
+					'idnumber'  	=> $row->idnumber,
+					'id'     		=> $row->id,
+					'type'     		=> $row->type,
 					'firstname'     => $row->firstname,
-					'middlename'     => $row->middlename,
-					'lastname'     => $row->lastname,
-					'sex'     => $row->sex,
+					'middlename'    => $row->middlename,
+					'lastname'     	=> $row->lastname,
+					'sex'     		=> $row->sex,
+					'pic' 			=> $row->pic,
 					'logged_in' => TRUE
 				);	
 			
@@ -232,6 +233,57 @@ class User_model extends CI_Model {
 			$successMessage = "Deleting user account has been successful.";
 			$error = array('success' => $successMessage);
 			echo json_encode($error);
+		}
+	}
+
+	public function changepic() 
+	{
+		$config = array(
+			'upload_path' 		=>	'./uploads/',
+			'allowed_types' 	=>	'gif|jpg|png|jpeg',
+			'file_ext_tolower'	=>	true,
+			'overwrite'			=>	true,
+			'max_size' 			=>	100,
+			'max_width' 		=>	1024,
+			'max_height' 		=>	1024,
+			'encrypt_name'		=>	true
+		);
+		
+		$this->upload->initialize($config);
+		
+		if ( ! $this->upload->do_upload('file'))
+        {
+			$error = array('error' => $this->upload->display_errors());
+			echo json_encode($error);
+        }
+        else    
+        {
+			$img = $this->upload->data();
+			$data = array('pic' => $img['file_name']);
+
+			$query = $this->db->get_where('users', array('idnumber' => $this->session->idnumber, 'id' => $this->session->id));
+
+			$filepath = base_url('uploads/'.$query->first_row()->pic);
+	
+			$query = $this->db->update('users', $data, array('idnumber' => $this->session->idnumber, 'id' => $this->session->id));
+	
+			if ($query == false)
+			{
+				$error = array(
+					'error' => 'Processing photo failed.'
+				);
+				
+				echo json_encode($error);
+			}
+			else
+			{
+				$this->session->set_userdata($data);
+				$data = array(
+					'success' => 'Updating photo is successful.'
+				);
+
+				echo json_encode($data);
+			}
 		}
 	}
 }

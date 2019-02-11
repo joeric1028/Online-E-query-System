@@ -3,6 +3,11 @@ class SchoolCalendar extends CI_Controller {
 
     public function index()
     {
+        if(!is_https())
+        {
+            redirect('calendar', 'location', 301);
+        }
+
         if (!$this->session->has_userdata('logged_in'))
         {
             redirect('login');

@@ -71,11 +71,11 @@
           <div class="form-label">Gender</div>
           <div class="custom-controls-stacked">
             <label class="custom-control custom-radio custom-control-inline">
-              <input type="radio" class="custom-control-input" name="gender" id="gender" value="Male" checked="">
+              <input type="radio" class="custom-control-input" name="gender" value="Male" checked="">
               <span class="custom-control-label">Male</span>
             </label>
             <label class="custom-control custom-radio custom-control-inline">
-              <input type="radio" class="custom-control-input" name="gender" id="gender" value="Female">
+              <input type="radio" class="custom-control-input" name="gender" value="Female">
               <span class="custom-control-label">Female</span>
             </label>
           </div>
@@ -260,9 +260,9 @@
 			var formData = {
         	    'firstname'      : firstname,
         	    'middlename'     : middlename,
-				'lastname'       : lastname,
-				'sex'            : $("input#gender").val(),
-				'type'           : $("select#type").val(),
+							'lastname'       : lastname,
+							'sex'            : $("input[type=radio][name=gender]:checked").val(),
+							'type'           : $("select#type").val(),
     	        'idnumber'       : idnumber
         	};
       
