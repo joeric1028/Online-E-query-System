@@ -33,4 +33,3 @@ user_guide_src/cilexer/pycilexer.egg-info/*
 /tests/tests/
 /tests/results/
 .vscode/ftp-sync.json
-application/config/config.php

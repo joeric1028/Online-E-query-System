@@ -4,13 +4,12 @@ class Subjects_model extends CI_Model {
 	public function __construct()
 	{
 		$this->load->database();
-    }
+  	}
     
     public function get_subjects()
 	{
-	
-        $query = $this->db->get('subjects');
-		echo json_encode($query);
+		$query = $this->db->get('subjects');
+		echo json_encode($query->result());
 
 	}
     	/*

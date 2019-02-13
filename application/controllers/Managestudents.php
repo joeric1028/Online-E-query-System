@@ -1,12 +1,5 @@
 <?php
 class ManageStudents extends CI_Controller {
-    
-    public function __construct()
-    {
-        parent::__construct();
-        $this->load->model('Subjects_model');
-    }
-
     public function index()
     {
         if(!is_https())
