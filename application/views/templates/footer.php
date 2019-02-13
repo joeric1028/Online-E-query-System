@@ -13,6 +13,29 @@
         $(document).ready(function () {
             var USER_TYPE = "<?php if ($this->session->has_userdata('logged_in'))echo $type?>";
 
+            function showProfilePic() {
+                $.ajax({
+                type: "GET",
+                    url: "<?php echo site_url('api/get_pic');?>",
+                    beforeSend: function() {
+                        $('#profile').show();
+                        $('div#loaderprof').show();
+                        $('img#pic').attr('style', 'opacity:0.2;');
+                    },
+                    error: function() {
+                        $('#profile').hide();
+                        $('div#loaderprof').hide();
+                        //alert('error occured');
+                    },
+                    success: function(data) {
+                        $('img#pic').attr('src', data.data.pic);
+                        $('div#loaderprof').hide();
+                        $('img#pic').attr('style', 'opacity:1;');
+                        $('#profile').show();
+                    }
+            });
+            }
+
             $("a#menu-toggle").click(function() {
               $("div#wrapper").toggleClass("toggled");
             });
@@ -30,29 +53,10 @@
             $('button#profile').click(function () {
                 $('.error').hide();
 
-                $('input#uploadPic').val('');
+                $('input#image_file').val('');
             });
 
-            $.ajax({
-                type: "GET",
-                    url: "<?php echo site_url('api/get_pic');?>",
-                    beforeSend: function() {
-                        $('#profile').show();
-                        $('div#loaderprof').show();
-                        $('img#pic').attr('style', 'opacity:0.2;');
-                    },
-                    error: function() {
-                        $('#profile').hide();
-                        $('div#loaderprof').hide();
-                        //alert('error occured');
-                    },
-                    success: function(data) {
-                        $('#profile').show();
-                        $('div#loaderprof').hide();
-                        $('img#pic').attr('src', data.data.pic);
-                        $('img#pic').attr('style', 'opacity:1;');
-                    }
-            });
+            showProfilePic();
 
             //Change password
             $('button#submitpassword').click(function (event) {
@@ -104,7 +108,6 @@
                         {
                             $("label#changepasswordstatussuccess").show();
                             $("label#changepasswordstatussuccess").text(data.success);
-                            $
                         }
                         else
                         {
@@ -161,26 +164,7 @@
                         {
                             $("label#profilestatussuccess").show();
                             $("label#profilestatussuccess").html(data.success);
-                            $.ajax({
-                                type: "GET",
-                                url: "<?php echo site_url('api/get_pic');?>",
-                                beforeSend: function() {
-                                    $('#profile').show();
-                                    $('div#loaderprof').show();
-                                    $('img#pic').attr('style', 'opacity:0.2;');
-                                },
-                                error: function() {
-                                    $('#profile').hide();
-                                    $('div#loaderprof').hide();
-                                    //alert('error occured');
-                                },
-                                success: function(data) {
-                                    $('#profile').show();
-                                    $('div#loaderprof').hide();
-                                    $('img#pic').attr('src', data.data.pic);
-                                    $('img#pic').attr('style', 'opacity:1;');
-                                }
-                            });
+                            showProfilePic();
                         }
                         else
                         {

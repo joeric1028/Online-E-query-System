@@ -57,7 +57,12 @@
               <div class="profile-userpic">
                   <div class="profcon">
                     <div id="profile">
-                      <img id="pic" class="d-flex align-items-center image" class="img-responsive" alt="" style="opacity:0.2;" src="<?php echo base_url('assets/img/profilepictures/avatarM.png')?>">
+                      <img id="pic" class="d-flex align-items-center image" class="img-responsive" alt="" style="opacity:0.2;" src="<?php 
+                      if ($this->session->sex == 'Male') {
+                        echo base_url('assets/img/profilepictures/avatarM.png');
+                      } else {
+                        echo base_url('assets/img/profilepictures/avatarF.png');
+                      }?>">
                       <div class="overlay" id="profile">
                           <button class="btn img-responsive" data-toggle="modal" data-target="#UploadProfilePictureModal" id="profile">Update</button>
                       </div>
@@ -77,8 +82,12 @@
               <li>
                 <div class="d-flex align-items-center "><h6>Welcome, 
                   <?php 
-                    if ($this->session->has_userdata('logged_in')){
-                      echo $firstname;
+                    if ($this->session->has_userdata('logged_in')) {
+                      if ($this->session->sex == 'Male') {
+                        echo 'Mr. ' . $firstname;
+                      } else {
+                        echo 'Ms. ' . $firstname;
+                      }
                     } else {
                       echo 'Guest';
                     } 
