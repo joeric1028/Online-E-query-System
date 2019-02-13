@@ -1,11 +1,5 @@
 <?php
 class ManageStudents extends CI_Controller {
-    
-    public function __construct()
-    {
-        parent::__construct();
-        $this->load->model('Subjects_model');
-    }
 
     public function index()
     {
@@ -41,6 +35,11 @@ class ManageStudents extends CI_Controller {
     {
         header("Content-Type: application/json; charset=UTF-8");
         $this->Subjects_model->get_subjects();
+    }
+
+    public function getsubjectsperlevel($gradelevel) {
+        header("Content-Type: application/json; charset=UTF-8");
+        $this->Subjects_model->get_subjectsperlevel($gradelevel);
     }
 
 }

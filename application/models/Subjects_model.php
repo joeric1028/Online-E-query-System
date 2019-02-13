@@ -4,13 +4,21 @@ class Subjects_model extends CI_Model {
 	public function __construct()
 	{
 		$this->load->database();
-    }
+  }
     
-    public function get_subjects()
+  public function get_subjects()
+	{
+
+		$query = $this->db->get('subjects');
+		echo json_encode($query->result());
+
+  }
+    
+  public function get_subjectsperlevel($gradelevel)
 	{
 	
-        $query = $this->db->get('subjects');
-		echo json_encode($query);
+    $query = $this->db->get_where('subjects',array('gradelevel' => $gradelevel));
+		echo json_encode($query->result());
 
 	}
     	/*

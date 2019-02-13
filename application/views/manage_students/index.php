@@ -29,7 +29,7 @@
                 <button class="btn btn-outline-success btn-sm" type="button" id="addSubjectBtn" disabled data-toggle="modal" data-target="#addSubjectModal">Add Subject</button>    
             </div>
             <div class="card-body">
-                <ul class="list-group custom-list-group">
+                <ul id="subjectList" class="list-group custom-list-group">
                     <li class="list-group-item">
                         Filipino
                         <button type="button" class="close custom-close" aria-label="Close">
@@ -184,6 +184,24 @@
 
 <script>
   $(document).ready(function () {
+    $.ajax({
+      url: '<?php echo site_url('subjects/view');?>',
+      dataType: 'json',
+      success: function(data) {
+        $('#subjectsList').html("");
+        console.log(data);
+        
+        for(var c=0; c < data.length)
+          var subjectListItemTemplate = '<li class="list-group-item">'
+                                        + data.subject
+                                        + '<button type="button" class="close custom-close" aria-label="Close">'
+                                        + '<span aria-hidden="true">&times;</span>'
+                                        + '</button>'
+                                      + '</li>';
+          $('#subjectsList').append(subjectListItemTemplate);
+      }
+    });
+
     $('.error').hide();
     $('#addSubjectModal').on('shown.bs.modal', function () {
         $('#subjectname').trigger('focus')
