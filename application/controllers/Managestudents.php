@@ -1,5 +1,11 @@
 <?php
 class ManageStudents extends CI_Controller {
+    
+    public function __construct()
+    {
+        parent::__construct();
+        $this->load->model('Subjects_model');
+    }
 
     public function index()
     {
@@ -29,6 +35,12 @@ class ManageStudents extends CI_Controller {
         $this->load->view('templates/header', $data);
         $this->load->view('manage_students/index', $data);
         $this->load->view('templates/footer');
+    }
+    
+    public function getsubjects()
+    {
+        header("Content-Type: application/json; charset=UTF-8");
+        $this->Subjects_model->get_subjects();
     }
 
 }

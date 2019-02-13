@@ -55,27 +55,36 @@ $route['main'] = 'main';
 $route['login'] = 'login';
 $route['logout'] = 'api/logout';
 
+// Manage Users
 $route['users'] = 'manageusers';
 $route['users/create'] = 'manageusers/createuser';
 $route['users/delete'] = 'manageusers/deleteuser';
 
+// Manage Students
 $route['students'] = 'managestudents';
+$route['subjects/view'] = 'managestudents/getsubjects';
+$route['subjects/create'] = 'managestudents/createsubject';
+$route['subjects/delete'] = 'managestudents/deletsubject';
 
+// Accounts
 $route['accounts'] = 'accounts';
 
+// Grades
 $route['grades'] = 'grades';
 $route['grades/view'] = 'grades/getgrades';
 
+// School Calendar
 $route['calendar'] = 'schoolcalendar';
 $route['calendar/create'] = 'schoolcalendar/createevent';
 $route['calendar/upcoming'] = 'schoolcalendar/upcomingevent';
 $route['calendar/school'] = 'schoolcalendar/schoolevent';
 
+// News
 $route['news/(:any)'] = 'news/view/$1';
 $route['news'] = 'news';
 $route['welcome'] = 'welcome';
-$route['(:any)'] = 'pages/view/$1';
 
+$route['(:any)'] = 'pages/view/$1';
 $route['api/(:any)'] = 'api/$1';
 
 $route['404_override'] = '';

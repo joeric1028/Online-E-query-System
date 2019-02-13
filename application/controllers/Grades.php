@@ -36,4 +36,5 @@ class Grades extends CI_Controller {
         header("Content-Type: application/json; charset=UTF-8");
         $this->Grades_model->read_grades();
     }
+
 }
