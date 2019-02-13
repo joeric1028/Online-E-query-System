@@ -104,6 +104,7 @@
                         {
                             $("label#changepasswordstatussuccess").show();
                             $("label#changepasswordstatussuccess").text(data.success);
+                            $
                         }
                         else
                         {
@@ -160,6 +161,26 @@
                         {
                             $("label#profilestatussuccess").show();
                             $("label#profilestatussuccess").html(data.success);
+                            $.ajax({
+                                type: "GET",
+                                url: "<?php echo site_url('api/get_pic');?>",
+                                beforeSend: function() {
+                                    $('#profile').show();
+                                    $('div#loaderprof').show();
+                                    $('img#pic').attr('style', 'opacity:0.2;');
+                                },
+                                error: function() {
+                                    $('#profile').hide();
+                                    $('div#loaderprof').hide();
+                                    //alert('error occured');
+                                },
+                                success: function(data) {
+                                    $('#profile').show();
+                                    $('div#loaderprof').hide();
+                                    $('img#pic').attr('src', data.data.pic);
+                                    $('img#pic').attr('style', 'opacity:1;');
+                                }
+                            });
                         }
                         else
                         {
