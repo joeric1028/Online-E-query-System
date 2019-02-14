@@ -80,12 +80,9 @@ $route['calendar/create'] = 'schoolcalendar/createevent';
 $route['calendar/upcoming'] = 'schoolcalendar/upcomingevent';
 $route['calendar/school'] = 'schoolcalendar/schoolevent';
 
-// News
-$route['news/(:any)'] = 'news/view/$1';
-$route['news'] = 'news';
+// Under Construction
 $route['welcome'] = 'welcome';
 
-$route['(:any)'] = 'pages/view/$1';
 $route['api/(:any)'] = 'api/$1';
 
 $route['404_override'] = '';

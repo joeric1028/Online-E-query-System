@@ -35,7 +35,13 @@
                   ?>"><span class="fas fa-bars"></span></a>
           </li>
           <li class="nav-item">
-            <a class="navbar-brand" href="#">Online E-Query System</a>
+            <a class="navbar-brand" href="#">Online E-Query System <?php
+              if ($this->session->has_userdata('logged_in')){
+                echo '- ' . $this->session->type;
+              } else {
+                echo '';
+              } 
+            ?></a>
           </li>
         </ul>
         <div class="nav-item my-2 my-lg-0">
