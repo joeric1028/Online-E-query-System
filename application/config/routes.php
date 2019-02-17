@@ -79,6 +79,7 @@ $route['calendar'] = 'schoolcalendar';
 $route['calendar/create'] = 'schoolcalendar/createevent';
 $route['calendar/upcoming'] = 'schoolcalendar/upcomingevent';
 $route['calendar/school'] = 'schoolcalendar/schoolevent';
+$route['calendar/export'] = 'schoolcalendar/exportevent';
 
 // Under Construction
 $route['welcome'] = 'welcome';

@@ -48,4 +48,9 @@ class SchoolCalendar extends CI_Controller {
         header("Content-Type: application/json; charset=UTF-8");
         $this->News_model->create_event();
     }
+
+    public function exportevent()
+    {
+        $this->load->view('school_calendar/exportpdf');
+    }
 }
