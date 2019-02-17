@@ -61,8 +61,8 @@
 		),
 		'login' => array(
 			array(
-				'field' => 'username',
-				'label' => 'Username',
+				'field' => 'idnumber',
+				'label' => 'ID Number',
 				'rules' => 'required'
 					),
 					array(

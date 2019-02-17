@@ -11,7 +11,13 @@
     </head>
     <body>
         <div class="container">
-            <h2>Northemtern Mindanao Mission EDUCATION DEPARTMENT Km.3 Ba-an, Butuan City</h2>
+            <div class="row">
+                <center><h2>Northemtern Mindanao Mission<br>EDUCATION DEPARTMENT<br>Km.3 Ba-an, Butuan City</h2></center>
+            <div>
+            <div class="row">
+                <div class="col-xl">test</div>
+                <div class="col-xl">test</div>
+            </div>
         </div>
     </body>
 

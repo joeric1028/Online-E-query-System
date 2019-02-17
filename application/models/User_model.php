@@ -9,7 +9,7 @@ class User_model extends CI_Model {
 	public function authenticate_user()
 	{
     	$data = array(
-        	'idnumber' => $this->input->post('username'),
+        	'idnumber' => $this->input->post('idnumber'),
         	'password' => $this->input->post('password')
 		);
 		
