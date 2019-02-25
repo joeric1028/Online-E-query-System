@@ -212,21 +212,14 @@
 				success: function(data) {
                     $('table#calendarTable').show();
                     $('#loaderschoolevent').hide();
-					if (data.error != undefined)
-					{
+					if (data.error != undefined) {
                         var error = $('<div class="container"></div>').text(data.error);
                         $("table#calendarTable").append(error);
-					} 
-                    else
-					{
-                        if(data.warning != undefined)
-                        {
-                            alert('test warning');
+					} else {
+                        if (data.warning != undefined) {
                             var error = $('<div class="container"></div>').text(data.warning);
                             $("table#calendarTable").append(error);
-                        }
-                        else
-                        {
+                        } else {
                             var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
                             var table = $("table#calendarTable");
@@ -240,8 +233,7 @@
                             thead.append(th1,th2);
                             table.append(thead);
                             
-                            for (var i = 0; i < data.data.schoolactivities.length; i++)
-                            {
+                            for (var i = 0; i < data.data.schoolactivities.length; i++) {
                                 var getstartmonthday = new Date(data.data.schoolactivities[i].startdate);
                                 var getendmonthday = new Date(data.data.schoolactivities[i].enddate);
 

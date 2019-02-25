@@ -22,7 +22,7 @@ class Grades extends CI_Controller {
             'lastname'     => $this->session->lastname,
             'sex'     => $this->session->sex,
             'logged_in' => $this->session->logged_in,
-            'title' =>  'Welcome to E-Query System!',
+            'title' =>  'Grades',
             'activePage' => 'grades'
         );
 

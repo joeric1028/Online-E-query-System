@@ -3,27 +3,25 @@ class SchoolCalendar extends CI_Controller {
 
     public function index()
     {
-        if(!is_https())
-        {
+        if (!is_https()) {
             redirect('calendar', 'location', 301);
         }
 
-        if (!$this->session->has_userdata('logged_in'))
-        {
+        if (!$this->session->has_userdata('logged_in')) {
             redirect('login');
         }
 
         $data = array(
-            'idnumber'  => $this->session->idnumber,
-            'id'     => $this->session->id,
-            'type'     => $this->session->type,
-            'firstname'     => $this->session->firstname,
-            'middlename'     => $this->session->middlename,
-            'lastname'     => $this->session->lastname,
-            'sex'     => $this->session->sex,
-            'logged_in' => $this->session->logged_in,
-            'title' =>  'Welcome to E-Query System!',
-            'activePage' => 'calendar'
+            'idnumber'      =>  $this->session->idnumber,
+            'id'            =>  $this->session->id,
+            'type'          =>  $this->session->type,
+            'firstname'     =>  $this->session->firstname,
+            'middlename'    =>  $this->session->middlename,
+            'lastname'      =>  $this->session->lastname,
+            'sex'           =>  $this->session->sex,
+            'logged_in'     =>  $this->session->logged_in,
+            'title'         =>  'School Calendar',
+            'activePage'    =>  'calendar'
         );
 
         $this->load->view('templates/header', $data);
@@ -51,6 +49,7 @@ class SchoolCalendar extends CI_Controller {
 
     public function exportevent()
     {
+        header("Content-Type: application/pdf; charset=UTF-8;");
         $this->load->view('school_calendar/exportpdf');
     }
 }

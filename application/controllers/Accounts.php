@@ -3,13 +3,11 @@ class Accounts extends CI_Controller
 {
     public function index()
     {
-        if(!is_https())
-        {
+        if(!is_https()) {
             redirect('accounts', 'location', 301);
         }
 
-        if (!$this->session->has_userdata('logged_in'))
-        {
+        if (!$this->session->has_userdata('logged_in')) {
             redirect('login');
         }
 
@@ -22,7 +20,7 @@ class Accounts extends CI_Controller
             'lastname'     => $this->session->lastname,
             'sex'     => $this->session->sex,
             'logged_in' => $this->session->logged_in,
-            'title' =>  'Welcome to E-Query System!',
+            'title' =>  'Accounts',
             'activePage' => 'accounts'
         );
 
@@ -32,8 +30,7 @@ class Accounts extends CI_Controller
     }
 
     /* Subjects */
-    public function getaccounts()
-    {
+    public function getaccounts() {
         header("Content-Type: application/json; charset=UTF-8");
         $this->Subjects_model->get_accounts();
     }
