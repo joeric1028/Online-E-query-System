@@ -6,14 +6,46 @@ class Student_model extends CI_Model {
 		$this->load->database();
 	}
 	
-	public function get_student($slug = FALSE)
+	public function get_students()
 	{
-		if ($slug === FALSE)
+	
+		$query = $this->db->get('student');
+		echo json_encode($query->result());
+
+	}
+    
+	public function get_studentsbylevel($gradelevel)
+	{
+	
+		$query = $this->db->get_where('student',array('gradelevel' => $gradelevel));
+		echo json_encode($query->result());
+
+	}
+    	
+	public function create_student()
+	{
+		$data = array(
+        	'firstname' => $this->input->post('firstName'),
+			'middlename' => $this->input->post('middleName'),
+			'lastname' => $this->input->post('firstName'),
+			'gender' => $this->input->post('gender'),
+			'gradelevel' => $this->input->post('gradeLevel'),
+			//'parent_id' => $this->input->post('parentId'),
+		);
+		
+		$query = $this->db->insert('student', $data);
+		$newSubject = $this->db->insert_id();
+
+		if ($query == false)
 		{
-			$query = $this->db->get('student');
-			return $query->result_array();
+			$errorMessage = "Unable to proceed. Can't add student";
+			$error = array('error' => $errorMessage);
+			echo json_encode($error);
 		}
-		$query = $this->db->get_where('student', array('slug' => $slug));
-		return $query->row_array();
+		else {
+			$query = $this->db->get_where('student',array('gradelevel' => $this->input->post('gradeLevel')));
+			echo json_encode($query->result());
+
+		}
 	}
 }

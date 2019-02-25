@@ -1,31 +1,44 @@
 <div class="row">
     <div class="col-12">
         <div class="card">
-            <div class="card-body">
-                <h2>Accounts</h2>
+            <div class="card-body d-flex justify-content-between">
+              <h2> Manage Accounts </h2>
+              <span class="my-auto">
+                <?php if($type == "Treasurer" || $type == "Administrator"): ?>
+                  <button class="btn btn-primary" data-toggle="modal" data-target="#manageAssessmentItemsModal">Manage Assessments</button>
+                <?php endif;?>
+              </span>
             </div>
         </div>
     </div>
 </div>
 <?php if($type == "Treasurer" || $type == "Administrator"): ?>
   <div class="row">
-    <div class="col-12">
-      <div class="card">
-        <div class="card-header">Select User</div>
-        <div class="card-body">
-          <table cellpadding="0" cellspacing="0" id="userTable">
-            <thead class="customTh">
-                <tr>
-                    <th>ID No.</th>
-                    <th>First name</th>
-                    <th>Middle name</th>
-                    <th>Last Name</th>
-                    <th>Grade</th>
-                </tr>
-            </thead>
-            <tbody class="customTd">
-            </tbody>
-          </table>
+    <div class="accordion">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-header" id="headingOne">
+            <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+              Select User
+            </button>
+          </div>
+          <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+            <div class="card-body">
+              <table cellpadding="0" cellspacing="0" id="userTable">
+                <thead class="customTh">
+                    <tr>
+                        <th>ID No.</th>
+                        <th>First name</th>
+                        <th>Middle name</th>
+                        <th>Last Name</th>
+                        <th>Grade</th>
+                    </tr>
+                </thead>
+                <tbody class="customTd">
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -88,6 +101,56 @@
             </div>
         </div>
     </div>
+</div>
+
+<!-- ASSESSMENT ITEMS MODAL -->
+<div id="manageAssessmentItemsModal" class="modal fade" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+    <form name="manageassessmentform" id="manageAssessmentItemsForm" action="" method="post">
+      <div class="modal-header">
+        <h5 class="modal-title">Manage Assessment Items</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <ul class="list-group">
+          <li class="list-group-item d-flex justify-content-between">
+            <span>Computer Laboratory</span>
+            <button class="btn btn-link btn-sm text-danger">Remove</button>
+          </li>
+          <li class="list-group-item d-flex justify-content-between">
+            <span>Entrance Fee</span>
+            <button class="btn btn-link btn-sm text-danger">Remove</button>
+          </li>
+          <li class="list-group-item d-flex justify-content-between">
+            <span>Tuition Fee</span>
+            <button class="btn btn-link btn-sm text-danger">Remove</button>
+          </li>
+          <li class="list-group-item d-flex justify-content-between">
+            <span>Books</span>
+            <button class="btn btn-link btn-sm text-danger">Remove</button>
+          </li>
+          <li class="list-group-item d-flex justify-content-between">
+            <span>Seniors' Project</span>
+            <button class="btn btn-link btn-sm text-danger">Remove</button>
+          </li>
+          <li class="list-group-item d-flex justify-content-between">
+            <span>Old Balance</span>
+            <button class="btn btn-link btn-sm text-danger">Remove</button>
+          </li>
+        </ul>
+      </div>
+      <div class="modal-footer">
+        <label class="error form-label text-success" id="statussuccess"></label>
+        <label class="error form-label text-danger" id="statuserror"></label>
+        <button type="submit" class="btn btn-primary" id="saveAssessmentItems">Save</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" id="cancelAssessmentItems">Cancel</button>
+      </div>
+      </form>
+    </div>
+  </div>
 </div>
 
 <!-- ASSESSMENT MODAL -->

@@ -30,4 +30,22 @@ class Accounts extends CI_Controller
         $this->load->view('accounts/index', $data);
         $this->load->view('templates/footer');
     }
+
+    /* Subjects */
+    public function getaccounts()
+    {
+        header("Content-Type: application/json; charset=UTF-8");
+        $this->Subjects_model->get_accounts();
+    }
+
+    public function getsubjectsbylevel($gradelevel) {
+        header("Content-Type: application/json; charset=UTF-8");
+        $this->Subjects_model->get_subjectsbylevel($gradelevel);
+    }
+
+    public function createsubject() {
+        header("Content-Type: application/json; charset=UTF-8");
+        $this->Subjects_model->create_subject();
+    }
+    /* Subjects */
 }

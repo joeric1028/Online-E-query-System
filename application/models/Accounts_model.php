@@ -1,12 +1,12 @@
 <?php
-class Subjects_model extends CI_Model {
+class Accounts_model extends CI_Model {
 	
 	public function __construct()
 	{
 		$this->load->database();
   }
     
-  public function get_subjects()
+  public function get_accounts()
 	{
 
 		$query = $this->db->get('subjects');
@@ -14,22 +14,22 @@ class Subjects_model extends CI_Model {
 
   }
     
-  public function get_subjectsbylevel($gradelevel)
+  public function get_accountbystudent($studentId)
 	{
 	
-    $query = $this->db->get_where('subjects',array('gradelevel' => $gradelevel));
+    $query = $this->db->get_where('subjects',array('student_id' => $studentId));
 		echo json_encode($query->result());
 
 	}
     	
-	public function create_subject()
+	public function create_assessment()
 	{
 		$data = array(
-        	'subject' => $this->input->post('subjectName'),
+        	'item' => $this->input->post('assessmentName'),
         	'gradelevel' => $this->input->post('gradeLevel')
 		);
 		
-		$query = $this->db->insert('subjects', $data);
+		$query = $this->db->insert('accounts', $data);
 		$newSubject = $this->db->insert_id();
 
 		if ($query == false)

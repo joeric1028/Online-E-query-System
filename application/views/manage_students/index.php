@@ -4,7 +4,7 @@
             <div class="card-body d-flex justify-content-between">
                 <h2>Manage Students</h2>
                 <div class="dropdown">
-                    <button class="btn btn-primary dropdown-toggle" type="button" id="sectionDropdownBtn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" value="All Levels">
+                    <button class="btn btn-primary btn-lg dropdown-toggle" type="button" id="sectionDropdownBtn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" value="All Levels">
                         All Levels
                     </button>
                     <div class="dropdown-menu" aria-labelledby="sectionDropdownBtn">
@@ -26,28 +26,11 @@
         <div class="card" id="subjectCard">
             <div class="card-header d-flex justify-content-between">
                 <span>Subjects</span>
-                <button class="btn btn-outline-success btn-sm" type="button" id="addSubjectBtn" disabled data-toggle="modal" data-target="#addSubjectModal">Add Subject</button>    
+                <button class="btn btn-outline-success btn-sm" type="button" id="addSubjectBtn" data-toggle="modal" data-target="#addSubjectModal">Add Subject</button>    
             </div>
             <div class="card-body">
                 <ul id="subjectList" class="list-group custom-list-group">
-                    <li class="list-group-item">
-                        Filipino
-                        <button type="button" class="close custom-close" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </li>
-                    <li class="list-group-item">
-                        English
-                        <button type="button" class="close custom-close" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </li>
-                    <li class="list-group-item">
-                        Mathematics
-                        <button type="button" class="close custom-close" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </li>
+         
                 </ul>
             </div>
         </div>
@@ -60,19 +43,14 @@
             </div>
             
             <div class="card-body">
-                <table cellpadding="0" cellspacing="0" id="userTable">
+                <table cellpadding="0" cellspacing="0" id="studentTable">
                     <thead class="customTh">
                         <tr>
                             <th style="width: 20%">ID No.</th>
                             <th style="width: 80%">Full Name</th>
                         </tr>
                     </thead>
-                    <tbody class="customTd">
-                        <tr>
-                            <td>12345</td>
-                            <td>Jose Protacio Mercado Y Alonso Rizal</td> 
-                        </tr>
-                    </tbody>
+                    <tbody class="customTd"></tbody>
                 </table>
             </div>
         </div>
@@ -95,12 +73,24 @@
           <input type="text" class="form-control" name="subjectname" id="subjectname">
           <label class="error text-danger" for="subjectname" id="subjectname_error">This field is required.</label>
         </div>
+        <div class="form-group">
+          <label class="form-label">Grade Level</label>
+            <select class="form-control custom-select" name="type" id="subjectGradeLevel">
+                <option value="1">Grade 1</option>
+                <option value="2">Grade 2</option>
+                <option value="3">Grade 3</option>
+                <option value="4">Grade 4</option>
+                <option value="5">Grade 5</option>
+                <option value="6">Grade 6</option>
+            </select>
+        </div>
       </div>
+      
       <div class="modal-footer">
-	  <label class="error form-label text-success" id="statussuccess"></label>
-      <label class="error form-label text-danger" id="statuserror"></label>
-      <button type="submit" class="btn btn-primary" id="addevent">Add</button>
-      <button type="button" class="btn btn-secondary" data-dismiss="modal" id="addsubjectclose">Cancel</button>
+        <label class="error form-label text-success" id="statussuccess"></label>
+        <label class="error form-label text-danger" id="statuserror"></label>
+        <button type="submit" class="btn btn-primary" id="addsubject">Add</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" id="addsubjectclose">Cancel</button>
       </div>
       </form>
     </div>
@@ -147,18 +137,18 @@
           <div class="form-label">Gender</div>
           <div class="custom-controls-stacked">
             <label class="custom-control custom-radio custom-control-inline">
-              <input type="radio" class="custom-control-input" name="gender" id="gender" value="Male" checked="">
+              <input type="radio" class="custom-control-input" name="gender" id="genderMale" value="Male" checked="">
               <span class="custom-control-label">Male</span>
             </label>
             <label class="custom-control custom-radio custom-control-inline">
-              <input type="radio" class="custom-control-input" name="gender" id="gender" value="Female">
+              <input type="radio" class="custom-control-input" name="gender" id="genderFemale" value="Female">
               <span class="custom-control-label">Female</span>
             </label>
           </div>
         </div>
         <div class="form-group">
           <label class="form-label">Grade Level</label>
-            <select class="form-control custom-select" name="type" id="type">
+            <select class="form-control custom-select" name="type" id="studentGradeLevel">
                 <option value="1">Grade 1</option>
                 <option value="2">Grade 2</option>
                 <option value="3">Grade 3</option>
@@ -169,12 +159,10 @@
         </div>
       </div>
       <div class="modal-footer">
-	  <label class="error form-label text-success" id="statussuccess"></label>
-	  <label class="error form-label text-danger" id="statuserror"></label>
-		<button type="submit" class="btn btn-primary" id="addUser">Add</button>
-		<button type="button" class="error btn btn-primary" id="addAnotherUserAdd">Add Another User?</button>
-		<button type="button" class="error btn btn-secondary" data-dismiss="modal" id="addAnotherUserClose">Close</button>
-        <button type="button" class="btn btn-secondary" data-dismiss="modal" id="addUserCancel">Cancel</button>
+        <label class="error form-label text-success" id="statussuccess"></label>
+        <label class="error form-label text-danger" id="statuserror"></label>
+        <button type="submit" class="btn btn-primary" id="addstudent">Add</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" id="addstudentclose">Cancel</button>
       </div>
       </form>
     </div>
@@ -184,65 +172,191 @@
 
 <script>
   $(document).ready(function () {
+      // Get Students
+      $.ajax({
+        url: 'students/view/',
+        dataType: 'json',
+        success: function(data) {
+          $('#studentTable').find('tbody').html("");
+
+          for(var c=0; c < data.length; c++) {
+            var studentListItemTemplate = '<tr>' 
+                                          + '<td>' + data[c].id + '</td>' 
+                                          + '<td>' + data[c].firstname + ' ' + data[c].lastname + '</td>' 
+                                        + '</tr>'
+            $('#studentTable').find('tbody').append(studentListItemTemplate);
+          }
+        }
+      }); 
+    
+    // Get Subjects
     $.ajax({
       url: '<?php echo site_url('subjects/view');?>',
       dataType: 'json',
       success: function(data) {
-        $('#subjectsList').html("");
-        console.log(data);
-        
-        for(var c=0; c < data.length)
+        $('#subjectList').html("");
+
+        for(var c=0; c < data.length; c++) {
           var subjectListItemTemplate = '<li class="list-group-item">'
-                                        + data.subject
+                                        + data[c].subject
                                         + '<button type="button" class="close custom-close" aria-label="Close">'
                                         + '<span aria-hidden="true">&times;</span>'
                                         + '</button>'
                                       + '</li>';
-          $('#subjectsList').append(subjectListItemTemplate);
+          $('#subjectList').append(subjectListItemTemplate);
+        }
       }
     });
 
+        
+
     $('.error').hide();
     $('#addSubjectModal').on('shown.bs.modal', function () {
-        $('#subjectname').trigger('focus')
-    })
+        $('#subjectname').trigger('focus');
+    });
 
     $('.dropdown-menu a').click(function(){
-        if($(this).text() == "All Levels") {
-            $('#addSubjectBtn').attr('disabled',true);
-            $('.active').removeClass('active');
-        } else {
-            $('#addSubjectBtn').attr('disabled',false);
-            $('#addSubjectBtn').show();
-        }
+      // if($(this).text() == "All Levels") {
+      //     $('#addSubjectBtn').attr('disabled',true);
+      //     $('#addStudentBtn').attr('disabled',true);
+      //     $('.active').removeClass('active');
+      // } else {
+      //     $('#addSubjectBtn').attr('disabled',false);
+      //     $('#addSubjectBtn').show();
+      // }
 
-        $('.btn:first-child').text($(this).text());
-        $('.btn:first-child').val($(this).text());
+      $('#subjectList').html("");
+      $('#studentTable').find('tbody').html("");
+      
+      // Get Subjects by Level
+      $.ajax({
+        url: 'subjects/view/' + $(this).data('value') ,
+        dataType: 'json',
+        success: function(data) {
+          $('#subjectList').html("");
+
+          for(var c=0; c < data.length; c++) {
+            var subjectListItemTemplate = '<li class="list-group-item" data-value="'+ data[c].id +'">'
+                                          + data[c].subject
+                                          + '<button type="button" class="close custom-close" aria-label="Close">'
+                                          + '<span aria-hidden="true">&times;</span>'
+                                          + '</button>'
+                                        + '</li>';
+            $('#subjectList').append(subjectListItemTemplate);
+          }
+        }
+      });        
+
+      // Get Students by Level
+      $.ajax({
+        url: 'students/view/' + $(this).data('value') ,
+        dataType: 'json',
+        success: function(data) {
+
+          for(var c=0; c < data.length; c++) {
+            var studentListItemTemplate = '<tr>' 
+                                        + '<td>' + data[c].id +'</td>' 
+                                        + '<td>' + data[c].firstname + ' ' + data[c].lastname + '</td>' 
+                                      + '</tr>'
+          $('#studentTable').find('tbody').append(studentListItemTemplate);
+          }
+        }
+      });        
+
+      $('.btn:first-child').text($(this).text());
+      $('.btn:first-child').val($(this).text());
+      $('.btn:first-child').attr('data-value',$(this).data('value'));
     });
 
-    $('.list-group li').mouseenter(function(){
-        if($('.btn:first-child').val() != "All Levels") {
-            $(this).find('.custom-close').show();
-        }
-    }).mouseleave(function(){
-        $(this).find('.custom-close').hide();
-    });
 
-    $('.list-group li').click(function(e) {
-        e.preventDefault()
-        if($(".btn:first-child").val() != "All Levels") {
-            $(this).parent().find('li').removeClass('active');
-            $(this).addClass('active');
-        }
-    });
+  
 
-    $('#selectParent').select2({
-        placeholder: 'Select a Parent',
-        ajax: {
-          url: 'https://api.github.com/search/repositories',
-          dataType: 'json'
-          // Additional AJAX parameters go here; see the end of this chapter for the full code of this example
+  // Add Subject
+  $('#addsubject').click(function(event) {
+    event.preventDefault();
+
+    $.ajax({
+      url: 'subjects/create/',
+      type: 'POST',
+      dataType: 'json',
+      dataSrc: '',
+      data: { 
+        'subjectName': $('#subjectname').val(),
+        'gradeLevel': $('#subjectGradeLevel').val()
+      },
+      success: function(data) {
+
+        for(var c=0; c < data.length; c++) {
+          var subjectListItemTemplate = '<li class="list-group-item" data-value="'+ data[c].id +'">'
+                                        + data[c].subject
+                                        + '<button type="button" class="close custom-close" aria-label="Close">'
+                                        + '<span aria-hidden="true">&times;</span>'
+                                        + '</button>'
+                                      + '</li>';
+          $('#subjectList').append(subjectListItemTemplate);
         }
-    });
+
+        $('#addSubjectModal').modal('hide');
+      }
+    });        
   });
+
+  // Add Student
+  $('#addstudent').click(function(event) {
+    event.preventDefault();
+
+    $.ajax({
+      url: 'student/create/',
+      type: 'POST',
+      dataType: 'json',
+      dataSrc: '',
+      data: { 
+        'firstName': $('#firstname').val(),
+        'middleName': $('#middlename').val(),
+        'lastName': $('#lastname').val(),
+        'idNumber': $('#idnumber').val(),
+        'gender': $('input[name=gender]:checked').val(),
+        //'parent': $('#selectParent').text(),
+        'gradeLevel': $('#studentGradeLevel').val()
+      },
+      success: function(data) {
+
+        for(var c=0; c < data.length; c++) {
+          var studentListItemTemplate = '<tr>' 
+                                        + '<td>' + data[c].id +'</td>' 
+                                        + '<td>' + data[c].firstname + " " + data[c].middlename + ' ' + data[c].lastname + '</td>' 
+                                      + '</tr>'
+          $('#studentTable').find('tbody').append(studentListItemTemplate);
+        }
+
+        $('#addStudentModal').modal('hide');
+      }
+    });        
+  });
+
+  $('.list-group li').mouseenter(function(){
+      if($('.btn:first-child').val() != "All Levels") {
+          $(this).find('.custom-close').show();
+      }
+  }).mouseleave(function(){
+      $(this).find('.custom-close').hide();
+  });
+
+  $('.list-group li').click(function(e) {
+      e.preventDefault()
+      if($(".btn:first-child").val() != "All Levels") {
+          $(this).parent().find('li').removeClass('active');
+          $(this).addClass('active');
+      }
+  });
+
+  $('#selectParent').select2({
+      placeholder: 'Select a Parent',
+      ajax: {
+        url: 'https://api.github.com/search/repositories',
+        dataType: 'json'
+        // Additional AJAX parameters go here; see the end of this chapter for the full code of this example
+      }
+  });
+});
 </script>

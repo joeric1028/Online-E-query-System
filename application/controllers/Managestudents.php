@@ -30,15 +30,40 @@ class ManageStudents extends CI_Controller {
         $this->load->view('templates/footer');
     }
     
+    /* Students */
+    public function getstudents()
+    {
+        header("Content-Type: application/json; charset=UTF-8");
+        $this->Student_model->get_students();
+    }
+
+    public function getstudentsbylevel($gradelevel) {
+        header("Content-Type: application/json; charset=UTF-8");
+        $this->Student_model->get_studentsbylevel($gradelevel);
+    }
+
+    public function createstudent() {
+        header("Content-Type: application/json; charset=UTF-8");
+        $this->Student_model->create_student();
+    }
+    /* Students */
+
+    /* Subjects */
     public function getsubjects()
     {
         header("Content-Type: application/json; charset=UTF-8");
         $this->Subjects_model->get_subjects();
     }
 
-    public function getsubjectsperlevel($gradelevel) {
+    public function getsubjectsbylevel($gradelevel) {
         header("Content-Type: application/json; charset=UTF-8");
-        $this->Subjects_model->get_subjectsperlevel($gradelevel);
+        $this->Subjects_model->get_subjectsbylevel($gradelevel);
     }
+
+    public function createsubject() {
+        header("Content-Type: application/json; charset=UTF-8");
+        $this->Subjects_model->create_subject();
+    }
+    /* Subjects */
 
 }

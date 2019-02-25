@@ -62,9 +62,13 @@ $route['users/delete'] = 'manageusers/deleteuser';
 
 // Manage Students
 $route['students'] = 'managestudents';
+$route['students/view'] = 'managestudents/getstudents';
+$route['students/view/(:num)'] = "managestudents/getstudentsbylevel/$1";
+$route['students/create'] = 'managestudents/createstudent';
+//$route['students/delete'] = 'managestudents/deletestudent';
 $route['subjects/view'] = 'managestudents/getsubjects';
-$route['subjects/view/(:num)'] = "managestudents/getsubjectsperlevel/$1";
-// $route['subjects/create'] = 'managestudents/createsubject';
+$route['subjects/view/(:num)'] = "managestudents/getsubjectsbylevel/$1";
+$route['subjects/create'] = 'managestudents/createsubject';
 // $route['subjects/delete'] = 'managestudents/deletesubject';
 
 // Accounts
