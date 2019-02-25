@@ -1,115 +1,26 @@
-<div class="row">
-    <div class="col-12">
-        <div class="card">
-            <div class="card-body d-flex justify-content-between">
-                <h2> School Calendar </h2>
-                <span class="my-auto">
-                    <button class="btn btn-danger" data-toggle="modal" data-target="#exportEventModal">Export</button>
-                    <button class="btn btn-success" data-toggle="modal" data-target="#addEventModal">Add Event</button>
-                </span>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="row">
-    <div class="col-8">
-        <div class="card">
-            <div class="card-header">School Events</div>
-            <div class="card-body">
-                <table id="calendarTable"> 
-                </table>
-                <div id="loaderschoolevent">
-                        <div class="loader disable-selection" id="loader-4">
-                            <span></span>
-                            <span></span>
-                            <span></span>
-                        </div>
-                    </div>
-            </div>
-        </div>    
-    </div> 
-    <div class="col-4">
-        <div class="card">
-            <div class="card-header" id="monthevent">Upcoming Events</div>
-                <div class="card-body">
-                    <div class="container" id="upcomingEvent">
-                    </div>
-                    <div id="loaderupcomingevent">
-                        <div class="loader disable-selection" id="loader-4">
-                            <span></span>
-                            <span></span>
-                            <span></span>
-                        </div>
-                    </div>
-                </div>
-            </div>   
-        </div>
+<?php defined('BASEPATH') OR exit('No direct script access allowed');?>
 
-        <div id="addEventModal" class="modal fade" tabindex="-1" role="dialog">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <form name="adduserform" id="adduserform" action="" method="post">
-        <div class="modal-header">
-            <h5 class="modal-title">Add Event</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="addeventclosex">
-            <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-        <div class="modal-body">
-            <div class="form-group">
-            <label class="form-label">Name</label>
-            <input type="text" class="form-control" name="eventname" id="eventname">
-            <label class="error text-danger" for="eventname" id="eventname_error">This field is required.</label>
-            </div>
-            <div class="form-group">
-            <label class="form-label">Date of Occurance</label>
-            <input type="text" class="form-control" name="eventdate" id="eventdate">
-            <label class="error text-danger" for="eventdate" id="eventdate_error">This field is required.</label>
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="<?php echo base_url('assets/css/bootstrap.min.css');?>" id="bootstrap-css" />
+        <link rel="stylesheet" href="<?php echo base_url('assets/css/custompdf.css');?>" />
+        <script type="text/javascript" src="<?php echo base_url('assets/js/bootstrap.min.js');?>"></script>
+    </head>
+    <body>
+        <div class="container">
+            <div class="row">
+                <center><h2>Northemtern Mindanao Mission<br>EDUCATION DEPARTMENT<br>Km.3 Ba-an, Butuan City</h2></center>
+            <div>
+            <div class="row">
+                <div class="col-xl">test</div>
+                <div class="col-xl">test</div>
             </div>
         </div>
-        <div class="modal-footer">
-            <label class="error form-label text-success" id="statussuccess"></label>
-            <label class="error form-label text-danger" id="statuserror"></label>
-            <button type="submit" class="btn btn-primary" id="addevent">Add</button>
-            <button type="button" class="error btn btn-primary" id="addanothereventadd">Add Another Event?</button>
-            <button type="button" class="btn btn-secondary" data-dismiss="modal" id="addeventclose">Cancel</button>
-        </div>
-      </form>
-    </div>
-  </div>
-</div>
+    </body>
 
-<div id="exportEventModal" class="modal fade" tabindex="-1" role="dialog">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h5 class="modal-title">Exporting Event</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="addeventclosex">
-            <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-        <div class="modal-body">
-            <div class="form-group">
-            <label class="form-label">Name</label>
-            <input type="text" class="form-control" name="eventname" id="eventname">
-            <label class="error text-danger" for="eventname" id="eventname_error">This field is required.</label>
-            </div>
-            <div class="form-group">
-            <label class="form-label">Date of Occurance</label>
-            <input type="text" class="form-control" name="eventdate" id="eventdate">
-            <label class="error text-danger" for="eventdate" id="eventdate_error">This field is required.</label>
-            </div>
-        </div>
-        <div class="modal-footer">
-            <label class="error form-label text-success" id="statussuccess"></label>
-            <label class="error form-label text-danger" id="statuserror"></label>
-            <button type="submit" class="btn btn-primary" id="addevent">Add</button>
-            <button type="button" class="error btn btn-primary" id="addanothereventadd">Add Another Event?</button>
-            <button type="button" class="btn btn-secondary" data-dismiss="modal" id="addeventclose">Cancel</button>
-        </div>
-    </div>
-  </div>
-</div>
 
 <script>
     $(document).ready(function () {
@@ -368,3 +279,5 @@
         });
     });
 </script>
+
+</html>
