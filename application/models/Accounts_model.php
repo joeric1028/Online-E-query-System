@@ -1,8 +1,7 @@
 <?php
 class Accounts_model extends CI_Model {
 	
-	public function __construct()
-	{
+	public function __construct() {
 		$this->load->database();
   }
   
@@ -11,15 +10,13 @@ class Accounts_model extends CI_Model {
 
 		$query = $this->db->get('schoolaccount');
 		echo json_encode($query->result());
-
-  }
+	}
     
   public function get_accountbystudent($studentId)
 	{
 	
     $query = $this->db->get_where('schoolaccount',array('student_id' => $studentId));
 		echo json_encode($query->result());
-
 	}
 
 	/* Assessments */

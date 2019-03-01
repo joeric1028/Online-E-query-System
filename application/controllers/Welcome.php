@@ -19,8 +19,7 @@ class Welcome extends CI_Controller {
 	 * @see https://codeigniter.com/user_guide/general/urls.html
 	 */
 
-	public function index()
-	{
+	public function index() {
 		$data['title'] = 'E-Query System';
 		$this->load->view('underconstruction/index', $data);
 	}
