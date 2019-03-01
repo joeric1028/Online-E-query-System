@@ -114,6 +114,10 @@
     border: 0px solid #fff;
 }
 
+.list-group.custom-list-group > .list-group-item:hover {
+    cursor: pointer;
+}
+
 .list-group.custom-list-group > .list-group-item:hover:not(.active) {
     color: #212529;
     background-color: rgb(238, 238, 238);

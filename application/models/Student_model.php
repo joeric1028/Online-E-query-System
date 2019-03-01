@@ -25,9 +25,10 @@ class Student_model extends CI_Model {
 	public function create_student()
 	{
 		$data = array(
+			'id' => $this->input->post('idNumber'),
         	'firstname' => $this->input->post('firstName'),
 			'middlename' => $this->input->post('middleName'),
-			'lastname' => $this->input->post('firstName'),
+			'lastname' => $this->input->post('lastName'),
 			'gender' => $this->input->post('gender'),
 			'gradelevel' => $this->input->post('gradeLevel'),
 			//'parent_id' => $this->input->post('parentId'),

@@ -8,7 +8,7 @@
                         All Levels
                     </button>
                     <div class="dropdown-menu" aria-labelledby="sectionDropdownBtn">
-                        <a class="dropdown-item" href="#" data-value="0">All Levels</a>
+                        <a class="dropdown-item" href="#" data-value="">All Levels</a>
                         <a class="dropdown-item" href="#" data-value="1">Grade 1</a>
                         <a class="dropdown-item" href="#" data-value="2">Grade 2</a>
                         <a class="dropdown-item" href="#" data-value="3">Grade 3</a>
@@ -306,7 +306,7 @@
     event.preventDefault();
 
     $.ajax({
-      url: 'student/create/',
+      url: 'students/create/',
       type: 'POST',
       dataType: 'json',
       dataSrc: '',

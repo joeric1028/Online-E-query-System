@@ -63,7 +63,7 @@ $route['users/delete'] = 'manageusers/deleteuser';
 // Manage Students
 $route['students'] = 'managestudents';
 $route['students/view'] = 'managestudents/getstudents';
-$route['students/view/(:num)'] = "managestudents/getstudentsbylevel/$1";
+$route['students/view/(:num)'] = 'managestudents/getstudentsbylevel/$1';
 $route['students/create'] = 'managestudents/createstudent';
 //$route['students/delete'] = 'managestudents/deletestudent';
 $route['subjects/view'] = 'managestudents/getsubjects';
@@ -73,10 +73,19 @@ $route['subjects/create'] = 'managestudents/createsubject';
 
 // Accounts
 $route['accounts'] = 'accounts';
+$route['accounts/view'] = 'accounts/getaccounts';
+$route['assessments/view'] = 'accounts/getassessments';
+$route['assessments/view/(:num)'] = 'accounts/getassessmentsbystudentid/$1';
+$route['assessments/create'] = 'accounts/createassessment';
+$route['assessments/delete/(:num)'] = 'accounts/deleteassessment/$1';
+
 
 // Grades
 $route['grades'] = 'grades';
 $route['grades/view'] = 'grades/getgrades';
+$route['grades/view/(:num)'] = 'grades/getgradesByStudent/$1';
+
+
 
 // School Calendar
 $route['calendar'] = 'schoolcalendar';

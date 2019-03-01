@@ -31,21 +31,34 @@ class Accounts extends CI_Controller
         $this->load->view('templates/footer');
     }
 
-    /* Subjects */
+    /* Accounts */
     public function getaccounts()
     {
         header("Content-Type: application/json; charset=UTF-8");
-        $this->Subjects_model->get_accounts();
+        $this->Accounts_model->get_accounts();
+    }
+    /* Accounts */
+
+    /* Assessments */
+    public function getassessments()
+    {
+        header("Content-Type: application/json; charset=UTF-8");
+        $this->Accounts_model->get_assessments();
     }
 
-    public function getsubjectsbylevel($gradelevel) {
+    public function getassessmetsbystudentid($studentId) {
         header("Content-Type: application/json; charset=UTF-8");
-        $this->Subjects_model->get_subjectsbylevel($gradelevel);
+        $this->Accounts_model->get_assessmentsbystudentid($studentId);
     }
 
-    public function createsubject() {
+    public function createassessment() {
         header("Content-Type: application/json; charset=UTF-8");
-        $this->Subjects_model->create_subject();
+        $this->Accounts_model->create_assessment();
     }
-    /* Subjects */
+
+    public function deleteassessment($assessmentId) {
+        header("Content-Type: application/json; charset=UTF-8");
+        $this->Accounts_model->delete_assessment();
+    }
+    /* Assessments */
 }

@@ -19,6 +19,7 @@
         <script type="text/javascript" charset="utf8" src="<?php echo base_url('assets/plugins/daterangepicker/daterangepicker.js');?>"></script>
         <script type="text/javascript" src="<?php echo base_url('assets/plugins/select2-4.0.5/dist/js/select2.min.js');?>"></script>
         <script type="text/javascript" src="<?php echo base_url('assets/js/bootstrap.min.js');?>"></script>
+        <script type="text/javascript" src="<?php echo base_url('assets/js/dataTables.cellEdit.js');?>"></script>
     </head>
     <body>
       <img src="<?php echo base_url('assets/img/backgrounds/bg.jpg');?>" id="bg-image" />
@@ -107,7 +108,7 @@
               <?php if($type == "Administrator"): ?>
                 <li id="usersLink">
                   <a <?php if($activePage === "users"):?>class="active"<?php endif;?> href="<?php echo site_url('users')?>">
-                    <i class="fas fa-users"></i> Manage Users  
+                    <i class="fas fa-users"></i> Users  
                   </a>
                 </li>
               <?php endif; if($type != "Teacher"):?>
@@ -119,7 +120,7 @@
               <?php endif; if($type == "Teacher" || $type == "Administrator"):?>
                 <li id="studentsLink">
                   <a <?php if($activePage === "students"):?>class="active"<?php endif;?> href="<?php echo site_url('students')?>">
-                    <i class="fas fa-user-graduate"></i> Manage Classes  
+                    <i class="fas fa-user-graduate"></i> Classes  
                   </a>
                 </li>
               <?php endif; if($type != "Treasurer"):?>

@@ -158,7 +158,7 @@
 							{ "data": "sex"},
 							{ "data": "type"},
 						],
-            			"rowid": "id"
+						"rowid": "id"
     		}).on('select', function() {
       			if (deleteButton.style.display === "none" && $('.selected').length > 0) {
         			deleteButton.style.display = "inline-block";

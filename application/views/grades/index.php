@@ -15,7 +15,7 @@
             <div class="card-header d-flex justify-content-between">
                 <span>Students</span>
                 <div class="dropdown">
-                    <button class="btn btn-primary btn-sm dropdown-toggle" type="button" id="sectionDropdownBtn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" value="Grade 1">
+                    <button class="btn btn-primary btn-sm dropdown-toggle" type="button" id="sectionDropdownBtn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" value="Grade 1" data-value="1">
                         Grade 1
                     </button>
                     <div class="dropdown-menu" aria-labelledby="sectionDropdownBtn">
@@ -29,11 +29,7 @@
                 </div>
             </div>
             <div class="card-body">
-                <ul class="list-group custom-list-group">
-                    <li class="list-group-item">Jose Mari Chan</li>
-                    <li class="list-group-item">Kyle Shem Kun</li>
-                    <li class="list-group-item">Jv Ty San</li>
-                </ul>
+                <ul id="studentList" class="list-group custom-list-group"></ul>
             </div>
         </div>
     </div>
@@ -42,7 +38,7 @@
             <div class="card-header d-flex justify-content-between">
                 <span>Subjects</span>
                 <div>
-                    <button class="btn btn-primary btn-sm" type="button" id="saveBtn">
+                    <button class="btn btn-primary btn-sm" type="button" disabled id="saveBtn">
                         Save
                     </button>
                 </div>
@@ -58,53 +54,7 @@
                             <th>4th</th>
                         </tr>
                     </thead>
-                    <tbody class="customTd">
-                        <tr>
-                            <td>Mathematics</td>
-                            <td>
-                                <input maxlength="3" onkeypress="enableSaveBtnOnChange()" type="text" class="form-control" name="1st">
-                            </td>
-                            <td>
-                                <input maxlength="3" type="text" class="form-control" name="2nd">
-                            </td>
-                            <td>
-                                <input maxlength="3" type="text" class="form-control" name="3rd">
-                            </td>
-                            <td>
-                                <input maxlength="3" type="text" class="form-control" name="4th">
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Science</td>
-                            <td>
-                                <input maxlength="3" type="text" class="form-control" name="1st">
-                            </td>
-                            <td>
-                                <input maxlength="3" type="text" class="form-control" name="2nd">
-                            </td>
-                            <td>
-                                <input maxlength="3" type="text" class="form-control" name="3rd">
-                            </td>
-                            <td>
-                                <input maxlength="3" type="text" class="form-control" name="4th">
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>English</td>
-                            <td>
-                                <input maxlength="3" type="text" class="form-control" name="1st">
-                            </td>
-                            <td>
-                                <input maxlength="3" type="text" class="form-control" name="2nd">
-                            </td>
-                            <td>
-                                <input maxlength="3" type="text" class="form-control" name="3rd">
-                            </td>
-                            <td>
-                                <input maxlength="3" type="text" class="form-control" name="4th">
-                            </td>
-                        </tr>
-                    </tbody>
+                    <tbody class="customTd"></tbody>
                 </table>
             </div>
         </div>
@@ -119,7 +69,7 @@
             <div class="card-status bg-blue"></div>
             <div class="card-header"> 1st Grading </div>
             <div class="card-body p3 text-center align-middle mb-2">
-                <div class="h2 m-0" id="1stgrading"></div>
+                <div class="h2 m-0" id="1stgrading" class="grading"></div>
                     <div id="loader1stgrading">
                         <div class="loader disable-selection" id="loader-4">
                             <span></span>
@@ -135,7 +85,7 @@
             <div class="card-status bg-green"></div>
             <div class="card-header"> 2nd Grading </div>
             <div class="card-body p3 text-center align-middle mb-2">
-                <div class="h2 m-0" id="2ndgrading"></div>
+                <div class="h2 m-0" id="2ndgrading" class="grading"></div>
                 <div id="loader2ndgrading">
                     <div class="loader disable-selection" id="loader-4">
                         <span></span>
@@ -151,7 +101,7 @@
             <div class="card-status bg-red"></div>
             <div class="card-header"> 3rd Grading </div>
             <div class="card-body p3 text-center align-middle mb-2">
-                <div class="h2 m-0" id="3rdgrading"></div>
+                <div class="h2 m-0" id="3rdgrading" class="grading"></div>
                 <div id="loader3rdgrading">
                     <div class="loader disable-selection" id="loader-4">
                         <span></span>
@@ -167,7 +117,7 @@
             <div class="card-status bg-yellow"></div>
             <div class="card-header"> 4th Grading </div>
                 <div class="card-body p3 text-center align-middle mb-2">
-                    <div class="h2 m-0" id="4thgrading"></div>
+                    <div class="h2 m-0" id="4thgrading" class="grading"></div>
                     <div id="loader4thgrading">
                         <div class="loader disable-selection" id="loader-4">
                             <span></span>
@@ -187,7 +137,6 @@
                 <table cellpadding="0" cellspacing="0" id="userTable">
                     <thead class="customTh">
                         <tr>
-                            <th style="width: 10%">S.Y.</th>
                             <th style="width: 10%">Grade Level</th>
                             <th style="width: 15%">Section</th>
                             <th style="width: 15%">Teacher</th>
@@ -211,15 +160,68 @@
         $('#saveBtn').attr('disabled',false);
     }
 
+    // Retrieve Students By Level
+    function getStudentsByLevel(level) {
+        
+        $.ajax({
+            url: 'students/view/' + level,
+            dataType: 'json',
+            success: function(data) {
+                $('#studentList').html('');
+                for(var c=0; c < data.length; c++) {
+                    var studentListItemTemplate = '<li class="list-group-item" data-value="' + data[c].id + '">'
+                                                + data[c].firstname + ' ' + data[c].lastname + '</li>';
+                    $('#studentList').append(studentListItemTemplate);
+
+                    // Allows selection of student
+                    $('#studentList > li').click(function(e) {
+                        e.preventDefault()
+                        $(this).parent().find('li').removeClass('active');
+                        $(this).addClass('active');
+                    });
+                }
+            }
+        });   
+    }
+    
+    // Retrieve Subjects By Level
+    function getSubjectsByLevel(level) {
+        $.ajax({
+            url: 'subjects/view/' + level,
+            dataType: 'json',
+            success: function(data) {
+                $('#subjectTable').find('tbody').html('');
+                for(var c=0; c < data.length; c++) {
+                    var subjectRowTemplate =    '<tr data-value=' + data[c].id + '>'
+                                            +       '<td>' + data[c].subject + '</td>'
+                                            +       '<td>'
+                                            +           '<input maxlength="3" onkeypress="enableSaveBtnOnChange()" type="text" class="form-control" name="1st">'
+                                            +       '</td>'
+                                            +       '<td>'
+                                            +           '<input maxlength="3" onkeypress="enableSaveBtnOnChange()" type="text" class="form-control" name="2nd">'
+                                            +       '</td>'
+                                            +       '<td>'
+                                            +           '<input maxlength="3" onkeypress="enableSaveBtnOnChange()" type="text" class="form-control" name="3rd">'
+                                            +       '</td>'
+                                            +       '<td>'
+                                            +           '<input maxlength="3" onkeypress="enableSaveBtnOnChange()" type="text" class="form-control" name="4th">'
+                                            +       '</td>'
+                                            +   '</tr>';
+                    $('#subjectTable').append(subjectRowTemplate);
+
+                }
+            }
+        });   
+    }
+
     $(document).ready(function () {
-        var table = $('#userTable').DataTable({
+        var table = $('#gradesTable').DataTable({
             'select': true,
             'ajax': {
                 url: "<?php echo base_url('api/user_list')?>",
                 dataSrc: ''
             },
             'columns': [
-                { "data": null },
                 { "data": null },
                 { "data": null },
                 { "data": null },
@@ -251,38 +253,17 @@
 				url: "<?php echo site_url('grades/view');?>",
                 data: formData,
                 beforeSend: function() {
-                    $('div#loader1stgrading').show();
-                    $('div#loader2ndgrading').show();
-                    $('div#loader3rdgrading').show();
-                    $('div#loader4thgrading').show();
-                    $('div#1stgrading').hide();
-                    $('div#2ndgrading').hide();
-                    $('div#3rdgrading').hide();
-                    $('div#4thgrading').hide();
+                    $('.loader').show();
                 },
 				error: function(xhr, status, error) {
-                    $('div#loader1stgrading').hide();
-                    $('div#loader2ndgrading').hide();
-                    $('div#loader3rdgrading').hide();
-                    $('div#loader4thgrading').hide();
-
-                    $('div#1stgrading').show();
-                    $('div#2ndgrading').show();
-                    $('div#3rdgrading').show();
-                    $('div#4thgrading').show();
+                    $('.loader').hide();
+                    $('.grading').show();
 
                     alert( "error occured!\n"+error );
 				},
 				success: function(data) {
-                    $('div#loader1stgrading').hide();
-                    $('div#loader2ndgrading').hide();
-                    $('div#loader3rdgrading').hide();
-                    $('div#loader4thgrading').hide();
-
-                    $('div#1stgrading').show();
-                    $('div#2ndgrading').show();
-                    $('div#3rdgrading').show();
-                    $('div#4thgrading').show();
+                    $('.loader').hide();
+                    $('.grading').show();
                     
 					if (data.error != undefined)
 					{
@@ -342,6 +323,10 @@
 					}
 				}
 			});
+
+        getStudentsByLevel($('#sectionDropdownBtn').data('value'));
+        getSubjectsByLevel($('#sectionDropdownBtn').data('value'));
+
     });
 
     $('#saveBtn').click(function(){
@@ -353,19 +338,25 @@
     $('.dropdown-menu a').click(function(){
         $('#sectionDropdownBtn.btn:first-child').text($(this).text());
         $('#sectionDropdownBtn.btn:first-child').val($(this).text());
+        getStudentsByLevel($(this).data('value'));
+        getSubjectsByLevel($(this).data('value'));
     });
 
-    $('.list-group li').mouseenter(function(){
-        if($('.btn:first-child').val() != "All Levels") {
-            $(this).find('.custom-close').show();
-        }
-    }).mouseleave(function(){
-        $(this).find('.custom-close').hide();
-    });
-
-    $('.list-group li').click(function(e) {
-        e.preventDefault()
-        $(this).parent().find('li').removeClass('active');
-        $(this).addClass('active');
+    // Retrieves grades of selected student
+    $('#studentList').click(function(e) {
+        console.log($('li.active').attr('data-value'));
+        $('input').val("");
+        $.ajax({
+            url: 'grades/view/' + $('li.active').attr('data-value') ,
+            dataType: 'json',
+            success: function(data) {
+                for(var c=0; c < data.length; c++) {
+                    $('#subjectTable').find('tr[data-value='+ data[c].subjects_id +']').find('input')[0].value = data[c].firstgrading;
+                    $('#subjectTable').find('tr[data-value='+ data[c].subjects_id +']').find('input')[1].value = data[c].secondgrading;
+                    $('#subjectTable').find('tr[data-value='+ data[c].subjects_id +']').find('input')[2].value = data[c].thirdgrading;
+                    $('#subjectTable').find('tr[data-value='+ data[c].subjects_id +']').find('input')[3].value = data[c].fourthgrading;
+                }
+            }
+        });
     });
 </script>

@@ -5,7 +5,7 @@
               <h2> Manage Accounts </h2>
               <span class="my-auto">
                 <?php if($type == "Treasurer" || $type == "Administrator"): ?>
-                  <button class="btn btn-primary" data-toggle="modal" data-target="#manageAssessmentItemsModal">Manage Assessments</button>
+                  <button class="btn btn-primary" data-toggle="modal" data-target="#manageAssessmentItemsModal">Manage Particulars</button>
                 <?php endif;?>
               </span>
             </div>
@@ -115,7 +115,7 @@
         </button>
       </div>
       <div class="modal-body">
-        <ul class="list-group">
+        <ul class="list-group" id="assessmentItemsList">
           <li class="list-group-item d-flex justify-content-between">
             <span>Computer Laboratory</span>
             <button class="btn btn-link btn-sm text-danger">Remove</button>
@@ -206,25 +206,25 @@
         </div>
         <div class="form-group">
           <label class="form-label">Particular</label>
-          <input type="text" class="form-control" name="particulars" id="assessmentParticulars">
+          <input type="text" class="form-control" name="particulars" id="scheduleParticulars">
           <label class="error text-danger" for="particulars" id="particulars_error">This field is required.</label>
         </div>
         <div class="form-group">
           <label class="form-label">O.R. No.</label>
-          <input type="text" class="form-control" name="orno" id="assessmentOrNo">
+          <input type="text" class="form-control" name="orno" id="scheduleOrNo">
           <label class="error text-danger" for="orno" id="orno_error">This field is required.</label>
         </div>
         <div class="form-group">
-          <label class="form-label">Amount Due</label>
-          <input type="text" class="form-control" name="amountdue" id="assessmentAmountDue">
+          <label class="form-label">Amount Paid</label>
+          <input type="text" class="form-control" name="amountdue" id="scheduleAmountPaid">
           <label class="error text-danger" for="amountdue" id="amountdue_error">This field is required.</label>
         </div>
       </div>
       <div class="modal-footer">
 	  <label class="error form-label text-success" id="statussuccess"></label>
 	  <label class="error form-label text-danger" id="statuserror"></label>
-		<button type="submit" class="btn btn-primary" id="addAssessment">Add</button>
-        <button type="button" class="btn btn-secondary" data-dismiss="modal" id="addUserCancel">Cancel</button>
+		<button type="submit" class="btn btn-primary" id="addSchedule">Add</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" id="addScheduleCancel">Cancel</button>
       </div>
       </form>
     </div>
@@ -233,33 +233,49 @@
 
 
 <script>
+  $(document).ready(function () {
+    
     $('.error').hide();
-    var table = $('#userTable').DataTable(
-			{
-				'select': {
+    var table = $('#userTable').DataTable({
+        'select': {
           style: 'single'
         },
-				'responsive': true,
-						'ajax': {
-							url: "",
-							dataSrc: ''
-						},
-						'columns': [
-							{ "data": "idnumber"},
-							{ "data": "firstname"},
-							{ "data": "middlename"},
-							{ "data": "lastname"},
-							{ "data": "sex"},
-							{ "data": "type"},
-						],
-            			"rowid": "id"
-    		}).on('select', function() {
-      			if (deleteButton.style.display === "none" && $('.selected').length > 0) {
-        			deleteButton.style.display = "inline-block";
-      			}
-    		}).on('deselect', function() {
-      			if (deleteButton.style.display === "inline-block" && $('.selected').length == 0) {
-        			deleteButton.style.display = "none";
-      			}
-    		});
+        'ajax': {
+          url: '/students/view',
+          dataSrc: ''
+        },
+        'columns': [
+          { "data": "id"},
+          { "data": "firstname"},
+          { "data": "middlename",
+            render: function(data) {
+              if(data == "" || data == null) {
+                return "<i>n/a</i>";
+              }
+            }
+          },
+          { "data": "lastname"},
+          { "data": "gradelevel"},
+        ]
+      });
+
+
+      $('#manageAssessmentItemsModal').on('show.bs.modal', function (event) {
+        $.ajax({
+          url: '<?php echo site_url('assessments/view');?>',
+          dataType: 'json',
+          success: function(data) {
+            $('#assessmentItemsList').html("");
+
+            for(var c=0; c < data.length; c++) {
+              var assessmentListItemTemplate = '<li class="list-group-item d-flex justify-content-between" data-id=' + data[c].id + '>'
+                                          + '<span>' + data[c].assessmentname + '</span>'
+                                          + '<button class="btn btn-link btn-sm text-danger">Remove</button>'
+                                          + '</li>'
+              $('#assessmentItemsList').append(assessmentListItemTemplate);
+            }
+          }
+        });
+      });
+  });
 </script>

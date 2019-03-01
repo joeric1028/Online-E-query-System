@@ -39,7 +39,7 @@ class Grades_model extends CI_Model {
 	public function read_grades()
 	{
 		$where = array(
-        	'schoolyear_id' => $this->input->post('schoolyear_id'),
+        	//'schoolyear_id' => $this->input->post('schoolyear_id'),
         	'student_id' => $this->input->post('student_id')
 		);
 
@@ -61,6 +61,11 @@ class Grades_model extends CI_Model {
 		}
 	}
 
+	public function get_gradesByStudent($studentId) {
+		$query = $this->db->get_where('grades_view', array('student_id' => $studentId));
+		echo json_encode($query->result());
+	}
+
 	public function update_grades()
 	{
 		$data = array(
@@ -80,22 +85,23 @@ class Grades_model extends CI_Model {
 		$query = $this->db->update('grades', $data, $where);
 	}
 
-	public function delete_user()
-	{
-		$data = array(
-        	'firstgrading' => $this->input->post('firstgrading'),
-        	'secondgrading' => $this->input->post('secondgrading'),
-        	'thirdgrading' => $this->input->post('thirdgrading'),
-        	'fourthgrading' => $this->input->post('fourthgrading'),
-        	'schoolyear_id' => $this->input->post('schoolyear_id'),
-        	'student_id' => $this->input->post('student_id')
-        );
+	// public function delete_user()
+	// {
+	// 	$data = array(
+    //     	'firstgrading' => $this->input->post('firstgrading'),
+    //     	'secondgrading' => $this->input->post('secondgrading'),
+    //     	'thirdgrading' => $this->input->post('thirdgrading'),
+    //     	'fourthgrading' => $this->input->post('fourthgrading'),
+    //     	'schoolyear_id' => $this->input->post('schoolyear_id'),
+    //     	'student_id' => $this->input->post('student_id')
+    //     );
 
-		$where = array(
-        	'schoolyear_id' => $this->input->post('schoolyear_id'),
-        	'student_id' => $this->input->post('student_id')
-		);
+	// 	$where = array(
+    //     	'schoolyear_id' => $this->input->post('schoolyear_id'),
+    //     	'student_id' => $this->input->post('student_id')
+	// 	);
 		
-		$query = $this->db->delete('grades', $data, $where);
-	}
+	// 	$query = $this->db->delete('grades', $data, $where);
+	// }
 }
+

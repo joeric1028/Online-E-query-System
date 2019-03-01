@@ -37,4 +37,11 @@ class Grades extends CI_Controller {
         $this->Grades_model->read_grades();
     }
 
+    public function getgradesByStudent($studentId) 
+    {
+        header("Content-Type: application/json; charset=UTF-8");
+        $this->Grades_model->get_gradesByStudent($studentId);
+        
+    }
+
 }
