@@ -1,13 +1,11 @@
 <?php
 class Grades_model extends CI_Model {
 	
-	public function __construct()
-	{
+	public function __construct() {
 		$this->load->database();
 	}
 
-	public function create_grades()
-	{
+	public function create_grades() {
 		$data = array(
         	'firstgrading' => $this->input->post('firstgrading'),
         	'secondgrading' => $this->input->post('secondgrading'),
@@ -24,10 +22,8 @@ class Grades_model extends CI_Model {
 		
 		$query = $this->db->get_where('grades', $where);
 		
-		foreach ($query->result() as $row)
-		{
-			if ($data['student_id'] == $row->student_id && $data['schoolyear_id'] == $row->schoolyear_id)
-			{
+		foreach ($query->result() as $row) {
+			if ($data['student_id'] == $row->student_id && $data['schoolyear_id'] == $row->schoolyear_id) {
 				return false; //error: grades exist. Can't create grades.
 			}
 		}
@@ -36,24 +32,20 @@ class Grades_model extends CI_Model {
 		$query = $this->db->insert('grades', $data);
 	}
 
-	public function read_grades()
-	{
+	public function read_grades() {
 		$where = array(
         	//'schoolyear_id' => $this->input->post('schoolyear_id'),
         	'student_id' => $this->input->post('student_id')
 		);
 
 		$query = $this->db->get_where('grades', $where);
-		
 		$result = $query->result();
 			
-		if ($query->row(0) == null)
-		{	
+		if ($query->row(0) == null) {	
 			$errorMessage = 'NG';
 			$error = array('warning' => $errorMessage);
 			echo json_encode($error);
-		}
-		else {
+		} else {
 			$data = array(
 				'data' => $result
 			);
@@ -69,17 +61,17 @@ class Grades_model extends CI_Model {
 	public function update_grades()
 	{
 		$data = array(
-        	'firstgrading' => $this->input->post('firstgrading'),
+        	'firstgrading' 	=> $this->input->post('firstgrading'),
         	'secondgrading' => $this->input->post('secondgrading'),
-        	'thirdgrading' => $this->input->post('thirdgrading'),
+        	'thirdgrading' 	=> $this->input->post('thirdgrading'),
         	'fourthgrading' => $this->input->post('fourthgrading'),
         	'schoolyear_id' => $this->input->post('schoolyear_id'),
-        	'student_id' => $this->input->post('student_id')
+        	'student_id' 	=> $this->input->post('student_id')
         );
 		
 		$where = array(
         	'schoolyear_id' => $this->input->post('schoolyear_id'),
-        	'student_id' => $this->input->post('student_id')
+        	'student_id' 	=> $this->input->post('student_id')
 		);
 
 		$query = $this->db->update('grades', $data, $where);

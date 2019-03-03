@@ -1,13 +1,11 @@
 <?php
 class User_model extends CI_Model {
 	
-	public function __construct()
-	{
+	public function __construct() {
 		$this->load->database();
 	}
 	
-	public function authenticate_user()
-	{
+	public function authenticate_user() {
     	$data = array(
         	'idnumber' => $this->input->post('idnumber'),
         	'password' => $this->input->post('password')
@@ -15,10 +13,8 @@ class User_model extends CI_Model {
 		
 		$query = $this->db->get_where('users', array('idnumber' => $data['idnumber']));
 		
-		foreach ($query->result() as $row)
-		{
-			if ($data['idnumber'] == $row->idnumber && password_verify($data['password'], $row->password))
-			{
+		foreach ($query->result() as $row) {
+			if ($data['idnumber'] == $row->idnumber && password_verify($data['password'], $row->password)) {
 				$newdata = array(
 					'idnumber'  	=> $row->idnumber,
 					'id'     		=> $row->id,
@@ -48,52 +44,41 @@ class User_model extends CI_Model {
 		
 		$query = $this->db->get_where('users', $where);
 		
-		if ($query->first_row())
-		{
+		if ($query->first_row()) {
 			$result = $query->first_row();
 
-			if ($where['idnumber'] == $result->idnumber && $where['id'] == $result->id && password_verify($this->input->post('currentpassword'), $result->password))
-			{
-				if ($this->input->post('newpassword') == $this->input->post('confirmnewpassword'))
-				{
+			if ($where['idnumber'] == $result->idnumber && $where['id'] == $result->id && password_verify($this->input->post('currentpassword'), $result->password)) {
+				if ($this->input->post('newpassword') == $this->input->post('confirmnewpassword')) {
 					$newdata = array(
 						'password' => password_hash($this->input->post('confirmnewpassword'), PASSWORD_DEFAULT)
 					);
 
 					$query = $this->db->update('users', $newdata, $where);
 
-					if ($query)
-					{
+					if ($query) {
 						$successMessage = 'Password successfuly changed!';
 						$success = array('success' => $successMessage);
 				
 						echo json_encode($success);
-					}
-					else
-					{
+					} else {
 						$errorMessage = 'Unable to changed password.';
 						$error = array('error' => $errorMessage);
 				
 						echo json_encode($error);
 					}
-				}
-				else
-				{
+				} else {
 					$errorMessage = 'New password is not matched with new confirm password.';
 					$error = array('warning' => $errorMessage);
 				
 					echo json_encode($error);
 				}
-			}
-			else {
+			} else {
 				$errorMessage = 'Wrong current password.';
 				$error = array('warning' => $errorMessage);
 				
 				echo json_encode($error);
 			}
-		}
-		else
-		{
+		} else {
 			$errorMessage = 'Error occured!';
 			$error = array('error' => $errorMessage);
 				
@@ -101,8 +86,7 @@ class User_model extends CI_Model {
 		}
 	}
 
-	public function logout()
-	{
+	public function logout() {
 		$unsetdata = array(
 			'idnumber',
 			'id',
@@ -117,8 +101,7 @@ class User_model extends CI_Model {
 		$this->session->unset_userdata($unsetdata);
 	}
 
-	public function create_user()
-	{
+	public function create_user() {
 		$data = array(
         	'idnumber' => $this->input->post('idnumber'),
         	'firstname' => $this->input->post('firstname'),
@@ -130,22 +113,19 @@ class User_model extends CI_Model {
 		
 		$query = $this->db->get_where('users', array('idnumber' => $data['idnumber']));
 		
-		foreach ($query->result() as $row)
-		{
-			if ($data['idnumber'] == $row->idnumber)
-			{
+		foreach ($query->result() as $row) {
+			if ($data['idnumber'] == $row->idnumber) {
 				$errorMessage = "User exist. Can't create user";
 				$error = array('error' => $errorMessage);
 				echo json_encode($error); //error: User exist. Can't create user.
-				exit();
+				return;
 			}
 		}
 
 		//success: User not found. Can create user.
 		$query = $this->db->insert('users', $data);
 
-		if ($query == false)
-		{
+		if ($query == false) {
 			$errorMessage = "Unable to proceed. Can't create user";
 			$error = array('error' => $errorMessage);
 			echo json_encode($error);
@@ -157,21 +137,17 @@ class User_model extends CI_Model {
 		}
 	}
 
-	public function get_users()
-	{
+	public function get_users() {
 		$query = $this->db->get('users');
 
 		return $query->result();
 	}
 
-	public function read_user($data)
-	{
+	public function read_user($data) {
 		$query = $this->db->get_where('users', array('idnumber' => $data));
 		
-		foreach ($query->result() as $row)
-		{
-			if ($data == $row->idnumber)
-			{
+		foreach ($query->result() as $row) {
+			if ($data == $row->idnumber) {
 				//success: User exist. Read user.
 				$data = array(
 					'idnumber' => $row->username,
@@ -185,11 +161,11 @@ class User_model extends CI_Model {
 				return $data;
 			}
 		}
+
 		return false; //error: user not exist. Can't read user.
 	}
 
-	public function update_user()
-	{
+	public function update_user() {
 		$data = array(
         	'idnumber' => $this->input->post('username'),
         	'firstname' => $this->input->post('firstname'),
@@ -202,18 +178,14 @@ class User_model extends CI_Model {
 
 		$query = $this->db->update('users', $data, array('idnumber' => $data['idnumber']));
 
-		if ($query == false)
-		{
+		if ($query == false) {
 			return false;
-		}
-		else
-		{
+		} else {
 			return true;
 		}
 	}
 
-	public function delete_user()
-	{
+	public function delete_user() {
 		$data = array(
         	'id' => $this->input->post('id')
 		);
@@ -222,22 +194,18 @@ class User_model extends CI_Model {
 		
 		header("Content-Type: application/json; charset=UTF-8");
 
-		if ($query == false)
-		{
+		if ($query == false) {
 			$errorMessage = "Unable to proceed. Can't delete user";
 			$error = array('error' => $errorMessage);
 			echo json_encode($error);
-		}
-		else
-		{
+		} else {
 			$successMessage = "Deleting user account has been successful.";
 			$error = array('success' => $successMessage);
 			echo json_encode($error);
 		}
 	}
 
-	public function changepic() 
-	{
+	public function changepic() {
 		$config = array(
 			'upload_path' 		=>	'./uploads/',
 			'allowed_types' 	=>	'gif|jpg|png|jpeg',
@@ -251,13 +219,10 @@ class User_model extends CI_Model {
 		
 		$this->upload->initialize($config);
 		
-		if ( ! $this->upload->do_upload('file'))
-        {
+		if ( ! $this->upload->do_upload('file')) {
 			$error = array('error' => $this->upload->display_errors());
 			echo json_encode($error);
-        }
-        else    
-        {
+        } else {
 			$img = $this->upload->data();
 			$data = array('pic' => $img['file_name']);
 
@@ -267,16 +232,13 @@ class User_model extends CI_Model {
 	
 			$query = $this->db->update('users', $data, array('idnumber' => $this->session->idnumber, 'id' => $this->session->id));
 	
-			if ($query == false)
-			{
+			if ($query == false) {
 				$error = array(
 					'error' => 'Processing photo failed.'
 				);
 				
 				echo json_encode($error);
-			}
-			else
-			{
+			} else {
 				$this->session->set_userdata($data);
 				$data = array(
 					'success' => 'Updating photo is successful.'

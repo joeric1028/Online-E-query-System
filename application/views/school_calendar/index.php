@@ -4,7 +4,8 @@
             <div class="card-body d-flex justify-content-between">
                 <h2> School Calendar </h2>
                 <span class="my-auto">
-                    <button class="btn btn-danger" data-toggle="modal" data-target="#exportEventModal">Export</button>
+                    <!-- Removing export button. It is still in progress -->
+                    <!-- <button class="btn btn-danger" data-toggle="modal" data-target="#exportEventModal">Export</button> -->
                     <button class="btn btn-success" data-toggle="modal" data-target="#addEventModal">Add Event</button>
                 </span>
             </div>
@@ -161,21 +162,14 @@
 				success: function(data) {
                     $('#upcomingEvent').show();
                     $('#loaderupcomingevent').hide();
-					if (data.error != undefined)
-					{
+					if (data.error != undefined) {
                         var error = $('<div class="container"></div>').text(data.error);
                         $("div#upcomingEvent").append(error);
-					} 
-                    else
-					{
-                        if(data.warning != undefined)
-                        {
-                            alert('test warning');
+					} else {
+                        if(data.warning != undefined) {
                             var error = $('<div class="container"></div>').text(data.warning);
                             $("div#upcomingEvent").append(error);
-                        }
-                        else
-                        {
+                        } else {
                             var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sept", "Oct", "Nov", "Dec"];
                             var fullMonths = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
@@ -310,16 +304,13 @@
                     $("label#statussuccess").show();
                     $("label#statuserror").hide();
 
-					if (data['success'] == 'Creating event has been successful.')
-					{
+					if (data['success'] == 'Creating event has been successful.') {
 						$("label#statussuccess").show();
                         $("label#statussuccess").text(data['success']);
                         $("button#addanothereventadd").show();
                         $("button#addevent").hide();
                         $("button#addeventclose").text('Close');
-					}
-					else
-					{
+					} else {
 						$("label#statuserror").show();
                         $("label#statuserror").text(data['error']);
                         $("button#addanothereventadd").hide();

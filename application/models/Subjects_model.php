@@ -1,29 +1,21 @@
 <?php
 class Subjects_model extends CI_Model {
 	
-	public function __construct()
-	{
+	public function __construct() {
 		$this->load->database();
-  }
+	}
     
-  public function get_subjects()
-	{
-
+	public function get_subjects() {
 		$query = $this->db->get('subjects');
 		echo json_encode($query->result());
-
-  }
+	}
     
-  public function get_subjectsbylevel($gradelevel)
-	{
-	
-    $query = $this->db->get_where('subjects',array('gradelevel' => $gradelevel));
+	public function get_subjectsbylevel($gradelevel) {
+		$query = $this->db->get_where('subjects',array('gradelevel' => $gradelevel));
 		echo json_encode($query->result());
-
 	}
     	
-	public function create_subject()
-	{
+	public function create_subject() {
 		$data = array(
         	'subject' => $this->input->post('subjectName'),
         	'gradelevel' => $this->input->post('gradeLevel')
@@ -32,13 +24,11 @@ class Subjects_model extends CI_Model {
 		$query = $this->db->insert('subjects', $data);
 		$newSubject = $this->db->insert_id();
 
-		if ($query == false)
-		{
+		if ($query == false) {
 			$errorMessage = "Unable to proceed. Can't create subject";
 			$error = array('error' => $errorMessage);
 			echo json_encode($error);
-		}
-		else {
+		} else {
 			$query = $this->db->get_where('subjects',array('gradelevel' => $this->input->post('gradeLevel')));
 			echo json_encode($query->result());
 
