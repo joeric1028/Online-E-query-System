@@ -1,8 +1,7 @@
 <?php
 class Student_model extends CI_Model {
 	
-	public function __construct()
-	{
+	public function __construct() {
 		$this->load->database();
 	}
 	
@@ -14,16 +13,13 @@ class Student_model extends CI_Model {
 
 	}
     
-	public function get_studentsbylevel($gradelevel)
-	{
-	
+	public function get_studentsbylevel($gradelevel) {
 		$query = $this->db->get_where('student',array('gradelevel' => $gradelevel));
 		echo json_encode($query->result());
 
 	}
     	
-	public function create_student()
-	{
+	public function create_student() {
 		$data = array(
 			'id' => $this->input->post('idNumber'),
         	'firstname' => $this->input->post('firstName'),
@@ -36,8 +32,7 @@ class Student_model extends CI_Model {
 
 		$query = $this->db->insert('student', $data);
 
-		if ($query == false)
-		{
+		if ($query == false) {
 			$errorMessage = "Unable to proceed. Can't add student";
 			$error = array('error' => $errorMessage);
 			echo json_encode($error);
