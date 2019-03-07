@@ -236,6 +236,22 @@ class User_model extends CI_Model {
 		}
 	}
 
+	public function search_parent()
+	{
+		$json = [];
+		$this->load->database();
+		
+		if(!empty($this->input->get("q"))){
+			$this->db->like('text', $this->input->get("q"));
+			$query = $this->db->select('id, text')
+						->limit(10)
+						->get("parent_view");
+			$json = $query->result();
+		}
+
+		echo json_encode($json);
+	}
+
 	public function changepic() 
 	{
 		$config = array(

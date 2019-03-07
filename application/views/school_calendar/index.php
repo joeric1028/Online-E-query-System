@@ -3,10 +3,12 @@
         <div class="card">
             <div class="card-body d-flex justify-content-between">
                 <h2> School Calendar </h2>
+                <?php if($type == "Teacher" || $type == "Administrator"): ?>
                 <span class="my-auto">
                     <button class="btn btn-danger" data-toggle="modal" data-target="#exportEventModal">Export</button>
                     <button class="btn btn-success" data-toggle="modal" data-target="#addEventModal">Add Event</button>
                 </span>
+                <?php endif?>
             </div>
         </div>
     </div>

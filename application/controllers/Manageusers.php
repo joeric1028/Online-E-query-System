@@ -37,4 +37,9 @@
             header("Content-Type: application/json; charset=UTF-8");
             $this->User_model->delete_user();
         }
+
+        public function searchparent() {
+            header("Content-Type: application/json; charset=UTF-8");
+            $this->User_model->search_parent();
+        }
     }

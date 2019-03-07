@@ -14,17 +14,23 @@
 </div>
 <?php if($type == "Treasurer" || $type == "Administrator"): ?>
   <div class="row">
-    <div class="accordion">
-      <div class="col-12">
+    <div class="col-12">
+      <div class="accordion">
         <div class="card">
-          <div class="card-header" id="headingOne">
-            <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+          <div class="card-header d-flex justify-content-between" id="headingOne">
+            <div class="my-auto">
+              <span class="ml-2 d-none d-lg-block">
+                <span id="selectedStudentName" class="text-default"><i>Select a User</i></span>
+                <small id="selectedStudentLevel" class="text-muted d-block mt-1"></small>
+              </span>
+            </div>
+            <button id="selectUser" class="btn btn-primary" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
               Select User
             </button>
           </div>
           <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
             <div class="card-body">
-              <table cellpadding="0" cellspacing="0" id="userTable">
+              <table cellpadding="0" cellspacing="0" id="studentTable">
                 <thead class="customTh">
                     <tr>
                         <th>ID No.</th>
@@ -45,7 +51,7 @@
   </div>
   <?php endif;?>
   <div class="row">
-    <div class="col-4">
+    <div class="col-5">
         <div class="card">
             <div class="card-header d-flex justify-content-between">
                 <span class="my-auto">Assessment</span>
@@ -54,24 +60,26 @@
                 <?php endif; ?>
             </div>
             <div class="card-body">
-                <table cellpadding="0" cellspacing="0" id="accountTable">
+                <table cellpadding="0" cellspacing="0" id="assessmentTable">
                     <thead class="customTh">
                         <tr>
-                            <th>Particulars</th>
-                            <th>Amount Due</th>
+                            <th style="width:25%">Particulars</th>
+                            <th style="width:25%">Amount Due</th>
+                            <th style="width:10%"></th>
                         </tr>
-                    </thead>
+                    </thead> 
                     <tbody class="customTd">
                         <tr>
                             <td>Entrance Fee</td>
                             <td>2,700</td>
+                            <td><button class="btn btn-link icon deleteAssessment"><i class="fa fa-trash"></i></a></td>
                         </tr>
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
-    <div class="col-8">
+    <div class="col-7">
         <div class="card">
             <div class="card-header d-flex justify-content-between">
                 <span class="my-auto">Schedule of Payments</span>
@@ -116,31 +124,11 @@
       </div>
       <div class="modal-body">
         <ul class="list-group" id="assessmentItemsList">
-          <li class="list-group-item d-flex justify-content-between">
-            <span>Computer Laboratory</span>
-            <button class="btn btn-link btn-sm text-danger">Remove</button>
-          </li>
-          <li class="list-group-item d-flex justify-content-between">
-            <span>Entrance Fee</span>
-            <button class="btn btn-link btn-sm text-danger">Remove</button>
-          </li>
-          <li class="list-group-item d-flex justify-content-between">
-            <span>Tuition Fee</span>
-            <button class="btn btn-link btn-sm text-danger">Remove</button>
-          </li>
-          <li class="list-group-item d-flex justify-content-between">
-            <span>Books</span>
-            <button class="btn btn-link btn-sm text-danger">Remove</button>
-          </li>
-          <li class="list-group-item d-flex justify-content-between">
-            <span>Seniors' Project</span>
-            <button class="btn btn-link btn-sm text-danger">Remove</button>
-          </li>
-          <li class="list-group-item d-flex justify-content-between">
-            <span>Old Balance</span>
-            <button class="btn btn-link btn-sm text-danger">Remove</button>
-          </li>
+          
         </ul>
+        <div style="margin-top: 0.5em">
+          <button id="addAssessmentItemBtn" class="btn btn-link btn-sm">+ Add Assessment Item</button>
+        </div>
       </div>
       <div class="modal-footer">
         <label class="error form-label text-success" id="statussuccess"></label>
@@ -234,48 +222,99 @@
 
 <script>
   $(document).ready(function () {
-    
     $('.error').hide();
-    var table = $('#userTable').DataTable({
-        'select': {
-          style: 'single'
-        },
-        'ajax': {
-          url: '/students/view',
-          dataSrc: ''
-        },
-        'columns': [
-          { "data": "id"},
-          { "data": "firstname"},
-          { "data": "middlename",
-            render: function(data) {
-              if(data == "" || data == null) {
-                return "<i>n/a</i>";
-              }
-            }
-          },
-          { "data": "lastname"},
-          { "data": "gradelevel"},
-        ]
-      });
 
-
-      $('#manageAssessmentItemsModal').on('show.bs.modal', function (event) {
-        $.ajax({
-          url: '<?php echo site_url('assessments/view');?>',
-          dataType: 'json',
-          success: function(data) {
-            $('#assessmentItemsList').html("");
-
-            for(var c=0; c < data.length; c++) {
-              var assessmentListItemTemplate = '<li class="list-group-item d-flex justify-content-between" data-id=' + data[c].id + '>'
-                                          + '<span>' + data[c].assessmentname + '</span>'
-                                          + '<button class="btn btn-link btn-sm text-danger">Remove</button>'
-                                          + '</li>'
-              $('#assessmentItemsList').append(assessmentListItemTemplate);
+    // Select Students Table
+    var table = $('#studentTable').DataTable({
+      'select': {
+        style: 'single'
+      },
+      'ajax': {
+        url: '/students/view',
+        dataSrc: ''
+      },
+      'columns': [
+        { "data": "id"},
+        { "data": "firstname"},
+        { "data": "middlename",
+          render: function(data) {
+            if(data == "" || data == null) {
+              return "<i>n/a</i>";
+            } else {
+              return data;
             }
           }
-        });
+        },
+        { "data": "lastname"},
+        { "data": "gradelevel"},
+      ]
+    });
+
+    // Retrieves Assessment Items
+    $('#manageAssessmentItemsModal').on('show.bs.modal', function (event) {
+      $.ajax({
+        url: '<?php echo site_url('assessments/view');?>',
+        dataType: 'json',
+        success: function(data) {
+          $('#assessmentItemsList').html("");
+
+          for(var c=0; c < data.length; c++) {
+            var assessmentListItemTemplate = '<li class="list-group-item d-flex justify-content-between" data-id=' + data[c].id + '>'
+                                        + '<span>' + data[c].assessmentname + '</span>'
+                                        + '<button class="btn btn-link btn-sm text-danger delete-assessment-item">Remove</button>'
+                                        + '</li>'
+            $('#assessmentItemsList').append(assessmentListItemTemplate);
+          }
+        }
       });
+    });
+
+    // Select User
+    $('#studentTable tbody').on( 'click', 'tr', function () {
+      var userData = table.row( this ).data();
+      var name = userData.firstname + " ";
+    
+      if(userData.middlename != null || userData.middlename != "") {
+        name += userData.middlename + " ";
+      }
+      name += userData.lastname;
+
+      $('#selectedStudentName').text(name);
+      $('#selectedStudentLevel').text("Grade " + userData.gradelevel);
+      $('.collapse').collapse('hide');
+    });
+
+    // Appends an Assessment Item Input to List Group
+    $('#addAssessmentItemBtn').on('click',function(event) {
+      event.preventDefault();
+      if($('.new-assessment-item').length < 1) {
+        $('#assessmentItemsList').append('<input class="list-group-item new-assessment-item">');
+      
+        $('input.new-assessment-item').keydown(function (e) {
+          if (e.keyCode == 13) {
+            e.preventDefault();
+
+            var assessmentListItemTemplate = '<li class="list-group-item d-flex justify-content-between">'
+                                          + '<span>' + $(this).val() + '</span>'
+                                          + '<button class="btn btn-link btn-sm text-danger delete-assessment-item">Remove</button>'
+                                          + '</li>';
+
+            $('#assessmentItemsList').append(assessmentListItemTemplate);
+            $('.new-assessment-item').remove();
+
+            return false;
+          } 
+        });
+      }
+
+      // Removes Assessment Item
+      $('.delete-assessment-item').on('click', function(e){
+        alert("HAHA!");
+        e.preventDefault();
+        $(this).parent().remove();
+      });
+    });
+
+    
   });
 </script>

@@ -39,5 +39,11 @@
         $this->Grades_model->get_gradesByStudent($studentId);
         
     }
+ 
+    public function updateGrades() 
+    {
+        header("Content-Type: application/json; charset=UTF-8");
+        $this->Grades_model->update_grades();
+    }
 
 }

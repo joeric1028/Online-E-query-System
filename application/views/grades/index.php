@@ -7,6 +7,7 @@
         </div>
     </div>
 </div>
+
 <!-- Teacher's Row -->
 <?php if($type == "Teacher" || $type == "Administrator"): ?>
 <div class="row"> 
@@ -38,7 +39,7 @@
             <div class="card-header d-flex justify-content-between">
                 <span>Subjects</span>
                 <div>
-                    <button class="btn btn-primary btn-sm" type="button" disabled id="saveBtn">
+                    <button class="btn btn-primary btn-sm saveBtn" type="button" disabled>
                         Save
                     </button>
                 </div>
@@ -56,6 +57,14 @@
                     </thead>
                     <tbody class="customTd"></tbody>
                 </table>
+            </div>
+            <div class="card-footer d-flex justify-content-between">
+                <span></span>
+                <div>
+                    <button class="btn btn-primary btn-sm saveBtn" type="button" disabled>
+                        Save
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -134,21 +143,21 @@
         <div class="card">
             <div class="card-header">Overall Grades</div>
             <div class="card-body">
-                <table cellpadding="0" cellspacing="0" id="userTable">
+                <table cellpadding="0" cellspacing="0" id="gradesTable">
                     <thead class="customTh">
                         <tr>
+                            <th style="width: 30%"> Subject Name </th>
                             <th style="width: 10%">Grade Level</th>
-                            <th style="width: 15%">Section</th>
-                            <th style="width: 15%">Teacher</th>
+                            <!-- <th style="width: 15%">Section</th> -->
+                            <!-- <th style="width: 15%">Teacher</th> -->
                             <th style="width: 8%">1st</th>
                             <th style="width: 8%">2nd</th>
                             <th style="width: 8%">3rd</th>
                             <th style="width: 8%">4th</th>
-                            <th style="width: 12%">Final Grade</th>
+                            <th style="width: 15%">Final Grade</th>
                         </tr>
                     </thead>
-                        <tbody class="customTd">
-                    </tbody>
+                        <tbody class="customTd"></tbody>
                 </table>
             </div>
         </div>
@@ -157,12 +166,11 @@
 
 <script>
     function enableSaveBtnOnChange() {
-        $('#saveBtn').attr('disabled',false);
+        $('.saveBtn').attr('disabled',false);
     }
 
     // Retrieve Students By Level
     function getStudentsByLevel(level) {
-        
         $.ajax({
             url: 'students/view/' + level,
             dataType: 'json',
@@ -172,7 +180,7 @@
                     var studentListItemTemplate = '<li class="list-group-item" data-value="' + data[c].id + '">'
                                                 + data[c].firstname + ' ' + data[c].lastname + '</li>';
                     $('#studentList').append(studentListItemTemplate);
-
+ 
                     // Allows selection of student
                     $('#studentList > li').click(function(e) {
                         e.preventDefault()
@@ -214,30 +222,69 @@
         });   
     }
 
-    $(document).ready(function () {
+    // Retrieves Grades By Student
+    function getGradesByStudent(studentId) {
+        var avgGrades = [0,0,0,0];
+        $('input').val("");
+        $.ajax({
+            url: 'grades/view/' + studentId ,
+            dataType: 'json',
+            success: function(data) {
+                for(var c=0; c < data.length; c++) {
+                    $('#subjectTable').find('tr[data-value='+ data[c].subjects_id +']').find('input')[0].value = data[c].firstgrading;
+                    $('#subjectTable').find('tr[data-value='+ data[c].subjects_id +']').find('input')[1].value = data[c].secondgrading;
+                    $('#subjectTable').find('tr[data-value='+ data[c].subjects_id +']').find('input')[2].value = data[c].thirdgrading;
+                    $('#subjectTable').find('tr[data-value='+ data[c].subjects_id +']').find('input')[3].value = data[c].fourthgrading;
+
+                    avgGrades[0] += parseInt(data[c].firstgrading);
+                    avgGrades[1] += parseInt(data[c].secondgrading);
+                    avgGrades[2] += parseInt(data[c].thirdgrading);
+                    avgGrades[3] += parseInt(data[c].fourthgrading);
+                }
+
+                $('#1stgrading').text(avgGrades[0]/data.length);
+                $('#2ndgrading').text(avgGrades[1]/data.length);
+                $('#3rdgrading').text(avgGrades[2]/data.length);
+                $('#4thgrading').text(avgGrades[3]/data.length);
+            }
+        });
+
+        $("#gradesTable").dataTable().fnDestroy();
         var table = $('#gradesTable').DataTable({
             'select': true,
             'ajax': {
-                url: "<?php echo base_url('api/user_list')?>",
+                url: 'grades/view/' + $('li.active').attr('data-value'),
                 dataSrc: ''
             },
             'columns': [
-                { "data": null },
-                { "data": null },
-                { "data": null },
-                { "data": null },
-                { "data": null },
-                { "data": null },
-                { "data": null },
-                { "data": null,
-                    "render": function() {
-                        return "hello"; 
+                { data: 'subject' },
+                { data: 'gradelevel'},
+                { 
+                    data: 'firstgrading',
+                    render: function(data) {
+                        if(data == null || data == '0') {
+                            return "NG";
+                        } else {
+                            return data;
+                        }
+                    } 
+                },
+                { data: 'secondgrading' },
+                { data: 'thirdgrading' },
+                { data: 'fourthgrading' },
+                {
+                    render: function(data,type,full) {
+                        console.log(full);
+                        var avg = parseInt(full.firstgrading) + parseInt(full.secondgrading) + parseInt(full.thirdgrading) + parseInt(full.fourthgrading) 
+                        return avg/4; 
                     }
                 }
             ],
             "rowid": "id"
         });
+    }
 
+    $(document).ready(function () {
         var date = new Date();
         var formData = {
             'year'              : date.getFullYear(),
@@ -246,93 +293,136 @@
             'student_id'        : 1,
             'schoolyear_id'     : 3
         };
-        
-        // For Grades
-        $.ajax({
-				type: "POST",
-				url: "<?php echo site_url('grades/view');?>",
-                data: formData,
-                beforeSend: function() {
-                    $('.loader').show();
-                },
-				error: function(xhr, status, error) {
-                    $('.loader').hide();
-                    $('.grading').show();
 
-                    alert( "error occured!\n"+error );
-				},
-				success: function(data) {
-                    $('.loader').hide();
-                    $('.grading').show();
-                    
-					if (data.error != undefined)
-					{
-                        $('div#1stgrading').text(data.error);
-                        $('div#2ndgrading').text(data.error);
-                        $('div#3rdgrading').text(data.error);
-                        $('div#4thgrading').text(data.error);
-					} 
+        // For Grades
+        /*$.ajax({
+            type: "POST",
+            url: "<?php //echo site_url('grades/view');?>",
+            data: formData,
+            beforeSend: function() {
+                $('.loader').show();
+            },
+            error: function(xhr, status, error) {
+                $('.loader').hide();
+                $('.grading').show();
+
+                alert( "error occured!\n"+error );
+            },
+            success: function(data) {
+                $('.loader').hide();
+                $('.grading').show();
+                
+                if (data.error != undefined)
+                {
+                    $('div#1stgrading').text(data.error);
+                    $('div#2ndgrading').text(data.error);
+                    $('div#3rdgrading').text(data.error);
+                    $('div#4thgrading').text(data.error);
+                } 
+                else
+                {
+                    if(data.warning != undefined)
+                    {
+                        $('div#1stgrading').text(data.warning);
+                        $('div#2ndgrading').text(data.warning);
+                        $('div#3rdgrading').text(data.warning);
+                        $('div#4thgrading').text(data.warning);
+                    }
                     else
-					{
-                        if(data.warning != undefined)
+                    {
+                        var ng = 'NG';
+                        if (data.data[0].firstgrading != null)
                         {
-                            $('div#1stgrading').text(data.warning);
-                            $('div#2ndgrading').text(data.warning);
-                            $('div#3rdgrading').text(data.warning);
-                            $('div#4thgrading').text(data.warning);
+                            $('div#1stgrading').text(data.data[0].firstgrading);
                         }
                         else
                         {
-                            var ng = 'NG';
-                            if (data.data[0].firstgrading != null)
-                            {
-                                $('div#1stgrading').text(data.data[0].firstgrading);
-                            }
-                            else
-                            {
-                                $('div#1stgrading').text(ng);
-                            }
-
-                            if (data.data[0].secondgrading != null)
-                            {
-                                $('div#2ndgrading').text(data.data[0].secondgrading);
-                            }
-                            else
-                            {
-                                $('div#2ndgrading').text('NG');
-                            }
-
-                            if (data.data[0].thirdgrading != null)
-                            {
-                                $('div#3rdgrading').text(data.data[0].thirdgrading);
-                            }
-                            else
-                            {
-                                $('div#3rdgrading').text('NG');
-                            }
-
-                            if (data.data[0].fourthgrading != null)
-                            {
-                                $('div#4thgrading').text(data.data[0].fourthgrading);
-                            }
-                            else
-                            {
-                                $('div#4thgrading').text('NG');
-                            }
+                            $('div#1stgrading').text(ng);
                         }
-					}
-				}
-			});
+
+                        if (data.data[0].secondgrading != null)
+                        {
+                            $('div#2ndgrading').text(data.data[0].secondgrading);
+                        }
+                        else
+                        {
+                            $('div#2ndgrading').text('NG');
+                        }
+
+                        if (data.data[0].thirdgrading != null)
+                        {
+                            $('div#3rdgrading').text(data.data[0].thirdgrading);
+                        }
+                        else
+                        {
+                            $('div#3rdgrading').text('NG');
+                        }
+
+                        if (data.data[0].fourthgrading != null)
+                        {
+                            $('div#4thgrading').text(data.data[0].fourthgrading);
+                        }
+                        else
+                        {
+                            $('div#4thgrading').text('NG');
+                        }
+                    }
+                }
+            }
+        });
+        */
 
         getStudentsByLevel($('#sectionDropdownBtn').data('value'));
         getSubjectsByLevel($('#sectionDropdownBtn').data('value'));
 
+        $('.loader').hide();
     });
 
-    $('#saveBtn').click(function(){
-        // Insert AJAX here ^-^ (  0)>
-        // Disable when ajax sucess
-        $(this).attr('disabled',true);
+    $('.saveBtn').click(function(){
+        var grades = [];
+
+        // Pushes input in each row to an array
+        for(var c=1; c < $('#subjectTable').find('tr').length; c++) {
+            var subjectsId = $('#subjectTable').find('tr').eq(c).data('value');
+            grades.push({
+                'subjects_id': subjectsId,
+                'firstgrading': $('#subjectTable').find('tr').eq(c).find('input').eq(0).val(),
+                'secondgrading': $('#subjectTable').find('tr').eq(c).find('input').eq(1).val(),
+                'thirdgrading': $('#subjectTable').find('tr').eq(c).find('input').eq(2).val(),
+                'fourthgrading': $('#subjectTable').find('tr').eq(c).find('input').eq(3).val()
+                });
+        }
+
+        // Data to be updated
+        var updateData = {
+            'studentId': $('li.active').attr('data-value'),
+            'gradeLevel': $('#sectionDropdownBtn').data('value'),
+            'grades': grades
+        }
+
+        // Update Grades AJAX
+        $.ajax({
+            type: 'POST',
+            url: 'grades/update',
+            dataType: 'json',
+            data: updateData,
+            beforeSend: function() {
+                $('.grading').text("");
+                $('.loader').show();
+            },
+            success: function(data) {
+                console.log('grade update success');
+                $('.loader').hide();
+                getGradesByStudent($('li.active').data('value'));
+            },
+            error: function() {
+                $('.loader').hide();
+                getGradesByStudent($('li.active').data('value'));
+            }
+        });
+
+        // Disable save button when ajax sucess
+        $('.saveBtn').attr('disabled',true);
     });
 
     $('.dropdown-menu a').click(function(){
@@ -345,18 +435,6 @@
     // Retrieves grades of selected student
     $('#studentList').click(function(e) {
         console.log($('li.active').attr('data-value'));
-        $('input').val("");
-        $.ajax({
-            url: 'grades/view/' + $('li.active').attr('data-value') ,
-            dataType: 'json',
-            success: function(data) {
-                for(var c=0; c < data.length; c++) {
-                    $('#subjectTable').find('tr[data-value='+ data[c].subjects_id +']').find('input')[0].value = data[c].firstgrading;
-                    $('#subjectTable').find('tr[data-value='+ data[c].subjects_id +']').find('input')[1].value = data[c].secondgrading;
-                    $('#subjectTable').find('tr[data-value='+ data[c].subjects_id +']').find('input')[2].value = data[c].thirdgrading;
-                    $('#subjectTable').find('tr[data-value='+ data[c].subjects_id +']').find('input')[3].value = data[c].fourthgrading;
-                }
-            }
-        });
+        getGradesByStudent($('li.active').attr('data-value'));
     });
 </script>

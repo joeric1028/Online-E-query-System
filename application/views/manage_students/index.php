@@ -191,172 +191,178 @@
 		
 		// Get Subjects
 		$.ajax({
-		url: '<?php echo site_url('subjects/view');?>',
-		dataType: 'json',
-		success: function(data) {
-			$('#subjectList').html("");
+			url: '<?php echo site_url('subjects/view');?>',
+			dataType: 'json',
+			success: function(data) {
+				$('#subjectList').html("");
 
-			for(var c=0; c < data.length; c++) {
-			var subjectListItemTemplate = '<li class="list-group-item">'
-											+ data[c].subject
-											+ '<button type="button" class="close custom-close" aria-label="Close">'
-											+ '<span aria-hidden="true">&times;</span>'
-											+ '</button>'
-										+ '</li>';
-			$('#subjectList').append(subjectListItemTemplate);
+				for(var c=0; c < data.length; c++) {
+				var subjectListItemTemplate = '<li class="list-group-item">'
+												+ data[c].subject
+												+ '<button type="button" class="close custom-close" aria-label="Close">'
+												+ '<span aria-hidden="true">&times;</span>'
+												+ '</button>'
+											+ '</li>';
+				$('#subjectList').append(subjectListItemTemplate);
+				}
 			}
-		}
-		});
+			});
 
-			
+				
 
-		$('.error').hide();
-		$('#addSubjectModal').on('shown.bs.modal', function () {
-			$('#subjectname').trigger('focus');
+			$('.error').hide();
+			$('#addSubjectModal').on('shown.bs.modal', function () {
+				$('#subjectname').trigger('focus');
 		});
 
 		$('.dropdown-menu a').click(function(){
-		// if($(this).text() == "All Levels") {
-		//     $('#addSubjectBtn').attr('disabled',true);
-		//     $('#addStudentBtn').attr('disabled',true);
-		//     $('.active').removeClass('active');
-		// } else {
-		//     $('#addSubjectBtn').attr('disabled',false);
-		//     $('#addSubjectBtn').show();
-		// }
+			// if($(this).text() == "All Levels") {
+			//     $('#addSubjectBtn').attr('disabled',true);
+			//     $('#addStudentBtn').attr('disabled',true);
+			//     $('.active').removeClass('active');
+			// } else {
+			//     $('#addSubjectBtn').attr('disabled',false);
+			//     $('#addSubjectBtn').show();
+			// }
 
-		$('#subjectList').html("");
-		$('#studentTable').find('tbody').html("");
-		
-		// Get Subjects by Level
-		$.ajax({
-			url: 'subjects/view/' + $(this).data('value') ,
-			dataType: 'json',
-			success: function(data) {
 			$('#subjectList').html("");
+			$('#studentTable').find('tbody').html("");
+			
+			// Get Subjects by Level
+			$.ajax({
+				url: 'subjects/view/' + $(this).data('value') ,
+				dataType: 'json',
+				success: function(data) {
+					$('#subjectList').html("");
 
-			for(var c=0; c < data.length; c++) {
-				var subjectListItemTemplate = '<li class="list-group-item" data-value="'+ data[c].id +'">'
-											+ data[c].subject
-											+ '<button type="button" class="close custom-close" aria-label="Close">'
-											+ '<span aria-hidden="true">&times;</span>'
-											+ '</button>'
-											+ '</li>';
-				$('#subjectList').append(subjectListItemTemplate);
-			}
-			}
-		});        
+					for(var c=0; c < data.length; c++) {
+						var subjectListItemTemplate = '<li class="list-group-item" data-value="'+ data[c].id +'">'
+													+ data[c].subject
+													+ '<button type="button" class="close custom-close" aria-label="Close">'
+													+ '<span aria-hidden="true">&times;</span>'
+													+ '</button>'
+													+ '</li>';
+						$('#subjectList').append(subjectListItemTemplate);
+					}
+				}
+			});        
 
-		// Get Students by Level
-		$.ajax({
-			url: 'students/view/' + $(this).data('value') ,
-			dataType: 'json',
-			success: function(data) {
+			// Get Students by Level
+			$.ajax({
+				url: 'students/view/' + $(this).data('value') ,
+				dataType: 'json',
+				success: function(data) {
+					for(var c=0; c < data.length; c++) {
+						var studentListItemTemplate = '<tr>' 
+													+ '<td>' + data[c].id +'</td>' 
+													+ '<td>' + data[c].firstname + ' ' + data[c].lastname + '</td>' 
+												+ '</tr>'
+					$('#studentTable').find('tbody').append(studentListItemTemplate);
+					}
+				}
+			});        
 
-			for(var c=0; c < data.length; c++) {
-				var studentListItemTemplate = '<tr>' 
-											+ '<td>' + data[c].id +'</td>' 
-											+ '<td>' + data[c].firstname + ' ' + data[c].lastname + '</td>' 
-										+ '</tr>'
-			$('#studentTable').find('tbody').append(studentListItemTemplate);
-			}
-			}
-		});        
-
-		$('.btn:first-child').text($(this).text());
-		$('.btn:first-child').val($(this).text());
-		$('.btn:first-child').attr('data-value',$(this).data('value'));
+			$('.btn:first-child').text($(this).text());
+			$('.btn:first-child').val($(this).text());
+			$('.btn:first-child').attr('data-value',$(this).data('value'));
 		});
 
+		// Add Subject
+		$('#addsubject').click(function(event) {
+			event.preventDefault();
 
-	
+			$.ajax({
+				url: 'subjects/create/',
+				type: 'POST',
+				dataType: 'json',
+				dataSrc: '',
+				data: { 
+					'subjectName': $('#subjectname').val(),
+					'gradeLevel': $('#subjectGradeLevel').val(),
+					'selectedLevel': $('#subjectGradeLevel').attr('data-value')
+				}, 
+				success: function(data) {
+					$('#subjectList').html('');
+					for(var c=0; c < data.length; c++) {
+						var subjectListItemTemplate = '<li class="list-group-item" data-value="'+ data[c].id +'">'
+														+ data[c].subject
+														+ '<button type="button" class="close custom-close" aria-label="Close">'
+														+ '<span aria-hidden="true">&times;</span>'
+														+ '</button>'
+													+ '</li>';
+						$('#subjectList').append(subjectListItemTemplate);
+					}
 
-	// Add Subject
-	$('#addsubject').click(function(event) {
-		event.preventDefault();
+					$('#addSubjectModal').modal('hide');
+				}
+			});        
+		});
 
-		$.ajax({
-		url: 'subjects/create/',
-		type: 'POST',
-		dataType: 'json',
-		dataSrc: '',
-		data: { 
-			'subjectName': $('#subjectname').val(),
-			'gradeLevel': $('#subjectGradeLevel').val()
-		},
-		success: function(data) {
+		// Add Student
+		$('#addstudent').click(function(event) {
+			event.preventDefault();
 
-			for(var c=0; c < data.length; c++) {
-			var subjectListItemTemplate = '<li class="list-group-item" data-value="'+ data[c].id +'">'
-											+ data[c].subject
-											+ '<button type="button" class="close custom-close" aria-label="Close">'
-											+ '<span aria-hidden="true">&times;</span>'
-											+ '</button>'
-										+ '</li>';
-			$('#subjectList').append(subjectListItemTemplate);
+			$.ajax({
+				url: 'students/create/',
+				type: 'POST',
+				dataType: 'json',
+				dataSrc: '',
+				data: { 
+					'firstName': $('#firstname').val(),
+					'middleName': $('#middlename').val(),
+					'lastName': $('#lastname').val(),
+					'idNumber': $('#idnumber').val(),
+					'gender': $('input[name=gender]:checked').val(),
+					'parentId': $('#selectParent').val(),
+					'gradeLevel': $('#studentGradeLevel').val(),
+					'selectedLevel': $('#subjectGradeLevel').attr('data-value')
+				},
+				success: function(data) {
+					$('#studentTable').find('tbody').html('');
+					for(var c=0; c < data.length; c++) {
+						var studentListItemTemplate = '<tr>' 
+														+ '<td>' + data[c].id +'</td>' 
+														+ '<td>' + data[c].firstname + " " + data[c].middlename + ' ' + data[c].lastname + '</td>' 
+													+ '</tr>'
+						$('#studentTable').find('tbody').append(studentListItemTemplate);
+					}
+
+					$('#addStudentModal').modal('hide');
+				}
+			});        
+		});
+
+		$('.list-group li').mouseenter(function(){
+			if($('.btn:first-child').val() != "All Levels") {
+				$(this).find('.custom-close').show();
 			}
+		}).mouseleave(function(){
+			$(this).find('.custom-close').hide();
+		});
 
-			$('#addSubjectModal').modal('hide');
-		}
-		});        
-	});
-
-	// Add Student
-	$('#addstudent').click(function(event) {
-		event.preventDefault();
-
-    $.ajax({
-      url: 'students/create/',
-      type: 'POST',
-      dataType: 'json',
-      dataSrc: '',
-      data: { 
-        'firstName': $('#firstname').val(),
-        'middleName': $('#middlename').val(),
-        'lastName': $('#lastname').val(),
-        'idNumber': $('#idnumber').val(),
-        'gender': $('input[name=gender]:checked').val(),
-        //'parent': $('#selectParent').text(),
-        'gradeLevel': $('#studentGradeLevel').val()
-      },
-      success: function(data) {
-
-			for(var c=0; c < data.length; c++) {
-			var studentListItemTemplate = '<tr>' 
-											+ '<td>' + data[c].id +'</td>' 
-											+ '<td>' + data[c].firstname + " " + data[c].middlename + ' ' + data[c].lastname + '</td>' 
-										+ '</tr>'
-			$('#studentTable').find('tbody').append(studentListItemTemplate);
+		$('.list-group li').click(function(e) {
+			e.preventDefault()
+			if($(".btn:first-child").val() != "All Levels") {
+				$(this).parent().find('li').removeClass('active');
+				$(this).addClass('active');
 			}
+		});
 
-			$('#addStudentModal').modal('hide');
-		}
-		});        
-	});
-
-	$('.list-group li').mouseenter(function(){
-		if($('.btn:first-child').val() != "All Levels") {
-			$(this).find('.custom-close').show();
-		}
-	}).mouseleave(function(){
-		$(this).find('.custom-close').hide();
-	});
-
-	$('.list-group li').click(function(e) {
-		e.preventDefault()
-		if($(".btn:first-child").val() != "All Levels") {
-			$(this).parent().find('li').removeClass('active');
-			$(this).addClass('active');
-		}
-	});
-
-	$('#selectParent').select2({
-		placeholder: 'Select a Parent',
-		ajax: {
-			url: 'https://api.github.com/search/repositories',
-			dataType: 'json'
-			// Additional AJAX parameters go here; see the end of this chapter for the full code of this example
-		}
-	});
+		// Search Parent
+		$('#selectParent').select2({
+			placeholder: '--- Select Parent ---',
+			ajax: {
+				url: 'parents/search',
+				dataType: 'json',
+				delay: 250,
+				processResults: function (data) {
+					console.log(data);
+					return {
+						results: data
+					};
+				},
+				cache: true
+			}
+		});
 	});
 	</script>

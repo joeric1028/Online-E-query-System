@@ -31,11 +31,10 @@ class Student_model extends CI_Model {
 			'lastname' => $this->input->post('lastName'),
 			'gender' => $this->input->post('gender'),
 			'gradelevel' => $this->input->post('gradeLevel'),
-			//'parent_id' => $this->input->post('parentId'),
+			'users_id' => $this->input->post('parentId')
 		);
-		
+
 		$query = $this->db->insert('student', $data);
-		$newSubject = $this->db->insert_id();
 
 		if ($query == false)
 		{
@@ -44,8 +43,13 @@ class Student_model extends CI_Model {
 			echo json_encode($error);
 		}
 		else {
-			$query = $this->db->get_where('student',array('gradelevel' => $this->input->post('gradeLevel')));
-			echo json_encode($query->result());
+			if($this->input->post('selectedLevel') != "") {
+				$query = $this->db->get_where('student',array('gradelevel' => $this->input->post('selectedLevel')));
+				echo json_encode($query->result());
+			} else {
+				$query = $this->db->get('student');
+				echo json_encode($query->result());
+			}
 
 		}
 	}

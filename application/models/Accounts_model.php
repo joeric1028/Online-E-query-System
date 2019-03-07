@@ -27,7 +27,7 @@ class Accounts_model extends CI_Model {
     echo json_encode($query->result());
     
   }
-  
+   
   public function get_assessmentsbystudentid() 
   {
     $this->db->select('*');

@@ -85,6 +85,7 @@
           <select class="form-control custom-select" name="type" id="type">
             <option id='optionTeacher' value="Teacher">Teacher</option>
             <option id='optionParent' value="Parent">Parent</option>
+						<option id='optionTreasurer' value="Treasurer">Treasurer</option>
             <option id='optionAdministrator' value="Administrator">Administrator</option>
           </select>
         </div>

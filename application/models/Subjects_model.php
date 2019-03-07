@@ -39,9 +39,13 @@ class Subjects_model extends CI_Model {
 			echo json_encode($error);
 		}
 		else {
-			$query = $this->db->get_where('subjects',array('gradelevel' => $this->input->post('gradeLevel')));
-			echo json_encode($query->result());
-
+			if($this->input->post('selectedLevel') != "") {
+				$query = $this->db->get_where('subjects',array('gradelevel' => $this->input->post('selectedLevel')));
+				echo json_encode($query->result());
+			} else {
+				$query = $this->db->get('subjects');
+				echo json_encode($query->result());
+			}
 		}
 	}
-}
+} 

@@ -59,6 +59,7 @@ $route['logout'] = 'api/logout';
 $route['users'] = 'manageusers';
 $route['users/create'] = 'manageusers/createuser';
 $route['users/delete'] = 'manageusers/deleteuser';
+$route['parents/search'] = 'manageusers/searchparent'; 
 
 // Manage Students
 $route['students'] = 'managestudents';
@@ -84,7 +85,7 @@ $route['assessments/delete/(:num)'] = 'accounts/deleteassessment/$1';
 $route['grades'] = 'grades';
 $route['grades/view'] = 'grades/getgrades';
 $route['grades/view/(:num)'] = 'grades/getgradesByStudent/$1';
-
+$route['grades/update'] = 'grades/updateGrades';
 
 
 // School Calendar
