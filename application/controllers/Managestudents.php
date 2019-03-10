@@ -39,6 +39,11 @@
             $this->Student_model->get_studentsbylevel($gradelevel);
         }
 
+        public function getstudentsbyparent($parentId) {
+            header("Content-Type: application/json; charset=UTF-8");
+            $this->Student_model->get_studentsbyparent($parentId);
+        }
+
         public function createstudent() {
             header("Content-Type: application/json; charset=UTF-8");
             $this->Student_model->create_student();

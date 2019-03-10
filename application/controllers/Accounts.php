@@ -34,6 +34,11 @@ class Accounts extends CI_Controller {
         header("Content-Type: application/json; charset=UTF-8");
         $this->Accounts_model->get_accounts();
     }
+
+    public function deleteaccounts() {
+        header("Content-Type: application/json; charset=UTF-8");
+        $this->Accounts_model->delete_accounts();
+    }
     /* Accounts */
 
     /* Assessments */
@@ -42,7 +47,7 @@ class Accounts extends CI_Controller {
         header("Content-Type: application/json; charset=UTF-8");
         $this->Accounts_model->get_assessments();
     }
-
+ 
     public function getassessmentsbystudentid($studentId) {
         header("Content-Type: application/json; charset=UTF-8");
         $this->Accounts_model->get_assessmentsbystudentid($studentId);
@@ -63,5 +68,19 @@ class Accounts extends CI_Controller {
         $this->Accounts_model->delete_assessment($assessmentId);
     }
     /* Assessments */
+
+    /* Payments */
+    public function getpaymentsbystudentid($studentId) {
+        header("Content-Type: application/json; charset=UTF-8");
+        $this->Accounts_model->get_paymentsbystudentid($studentId);
+    }
+
+    public function createpaymentschedule() {
+        header("Content-Type: application/json; charset=UTF-8");
+        $this->Accounts_model->create_paymentschedule();
+    }
+
+    /* Payments */
+
 }
  

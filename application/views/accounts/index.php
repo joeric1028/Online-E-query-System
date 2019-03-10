@@ -4,9 +4,14 @@
       <div class="card-body d-flex justify-content-between">
         <h2> Manage Accounts </h2>
         <span class="my-auto">
-        <?php if($type == "Treasurer" || $type == "Administrator"): ?>
-        <button class="btn btn-primary" data-toggle="modal" data-target="#manageAssessmentItemsModal">Manage Particulars</button>
-        <?php endif;?>
+          <?php if($type == "Treasurer" || $type == "Administrator"): ?>
+          <button class="btn btn-primary" data-toggle="modal" data-target="#manageAssessmentItemsModal">Manage Particulars</button>
+          <?php endif; if($type == "Parent"):?>
+          <button class="btn btn-primary btn-lg dropdown-toggle" type="button" id="studentDropdownBtn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" value="">
+          </button>
+          <div id="studentDropdownList" class="dropdown-menu" aria-labelledby="sectionDropdownBtn">
+          </div>
+          <?php endif;?>
         </span>
       </div>
     </div>
@@ -83,7 +88,7 @@
         <?php endif;?>
       </div>
       <div class="card-body">
-        <table cellpadding="0" cellspacing="0" id="accountTable">
+        <table cellpadding="0" cellspacing="0" id="paymentsTable">
           <thead class="customTh">
             <tr>
               <th>Date</th>
@@ -188,7 +193,8 @@
           </div>
           <div class="form-group">
             <label class="form-label">Particular</label>
-            <input type="text" class="form-control" name="particulars" id="scheduleParticulars">
+            <select class="form-control custom-select" name="type" id="scheduleParticulars">
+            </select>
             <label class="error text-danger" for="particulars" id="particulars_error">This field is required.</label>
           </div>
           <div class="form-group">
@@ -213,6 +219,8 @@
   </div>
 </div>
 <script>
+
+
   $(document).ready(function () {
     $('.error').hide();
   
@@ -249,12 +257,13 @@
         success: function(data) {
           for(var c=0; c < data.length; c++) {
             $('#particulars').append('<option value="' + data[c].id + '" selected="">' + data[c].assessmentname + '</option>');
+            $('#scheduleParticulars').append('<option value="' + data[c].id + '" selected="">' + data[c].assessmentname + '</option>');
           }
         }
     });
   
     // Retrieves Assessment Items for Manage Assessments Modal
-    //$('#manageAssessmentItemsModal').on('show.bs.modal', function (event) {
+    $('#manageAssessmentItemsModal').on('show.bs.modal', function () {
       $('#assessmentItemsList').html("");
       $.ajax({
         url: '<?php echo site_url('assessments/view');?>',
@@ -263,11 +272,6 @@
           console.log(data);
           if(data != null) {
             for(var c=0; c < data.length; c++) {
-              // var assessmentListItemTemplate = '<li class="list-group-item d-flex justify-content-between" data-id=' + data[c].id + '>'
-              //                             + '<span>' + data[c].assessmentname + '</span>'
-              //                             + '<button class="btn btn-link btn-sm text-danger delete-assessment-item">Remove</button>'
-              //                             + '</li>';
-              
               var assessmentListItemTemplate = '<li class="list-group-item d-flex justify-content-between" data-id="' + data[c].id + '">'
                                               +   '<div class="col-5 align-center pt-1">' + data[c].assessmentname + '</div>'
                                               +   '<select class="col-4 form-control custom-select" name="type" id="assessmentType">'
@@ -280,15 +284,53 @@
               $('#assessmentItemsList').append(assessmentListItemTemplate);
             }
             
+            var toBeRemovedAssessments = [];
+
             // Removes Assessment Item
             $('.delete-assessment-item').on('click', function(e){
-                e.preventDefault();
-                $(this).parent().remove();
+              e.preventDefault();
+              if($(this).parent().data('id') != "") {
+                toBeRemovedAssessments.push($(this).parent().data('id'));
+              }
+              $(this).parent().remove();
             });
+
+            // Saves/Updates Assessment Items
+            $('#saveAssessmentItems').on('click', function(event) {
+                //event.preventDefault();
+                var assessmentList = [];
+                $('li.list-group-item').each(function(i) {
+                  assessmentList.push({
+                    id: $(this).data('id'),
+                    assessmentname: $(this).find('div').text(),
+                    assessmenttype: $(this).find('select').val()
+                  });
+                });
+            
+                console.log(assessmentList);
+                console.log(toBeRemovedAssessments);
+ 
+                $.ajax({
+                  type: 'POST',
+                  url: 'assessments/update',
+                  data: { 
+                    newAssessmentList: assessmentList,
+                    removedAssessmentList: toBeRemovedAssessments 
+                  },
+                  success: function(data) {
+                    alert('update success!');
+                  },
+                  error: function(response) {
+                    console.log(response);
+                  }
+                });
+            
+                $('#manageAssessmentItemsModal').modal('hide');
+              });
           }
         }
       });
-    //});
+    });
   
     // Select User
     $('#studentTable tbody').on( 'click', 'tr', function () {
@@ -324,11 +366,15 @@
 
           // Deletes Assessment
           $('.deleteAssessment').on('click', function(event) {
-            alert('detele!');
+            alert('HOHOHO!');
             console.log($(this).parent().data('id'));
             $.ajax({
                 type: "POST",
-                url: 'assessments/delete/' + $(this).parent().parent().data('id'),
+                url: 'accounts/delete',
+                data: { 
+                  assessmentId: $(this).parent().parent().data('id'),
+                  studentId: userData.id
+                },
                 success: function(data) {
                   $('#assessmentTable > tbody').html("");
                   for(var c=0; c < data.length; c++) {
@@ -348,6 +394,24 @@
           });
         }
       });
+
+      // Retrieve Account Payments for Selected Student
+      $.ajax({
+          url: 'payments/view/' + userData.id,
+          success: function(data) {
+            $('#addScheduleModal').modal('hide');
+            $('#paymentsTable > tbody').html("");
+            for(var c=0; c < data.length; c++) {
+              var assessmentTemplate = '<tr data-id="' + data[c].id + '">'
+                                      + '<td>' + data[c].date + '</td>'
+                                      + '<td>' + data[c].assessmentname + '</td>'
+                                      + '<td>' + data[c].ornumber + '</td>'
+                                      + '<td>' + data[c].amount + '</td>'
+                                      + '</tr>';
+              $('#paymentsTable > tbody').append(assessmentTemplate);
+            }
+          }
+        });
  
       // Adds Assessment Particulars To User
       $('#addAssessment').on('click', function(event) {
@@ -379,32 +443,62 @@
               $('.deleteAssessment').on('click', function(event) {
                 alert('detele!');
                 $.ajax({
-                    type: "POST",
-                    url: 'assessments/delete/' + $(this).parent().parent().data('id'),
-                    success: function(data) {
-                      $('#assessmentTable > tbody').html("");
-                      for(var c=0; c < data.length; c++) {
-                        var assessmentTemplate = '<tr data-id="' + data[c].id + '">'
-                                                + '<td>' + data[c].assessmentname + '</td>'
-                                                + '<td>' + data[c].amount + '</td>'
-                                                + '<td>'
-                                                +   '<button class="btn btn-link icon deleteAssessment">'
-                                                +   '<i class="fa fa-trash"></i>'
-                                                + '</button></td>'
-                                                + '</tr>';
-                        $('#assessmentTable > tbody').append(assessmentTemplate);
-                        $('#addAssessmentModal').modal('hide');
-                      }
+                  type: "POST",
+                  url: 'assessments/delete/' + $(this).parent().parent().data('id'),
+                  success: function(data) {
+                    $('#assessmentTable > tbody').html("");
+                    for(var c=0; c < data.length; c++) {
+                      var assessmentTemplate = '<tr data-id="' + data[c].id + '">'
+                                              + '<td>' + data[c].assessmentname + '</td>'
+                                              + '<td>' + data[c].amount + '</td>'
+                                              + '<td>'
+                                              +   '<button class="btn btn-link icon deleteAssessment">'
+                                              +   '<i class="fa fa-trash"></i>'
+                                              + '</button></td>'
+                                              + '</tr>';
+                      $('#assessmentTable > tbody').append(assessmentTemplate);
+                      $('#addAssessmentModal').modal('hide');
                     }
-                  })
+                  }
+                })
               });
             }
           }
         })
       });
+
+      // Add Payment Schedule
+      $('#addSchedule').on('click', function(event) {
+        event.preventDefault();
+        var newPayment = {
+            date: $('#scheduleDate').val(),
+            orNumber: $('#scheduleOrNo').val(),
+            amount: $('#scheduleAmountPaid').val(),
+            assessmentId: $('#scheduleParticulars').val(),
+            studentId: userData.id,
+          };
+        $.ajax({
+          type: 'POST',
+          url: 'payments/create',
+          data: newPayment,
+          success: function(data) {
+            $('#addScheduleModal').modal('hide');
+            $('#paymentsTable > tbody').html("");
+            for(var c=0; c < data.length; c++) {
+              var assessmentTemplate = '<tr data-id="' + data[c].id + '">'
+                                      + '<td>' + data[c].date + '</td>'
+                                      + '<td>' + data[c].assessmentname + '</td>'
+                                      + '<td>' + data[c].ornumber + '</td>'
+                                      + '<td>' + data[c].amount + '</td>'
+                                      + '</tr>';
+              $('#paymentsTable > tbody').append(assessmentTemplate);
+            }
+          }
+        });
+      });
     });
 
-    // Appends an Input Assessment Item to List Group
+    // Appends an Assessment Item Input Box to List Group
     $('#addAssessmentItemBtn').on('click',function(event) {
       event.preventDefault();
       if($('.new-assessment-item').length < 1) {
@@ -413,17 +507,13 @@
         $('input.new-assessment-item').keydown(function (e) {
           if (e.keyCode == 13) {
             e.preventDefault();
-            // var assessmentListItemTemplate = '<li class="list-group-item d-flex justify-content-between">'
-            //                               + '<span>' + $(this).val() + '</span>'
-            //                               + '<button class="btn btn-link btn-sm text-danger delete-assessment-item">Remove</button>'
-            //                               + '</li>';
-  
+
             var assessmentListItemTemplate = '<li class="list-group-item d-flex justify-content-between" data-id="">'
                                             +   '<div class="col-5 align-center pt-1">' + $(this).val() + '</div>'
                                             +   '<select class="col-4 form-control custom-select" name="type" id="assessmentType">'
-                                      +       '<option value="Add">Add</option>'
-                                      +       '<option value="Deduct">Deduct</option>'
-                                         +   '</select>'
+                                            +       '<option value="Add">Add</option>'
+                                            +       '<option value="Deduct">Deduct</option>'
+                                            +   '</select>'
                                             +   '<button class="btn btn-link btn-sm text-danger delete-assessment-item">Remove</button>'
                                             + '</li>';
   
@@ -446,32 +536,97 @@
         });
       }
     });
-  
-    // Saves/Updates Assessment Items
-    $('#saveAssessmentItems').on('click', function(e) {
-      e.preventDefault();
-      var assessmentList = [];
-      $('li.list-group-item').each(function(i) {
-        assessmentList.push({
-          id: $(this).data('id'),
-          assessmentname: $(this).find('div').text(),
-          assessmenttype: $(this).find('select').val()
-        });
-      });
-  
-      $.ajax({
-        type: 'POST',
-        url: 'assessments/update',
-        data: { newAssessmentList: assessmentList }  ,
-        success: function(data) {
-          alert('update success!');
-        },
-        error: function(response) {
-          console.log(response);
+
+    <?php if($type == "Parent"): ?>
+    // Student Dropdown
+    $.ajax({
+      url: 'students/parent/view/' + <?php echo $id ?>,
+      success: function(data) {
+        if(data != null) {
+          $('#studentDropdownBtn').html(data[0].firstname + " " + data[0].lastname);
+          $('#studentDropdownBtn').val(data[0].firstname + " " + data[0].lastname);
+          $('#studentDropdownBtn').attr('data-value',data[0].id);
+          for(var c=0; c < data.length; c++) {
+            $('#studentDropdownList').append('<a class="dropdown-item" href="#" data-value="' + data[c].id + '">' + data[c].firstname + " " + data[c].lastname + '</a>');
+          }
         }
-      });
-  
-      $('#manageAssessmentItemsModal').modal('hide');
+
+        $('.dropdown-menu a').click(function(){
+          $('#studentDropdownBtn').text($(this).text());
+          $('#studentDropdownBtn').val($(this).text());
+          $('#studentDropdownBtn').attr('data-value',$(this).data('value'));
+
+          console.log('yo' + $(this).data('value'));
+          // Retrieve Accounts Assessments for Selected Student
+          $.ajax({
+            url: 'assessments/view/' + $(this).data('value'),
+            success: function(data) {
+              $('#assessmentTable > tbody').html("");
+              for(var c=0; c < data.length; c++) {
+                var assessmentTemplate = '<tr data-id="' + data[c].id + '">'
+                                        + '<td>' + data[c].assessmentname + '</td>'
+                                        + '<td>' + data[c].amount + '</td>'
+                                        + '<td>'
+                                        + '</button></td>'
+                                        + '</tr>';
+                $('#assessmentTable > tbody').append(assessmentTemplate);
+              }
+            }
+          });
+
+          // Retrieve Payments for Selected Student
+          $.ajax({
+            url: 'payments/view/' + $(this).data('value'),
+            success: function(data) {
+              $('#paymentsTable > tbody').html("");
+              for(var c=0; c < data.length; c++) {
+                var assessmentTemplate = '<tr data-id="' + data[c].id + '">'
+                                        + '<td>' + data[c].date + '</td>'
+                                        + '<td>' + data[c].assessmentname + '</td>'
+                                        + '<td>' + data[c].ornumber + '</td>'
+                                        + '<td>' + data[c].amount + '</td>'
+                                        + '</tr>';
+                $('#paymentsTable > tbody').append(assessmentTemplate);
+              }
+            }
+          });
+        });
+
+        // Retrieve Accounts Assessments for Selected Student
+        $.ajax({
+          url: 'assessments/view/' + $('#studentDropdownBtn').data('value'),
+          success: function(data) {
+            $('#assessmentTable > tbody').html("");
+            for(var c=0; c < data.length; c++) {
+              var assessmentTemplate = '<tr data-id="' + data[c].id + '">'
+                                      + '<td>' + data[c].assessmentname + '</td>'
+                                      + '<td>' + data[c].amount + '</td>'
+                                      + '<td>'
+                                      + '</button></td>'
+                                      + '</tr>';
+              $('#assessmentTable > tbody').append(assessmentTemplate);
+            }
+          }
+        });
+
+        // Retrieve Payments for Selected Student
+        $.ajax({
+          url: 'payments/view/' + $('#studentDropdownBtn').data('value'),
+          success: function(data) {
+            $('#paymentsTable > tbody').html("");
+            for(var c=0; c < data.length; c++) {
+              var assessmentTemplate = '<tr data-id="' + data[c].id + '">'
+                                      + '<td>' + data[c].date + '</td>'
+                                      + '<td>' + data[c].assessmentname + '</td>'
+                                      + '<td>' + data[c].ornumber + '</td>'
+                                      + '<td>' + data[c].amount + '</td>'
+                                      + '</tr>';
+              $('#paymentsTable > tbody').append(assessmentTemplate);
+            }
+          }
+        });
+      }
     });
+    <?php endif; ?>
   });
 </script>

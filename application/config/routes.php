@@ -65,6 +65,7 @@ $route['parents/search'] = 'manageusers/searchparent';
 $route['students'] = 'managestudents';
 $route['students/view'] = 'managestudents/getstudents';
 $route['students/view/(:num)'] = 'managestudents/getstudentsbylevel/$1';
+$route['students/parent/view/(:num)'] = 'managestudents/getstudentsbyparent/$1';
 $route['students/create'] = 'managestudents/createstudent';
 //$route['students/delete'] = 'managestudents/deletestudent';
 $route['subjects/view'] = 'managestudents/getsubjects';
@@ -75,11 +76,14 @@ $route['subjects/create'] = 'managestudents/createsubject';
 // Accounts
 $route['accounts'] = 'accounts';
 $route['accounts/view'] = 'accounts/getaccounts';
+$route['accounts/delete'] = 'accounts/deleteaccounts';
 $route['assessments/view'] = 'accounts/getassessments';
 $route['assessments/view/(:num)'] = 'accounts/getassessmentsbystudentid/$1';
 $route['assessments/add'] = 'accounts/addassessmentsbystudentid';
 $route['assessments/update'] = 'accounts/updateassessment';
 $route['assessments/delete/(:num)'] = 'accounts/deleteassessment/$1';
+$route['payments/view/(:num)'] = 'accounts/getpaymentsbystudentid/$1';
+$route['payments/create'] = 'accounts/createpaymentschedule';
 
 
 // Grades

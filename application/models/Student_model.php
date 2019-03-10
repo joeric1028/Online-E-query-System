@@ -18,6 +18,12 @@ class Student_model extends CI_Model {
 		echo json_encode($query->result());
 
 	}
+
+	public function get_studentsbyparent($parentId) {
+		$query = $this->db->get_where('student',array('users_id' => $parentId));
+		echo json_encode($query->result());
+		
+	}
     	
 	public function create_student() {
 		$data = array(
@@ -29,7 +35,7 @@ class Student_model extends CI_Model {
 			'gradelevel' => $this->input->post('gradeLevel'),
 			'users_id' => $this->input->post('parentId')
 		);
-
+ 
 		$query = $this->db->insert('student', $data);
 
 		if ($query == false) {
