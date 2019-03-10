@@ -222,7 +222,7 @@
         style: 'single'
       },
       'ajax': {
-        url: '/students/view',
+        url: '<?php echo base_url('/students/view');?>',
         dataSrc: ''
       },
       'columns': [
@@ -244,7 +244,7 @@
   
     // Retrieves Assessment Items for Add Assessment Modal
     $.ajax({
-        url: '<?php echo site_url('assessments/view');?>',
+        url: '<?php echo base_url('assessments/view');?>',
         dataType: 'json',
         success: function(data) {
           for(var c=0; c < data.length; c++) {
@@ -257,7 +257,7 @@
     //$('#manageAssessmentItemsModal').on('show.bs.modal', function (event) {
       $('#assessmentItemsList').html("");
       $.ajax({
-        url: '<?php echo site_url('assessments/view');?>',
+        url: '<?php echo base_url('assessments/view');?>',
         dataType: 'json',
         success: function(data) {
           console.log(data);
@@ -359,7 +359,7 @@
           };
         $.ajax({
           type: "POST",
-          url: 'assessments/add',
+          url: '<?php echo base_url('assessments/add');?>',
           data: newAssessment,
           success: function(data) {
             $('#assessmentTable > tbody').html("");
@@ -461,7 +461,7 @@
   
       $.ajax({
         type: 'POST',
-        url: 'assessments/update',
+        url: '<?php echo base_url('assessments/update');?>',
         data: { newAssessmentList: assessmentList }  ,
         success: function(data) {
           alert('update success!');
