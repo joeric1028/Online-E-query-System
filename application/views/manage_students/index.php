@@ -262,9 +262,9 @@
 				}
 			});        
 
-			$('.btn:first-child').text($(this).text());
-			$('.btn:first-child').val($(this).text());
-			$('.btn:first-child').attr('data-value',$(this).data('value'));
+			$('button#sectionDropdownBtn').text($(this).text());
+			$('button#sectionDropdownBtn').val($(this).text());
+			$('button#sectionDropdownBtn').attr('data-value',$(this).data('value'));
 		});
 
 		// Add Subject
