@@ -7,16 +7,39 @@ class Student_model extends CI_Model {
 	
 	public function get_students()
 	{
-	
 		$query = $this->db->get('student');
-		echo json_encode($query->result());
 
+		if ($query == false) {
+			$errorMessage = "Error retrieving student.";
+			$error = array('error' => $errorMessage);
+			echo json_encode($error);
+		} else {
+			if ($query->num_rows() == 0){
+				$errorMessage = "No student is enrolled.";
+				$error = array('warning' => $errorMessage);
+				echo json_encode($error);
+			} else {
+				echo json_encode($query->result());
+			}
+		}
 	}
     
 	public function get_studentsbylevel($gradelevel) {
 		$query = $this->db->get_where('student',array('gradelevel' => $gradelevel));
-		echo json_encode($query->result());
 
+		if ($query == false) {
+			$errorMessage = "Error retrieving student.";
+			$error = array('error' => $errorMessage);
+			echo json_encode($error);
+		} else {
+			if ($query->num_rows() == 0){
+				$errorMessage = "No student is enrolled.";
+				$error = array('warning' => $errorMessage);
+				echo json_encode($error);
+			} else {
+				echo json_encode($query->result());
+			}
+		}
 	}
     	
 	public function create_student() {

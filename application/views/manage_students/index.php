@@ -201,12 +201,20 @@
 				$('#studentTable').show();
 				$('#studentTable').find('tbody').html("");
 
-				for(var c=0; c < data.length; c++) {
+				if (data.warning != undefined) {
 					var studentListItemTemplate = '<tr>' 
-												+ '<td>' + data[c].id + '</td>' 
-												+ '<td>' + data[c].firstname + ' ' + data[c].lastname + '</td>' 
-												+ '</tr>'
+												+ '<td></td>' 
+												+ '<td>' + data.warning + '</td>' 
+												+ '</tr>';
 					$('#studentTable').find('tbody').append(studentListItemTemplate);
+				} else {
+					for(var c=0; c < data.length; c++) {
+						var studentListItemTemplate = '<tr>' 
+													+ '<td>' + data[c].id + '</td>' 
+													+ '<td>' + data[c].firstname + ' ' + data[c].lastname + '</td>' 
+													+ '</tr>';
+						$('#studentTable').find('tbody').append(studentListItemTemplate);
+					}
 				}
 			}
 		}); 
@@ -291,12 +299,20 @@
 					$('div#studentlistloader').hide();
 					$('#studentTable').show();
 					
-					for(var c=0; c < data.length; c++) {
+					if (data.warning != undefined) {
 						var studentListItemTemplate = '<tr>' 
-													+ '<td>' + data[c].id +'</td>' 
-													+ '<td>' + data[c].firstname + ' ' + data[c].lastname + '</td>' 
-												+ '</tr>'
-					$('#studentTable').find('tbody').append(studentListItemTemplate);
+													+ '<td></td>' 
+													+ '<td>' + data.warning + '</td>' 
+													+ '</tr>';
+						$('#studentTable').find('tbody').append(studentListItemTemplate);
+					} else {
+						for(var c=0; c < data.length; c++) {
+							var studentListItemTemplate = '<tr>' 
+														+ '<td>' + data[c].id +'</td>' 
+														+ '<td>' + data[c].firstname + ' ' + data[c].lastname + '</td>' 
+														+ '</tr>';
+							$('#studentTable').find('tbody').append(studentListItemTemplate);
+						}
 					}
 				}
 			});        
