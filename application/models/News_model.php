@@ -1,7 +1,7 @@
 <?php
 class News_model extends CI_Model {
 
-    public function __construct() {
+		public function __construct() {
 		$this->load->database();
 	}
 	
@@ -60,7 +60,15 @@ class News_model extends CI_Model {
 		$queryactivities = $this->db->query($sqlactivities, $data);
 
 		$sqlyear = "SELECT * FROM `schoolyear` WHERE `id` = ? ;";
-		$queryyear = $this->db->query($sqlyear, $queryactivities->first_row()->schoolyear_id);
+		if ($queryactivities->first_row() != null) {
+			$queryyear = $this->db->query($sqlyear, $queryactivities->first_row()->schoolyear_id);
+		} else {
+			$errorMessage = 'No event this school year.';
+			$error = array('warning' => $errorMessage);
+
+			echo json_encode($error);
+			return;
+		}
 
 		if ($queryactivities && $queryyear) {
 			$result = array(
