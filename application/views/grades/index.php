@@ -1,8 +1,16 @@
 <div class="row">
     <div class="col-12">
         <div class="card">
-            <div class="card-body">
+            <div class="card-body d-flex justify-content-between">
                 <h2>Grades</h2>
+                <span>
+                    <?php if($type == "Parent"):?>
+                    <button class="btn btn-primary btn-lg dropdown-toggle" type="button" id="studentDropdownBtn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" value="">
+                    </button>
+                    <div id="studentDropdownList" class="dropdown-menu" aria-labelledby="sectionDropdownBtn">
+                    </div>
+                    <?php endif;?>
+                </span>
             </div>
         </div>
     </div>
@@ -231,21 +239,47 @@
             dataType: 'json',
             success: function(data) {
                 for(var c=0; c < data.length; c++) {
-                    $('#subjectTable').find('tr[data-value='+ data[c].subjects_id +']').find('input')[0].value = data[c].firstgrading;
-                    $('#subjectTable').find('tr[data-value='+ data[c].subjects_id +']').find('input')[1].value = data[c].secondgrading;
-                    $('#subjectTable').find('tr[data-value='+ data[c].subjects_id +']').find('input')[2].value = data[c].thirdgrading;
-                    $('#subjectTable').find('tr[data-value='+ data[c].subjects_id +']').find('input')[3].value = data[c].fourthgrading;
+                    if($('#subjectTable').length) {
+                        $('#subjectTable').find('tr[data-value='+ data[c].subjects_id +']').find('input')[0].value = data[c].firstgrading;
+                        $('#subjectTable').find('tr[data-value='+ data[c].subjects_id +']').find('input')[1].value = data[c].secondgrading;
+                        $('#subjectTable').find('tr[data-value='+ data[c].subjects_id +']').find('input')[2].value = data[c].thirdgrading;
+                        $('#subjectTable').find('tr[data-value='+ data[c].subjects_id +']').find('input')[3].value = data[c].fourthgrading;
+                    }
 
                     avgGrades[0] += parseInt(data[c].firstgrading);
                     avgGrades[1] += parseInt(data[c].secondgrading);
                     avgGrades[2] += parseInt(data[c].thirdgrading);
                     avgGrades[3] += parseInt(data[c].fourthgrading);
                 }
+                var avg1 = avgGrades[0]/data.length;
+                var avg2 = avgGrades[1]/data.length;
+                var avg3 = avgGrades[2]/data.length;
+                var avg4 = avgGrades[3]/data.length;
 
-                $('#1stgrading').text(avgGrades[0]/data.length);
-                $('#2ndgrading').text(avgGrades[1]/data.length);
-                $('#3rdgrading').text(avgGrades[2]/data.length);
-                $('#4thgrading').text(avgGrades[3]/data.length);
+                if(isNaN(avg1)) {
+                    $('#1stgrading').text("NG");
+                } else {
+                    $('#1stgrading').text(avg1);
+                }
+                
+                if(isNaN(avg2)) {
+                    $('#2ndgrading').text("NG");
+                } else {
+                    $('#2ndgrading').text(avg2);
+                }
+
+                if(isNaN(avg3)) {
+                    $('#3rdgrading').text("NG");
+                } else {
+                    $('#3rdgrading').text(avg3);
+                }
+
+                if(isNaN(avg4)) {
+                    $('#4thgrading').text("NG");
+                } else {
+                    $('#4thgrading').text(avg4);
+                }
+
             }
         });
 
@@ -253,7 +287,7 @@
         var table = $('#gradesTable').DataTable({
             'select': true,
             'ajax': {
-                url: 'grades/view/' + $('li.active').attr('data-value'),
+                url: 'grades/view/' + studentId,
                 dataSrc: ''
             },
             'columns': [
@@ -293,6 +327,35 @@
             'student_id'        : 1,
             'schoolyear_id'     : 3
         };
+
+        <?php if($type == "Parent"): ?>
+        // Student Dropdown
+        $.ajax({
+            url: 'students/parent/view/' + <?php echo $id ?>,
+            success: function(data) {
+                if(data != null) {
+                    $('#studentDropdownBtn').html(data[0].firstname + " " + data[0].lastname);
+                    $('#studentDropdownBtn').val(data[0].firstname + " " + data[0].lastname);
+                    $('#studentDropdownBtn').attr('data-value',data[0].id);
+                    for(var c=0; c < data.length; c++) {
+                        $('#studentDropdownList').append('<a class="dropdown-item" href="#" data-value="' + data[c].id + '">' + data[c].firstname + " " + data[c].lastname + '</a>');
+                    }
+                }
+
+                console.log('yo' + data[0].id);
+                getGradesByStudent(data[0].id);
+
+                $('.dropdown-menu a').click(function(){
+                    $('#studentDropdownBtn').text($(this).text());
+                    $('#studentDropdownBtn').val($(this).text());
+                    $('#studentDropdownBtn').attr('data-value',$(this).data('value'));
+
+                    console.log('yo' + $(this).data('value'));
+                    getGradesByStudent($(this).data('value'));
+                });
+            }
+        });
+        <?php endif; ?>
 
         // For Grades
         /*$.ajax({

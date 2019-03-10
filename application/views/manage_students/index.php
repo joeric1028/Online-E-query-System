@@ -60,8 +60,9 @@
                 <table cellpadding="0" cellspacing="0" id="studentTable">
                     <thead class="customTh">
                         <tr>
-                            <th style="width: 20%">ID No.</th>
-                            <th style="width: 80%">Full Name</th>
+                            <th style="width: 15%">ID No.</th>
+                            <th style="width: 60%">Full Name</th>
+							<th style="width: 20%"></th>
                         </tr>
                     </thead>
                     <tbody class="customTd"></tbody>
@@ -186,6 +187,71 @@
 
 	<script>
 	$('table#studentTable').hide();
+	function getSubjects(currentLevel) {
+		var url;
+		if(currentLevel != undefined) {
+			url = 'subjects/view/' + currentLevel;
+		} else {
+			url = 'subjects/view';
+		}
+		// Get Subjects
+		$.ajax({
+			url: url,
+			dataType: 'json',
+			beforeSend: function() {
+                $('div#subjectlistloader').show();
+                $('#subjectList').html('');
+            },
+			success: function(data) {
+				$('#subjectList').html("");
+				$('div#subjectlistloader').hide();
+
+				for(var c=0; c < data.length; c++) {
+				var subjectListItemTemplate = '<li class="list-group-item" data-value="' + data[c].id + '">'
+												+ data[c].subject
+												+ '<button type="button" class="close custom-close" aria-label="Close">'
+												+ '<span aria-hidden="true">&times;</span>'
+												+ '</button>'
+											+ '</li>';
+				$('#subjectList').append(subjectListItemTemplate);
+				}
+
+				$('.list-group li').mouseenter(function(){
+					if($('.btn:first-child').val() != "All Levels") {
+						$(this).find('.custom-close').show();
+					}
+				}).mouseleave(function(){
+					$(this).find('.custom-close').hide();
+				});
+
+				$('.custom-close').on('click', function() {
+					deleteSubject($(this).parent().data('value'));
+					$(this).parent().remove();
+				});
+			}
+		});
+	}
+
+	function deleteSubject(subjectId) {
+		console.log(subjectId);
+		$.ajax({
+			url: 'subjects/delete/' + subjectId,
+			dataType: 'json',
+			success: function() {
+				console.log('delete success');
+			}
+		});
+	}
+
+	function deleteStudent(studentId) {
+		$.ajax({
+			url: 'students/delete/' + studentId ,
+			dataType: 'json',
+			success: function() {
+				console.log('delete success');
+			}
+		});
+	}
 
 	$(document).ready(function () {
 		// Get Students
@@ -212,80 +278,47 @@
 						var studentListItemTemplate = '<tr>' 
 													+ '<td>' + data[c].id + '</td>' 
 													+ '<td>' + data[c].firstname + ' ' + data[c].lastname + '</td>' 
+													+ '<td><button class="btn btn-link btn-sm text-danger removeStudent">Remove</td>'
 													+ '</tr>';
 						$('#studentTable').find('tbody').append(studentListItemTemplate);
+
+						$('.removeStudent').on('click', function(event) {
+							deleteStudent($(this).parent().siblings().eq(0).html());
+							$(this).parent().parent().remove();
+						});
 					}
 				}
 			}
 		}); 
-		
-		// Get Subjects
-		$.ajax({
-			url: '<?php echo site_url('subjects/view');?>',
-			dataType: 'json',
-			beforeSend: function() {
-                $('div#subjectlistloader').show();
-                $('#subjectList').html('');
-            },
-			success: function(data) {
-				$('#subjectList').html("");
-				$('div#subjectlistloader').hide();
 
-				for(var c=0; c < data.length; c++) {
-				var subjectListItemTemplate = '<li class="list-group-item">'
-												+ data[c].subject
-												+ '<button type="button" class="close custom-close" aria-label="Close">'
-												+ '<span aria-hidden="true">&times;</span>'
-												+ '</button>'
-											+ '</li>';
-				$('#subjectList').append(subjectListItemTemplate);
-				}
-			}
-		});
-
+		getSubjects();
 				
 
-			$('.error').hide();
-			$('#addSubjectModal').on('shown.bs.modal', function () {
-				$('#subjectname').trigger('focus');
+		$('.error').hide();
+		$('#addSubjectModal').on('shown.bs.modal', function () {
+			$('#subjectname').trigger('focus');
 		});
 
 		$('.dropdown-menu a').click(function(){
-			// if($(this).text() == "All Levels") {
-			//     $('#addSubjectBtn').attr('disabled',true);
-			//     $('#addStudentBtn').attr('disabled',true);
-			//     $('.active').removeClass('active');
-			// } else {
-			//     $('#addSubjectBtn').attr('disabled',false);
-			//     $('#addSubjectBtn').show();
-			// }
 
 			$('#subjectList').html("");
 			$('#studentTable').find('tbody').html("");
 			
 			// Get Subjects by Level
-			$.ajax({
-				url: 'subjects/view/' + $(this).data('value') ,
-				dataType: 'json',
-				beforeSend: function() {
-					$('#subjectList').hide();
-					$('div#subjectlistloader').show();
-            	},
-				success: function(data) {
-					$('div#subjectlistloader').hide();
-					$('#subjectList').html("");
+			getSubjects($(this).data('value'));    
 
-					for(var c=0; c < data.length; c++) {
-						var subjectListItemTemplate = '<li class="list-group-item" data-value="'+ data[c].id +'">'
-													+ data[c].subject
-													+ '<button type="button" class="close custom-close" aria-label="Close">'
-													+ '<span aria-hidden="true">&times;</span>'
-													+ '</button>'
-													+ '</li>';
-						$('#subjectList').append(subjectListItemTemplate);
-					}
+			$('.list-group li').mouseenter(function(){
+				if($('.btn:first-child').val() != "All Levels") {
+					$(this).find('.custom-close').show();
 				}
-			});        
+			}).mouseleave(function(){
+				$(this).find('.custom-close').hide();
+			});
+
+			$('.custom-close').on('click', function() {
+				deleteSubject($(this).parent().data('value'));
+				$(this).parent().remove();
+			});
 
 			// Get Students by Level
 			$.ajax({
@@ -310,9 +343,15 @@
 							var studentListItemTemplate = '<tr>' 
 														+ '<td>' + data[c].id +'</td>' 
 														+ '<td>' + data[c].firstname + ' ' + data[c].lastname + '</td>' 
+														+ '<td><button class="btn btn-link btn-sm text-danger removeStudent">Remove</td>'
 														+ '</tr>';
 							$('#studentTable').find('tbody').append(studentListItemTemplate);
 						}
+
+						$('.removeStudent').on('click', function(event) {
+							deleteStudent($(this).parent().siblings().eq(0).html());
+							$(this).parent().parent().remove();
+						});
 					}
 				}
 			});        
@@ -334,7 +373,7 @@
 				data: { 
 					'subjectName': $('#subjectname').val(),
 					'gradeLevel': $('#subjectGradeLevel').val(),
-					'selectedLevel': $('#subjectGradeLevel').attr('data-value')
+					'selectedLevel': $('#sectionDropdownBtn').attr('data-value')
 				}, 
 				success: function(data) {
 					$('#subjectList').html('');
@@ -378,6 +417,7 @@
 						var studentListItemTemplate = '<tr>' 
 														+ '<td>' + data[c].id +'</td>' 
 														+ '<td>' + data[c].firstname + " " + data[c].middlename + ' ' + data[c].lastname + '</td>' 
+														+ '<td><button class="btn btn-link btn-sm text-danger removeStudent">Remove</td>'
 													+ '</tr>'
 						$('#studentTable').find('tbody').append(studentListItemTemplate);
 					}
@@ -411,7 +451,6 @@
 				dataType: 'json',
 				delay: 250,
 				processResults: function (data) {
-					console.log(data);
 					return {
 						results: data
 					};

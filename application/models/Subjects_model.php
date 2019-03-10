@@ -39,4 +39,8 @@ class Subjects_model extends CI_Model {
 			}
 		}
 	}
+
+	public function delete_subject($subjectId) {
+		$this->db->delete('subjects',array('id' => $subjectId));
+	}
 } 

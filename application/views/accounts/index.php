@@ -269,7 +269,6 @@
         url: '<?php echo base_url('assessments/view');?>',
         dataType: 'json',
         success: function(data) {
-          console.log(data);
           if(data != null) {
             for(var c=0; c < data.length; c++) {
               var assessmentListItemTemplate = '<li class="list-group-item d-flex justify-content-between" data-id="' + data[c].id + '">'
@@ -307,9 +306,6 @@
                   });
                 });
             
-                console.log(assessmentList);
-                console.log(toBeRemovedAssessments);
- 
                 $.ajax({
                   type: 'POST',
                   url: 'assessments/update',
@@ -318,7 +314,7 @@
                     removedAssessmentList: toBeRemovedAssessments 
                   },
                   success: function(data) {
-                    alert('update success!');
+                    console.log('update success');
                   },
                   error: function(response) {
                     console.log(response);
@@ -366,8 +362,6 @@
 
           // Deletes Assessment
           $('.deleteAssessment').on('click', function(event) {
-            alert('HOHOHO!');
-            console.log($(this).parent().data('id'));
             $.ajax({
                 type: "POST",
                 url: 'accounts/delete',
@@ -441,7 +435,6 @@
 
               // Deletes Assessment
               $('.deleteAssessment').on('click', function(event) {
-                alert('detele!');
                 $.ajax({
                   type: "POST",
                   url: 'assessments/delete/' + $(this).parent().parent().data('id'),
@@ -556,7 +549,6 @@
           $('#studentDropdownBtn').val($(this).text());
           $('#studentDropdownBtn').attr('data-value',$(this).data('value'));
 
-          console.log('yo' + $(this).data('value'));
           // Retrieve Accounts Assessments for Selected Student
           $.ajax({
             url: 'assessments/view/' + $(this).data('value'),

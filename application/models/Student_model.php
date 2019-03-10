@@ -77,4 +77,8 @@ class Student_model extends CI_Model {
 
 		}
 	}
+
+	public function delete_student($studentId) {
+		$this->db->delete('student',array('id' => $studentId));
+	}
 }
