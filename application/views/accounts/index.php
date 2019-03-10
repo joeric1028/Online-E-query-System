@@ -18,6 +18,7 @@
       <div class="accordion">
         <div class="card">
           <div class="card-header d-flex justify-content-between" id="headingOne">
+            <span class="my-auto" id="selectedlabeluser"></span>
             <div class="my-auto">
               <span class="ml-2 d-none d-lg-block">
                 <span id="selectedStudentName" class="text-default"><i>Select a User</i></span>
@@ -279,6 +280,8 @@
       }
       name += userData.lastname;
 
+      var no = userData.id;
+      $('span#selectedlabeluser').text('ID No.: "' + no + '" is selected.');
       $('#selectedStudentName').text(name);
       $('#selectedStudentLevel').text("Grade " + userData.gradelevel);
       $('.collapse').collapse('hide');
