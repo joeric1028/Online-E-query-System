@@ -27,54 +27,57 @@ class Accounts_model extends CI_Model {
     echo json_encode($query->result());
     
   }
-   
-  public function get_assessmentsbystudentid() 
+
+  public function get_assessmentsbystudentid($studentId) 
   {
-    $this->db->select('*');
+    $this->db->select('assessments.id,amount,assessments.assessmentname');
     $this->db->from('assessments');
-    $this->db->join('schoolaccount', 'assessments.id = schoolaccounts.assessments_id');
-    $this->db->where('schoolaccounts',array(
-      'student_id' => $this->input->post('studentId'),
-      //'schoolyear_id' => $this->input->post('schoolYearId')
+    $this->db->join('schoolaccount', 'assessments.id = schoolaccount.assessments_id');
+    $this->db->where('student_id',$studentId);
+    $query = $this->db->get();
+    echo json_encode($query->result());
+  }
+
+  public function add_assessmentsbystudentid() {
+    $this->db->insert('schoolaccount',array(
+      'amount' => $this->input->post('amount'), 
+      'assessments_id' => $this->input->post('assessmentsId'),
+      'student_id' => $this->input->post('studentId')
     ));
+
+    $this->db->select('assessments.id,amount,assessments.assessmentname');
+    $this->db->from('assessments');
+    $this->db->join('schoolaccount', 'assessments.id = schoolaccount.assessments_id');
+    $this->db->where('student_id',$this->input->post('studentId'));
     $query = $this->db->get();
     echo json_encode($query->result());
   }
   
-  public function create_assessment()
+  public function update_assessment()
   {
-    $data = array(
-      'assessmentname' => $this->input->post('item'),
-      'assessmenttype' => $this->input->post('type'),
-    );
-    
-    $query      = $this->db->insert('assessments', $data);
-    $newSubject = $this->db->insert_id();
-    
-    if ($query == false) {
-      $errorMessage = "Unable to proceed. Can't create assessment";
-      $error        = array(
-        'error' => $errorMessage
-      );
-      echo json_encode($error);
-    } else {
-      $this->db->select('*');
-      $this->db->from('assessments');
-      $this->db->join('schoolaccount', 'assessments.id = schoolaccounts.assessments_id');
-      $this->db->where('schoolaccounts',array(
-        'student_id' => $this->input->post('studentId'),
-        //'schoolyear_id' => $this->input->post('schoolYearId')
+    $data = $this->input->post('newAssessmentList');
+    $this->db->empty_table('assessments');
+    for($c=0; $c < count($data); $c++) {
+      $this->db->insert('assessments',array(
+        'assessmentname' => $data[$c]['assessmentname'], 
+        'assessmenttype' => $data[$c]['assessmenttype']
       ));
-      $query = $this->db->get();
-      echo json_encode($query->result());
-      
     }
 	}
 	
-	public function delete_assessment()
+	public function delete_assessment($assessmentId)
 	{
-		$this->db->delete('assessments', array('id' => $id));
-		$query = $this->db->get('assessments');
+		if($assessmentId != "") {
+      $this->db->delete('assessments', array('id' => $assessmentId));
+    }
+    // $query = $this->db->get('assessments');
+    // echo json_encode($query->result());
+
+    $this->db->select('assessments.id,amount,assessments.assessmentname');
+    $this->db->from('assessments');
+    $this->db->join('schoolaccount', 'assessments.id = schoolaccount.assessments_id');
+    $this->db->where('student_id',$this->input->post('studentId'));
+    $query = $this->db->get();
     echo json_encode($query->result());
 	}
     	

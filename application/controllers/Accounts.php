@@ -43,19 +43,25 @@ class Accounts extends CI_Controller {
         $this->Accounts_model->get_assessments();
     }
 
-    public function getassessmetsbystudentid($studentId) {
+    public function getassessmentsbystudentid($studentId) {
         header("Content-Type: application/json; charset=UTF-8");
         $this->Accounts_model->get_assessmentsbystudentid($studentId);
     }
 
-    public function createassessment() {
+    public function addassessmentsbystudentid() {
         header("Content-Type: application/json; charset=UTF-8");
-        $this->Accounts_model->create_assessment();
+        $this->Accounts_model->add_assessmentsbystudentid();
     }
 
+    public function updateassessment() {
+        header("Content-Type: application/json; charset=UTF-8");
+        $this->Accounts_model->update_assessment();
+    }
+ 
     public function deleteassessment($assessmentId) {
         header("Content-Type: application/json; charset=UTF-8");
-        $this->Accounts_model->delete_assessment();
+        $this->Accounts_model->delete_assessment($assessmentId);
     }
     /* Assessments */
 }
+ 
