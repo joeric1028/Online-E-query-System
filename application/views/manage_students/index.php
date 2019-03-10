@@ -29,6 +29,13 @@
                 <button class="btn btn-outline-success btn-sm" type="button" id="addSubjectBtn" data-toggle="modal" data-target="#addSubjectModal">Add Subject</button>    
             </div>
             <div class="card-body">
+			<div id="subjectlistloader">
+                        <div class="loader disable-selection" id="loader-4">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                    </div>
                 <ul id="subjectList" class="list-group custom-list-group">
          
                 </ul>
@@ -43,6 +50,13 @@
             </div>
             
             <div class="card-body">
+			<div id="studentlistloader">
+                        <div class="loader disable-selection" id="loader-4">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                    </div>
                 <table cellpadding="0" cellspacing="0" id="studentTable">
                     <thead class="customTh">
                         <tr>
@@ -171,21 +185,37 @@
 
 
 	<script>
+	$('table#studentTable').hide();
+
 	$(document).ready(function () {
 		// Get Students
 		$.ajax({
-			url: 'students/view/',
+			url: '<?php echo site_url('students/view');?>',
 			dataType: 'json',
+			beforeSend: function() {
+				$('#studentTable').hide();
+				$('div#studentlistloader').show();
+            },
 			success: function(data) {
-			$('#studentTable').find('tbody').html("");
+				$('div#studentlistloader').hide();
+				$('#studentTable').show();
+				$('#studentTable').find('tbody').html("");
 
-			for(var c=0; c < data.length; c++) {
-				var studentListItemTemplate = '<tr>' 
-											+ '<td>' + data[c].id + '</td>' 
-											+ '<td>' + data[c].firstname + ' ' + data[c].lastname + '</td>' 
-											+ '</tr>'
-				$('#studentTable').find('tbody').append(studentListItemTemplate);
-			}
+				if (data.warning != undefined) {
+					var studentListItemTemplate = '<tr>' 
+												+ '<td></td>' 
+												+ '<td>' + data.warning + '</td>' 
+												+ '</tr>';
+					$('#studentTable').find('tbody').append(studentListItemTemplate);
+				} else {
+					for(var c=0; c < data.length; c++) {
+						var studentListItemTemplate = '<tr>' 
+													+ '<td>' + data[c].id + '</td>' 
+													+ '<td>' + data[c].firstname + ' ' + data[c].lastname + '</td>' 
+													+ '</tr>';
+						$('#studentTable').find('tbody').append(studentListItemTemplate);
+					}
+				}
 			}
 		}); 
 		
@@ -193,8 +223,13 @@
 		$.ajax({
 			url: '<?php echo site_url('subjects/view');?>',
 			dataType: 'json',
+			beforeSend: function() {
+                $('div#subjectlistloader').show();
+                $('#subjectList').html('');
+            },
 			success: function(data) {
 				$('#subjectList').html("");
+				$('div#subjectlistloader').hide();
 
 				for(var c=0; c < data.length; c++) {
 				var subjectListItemTemplate = '<li class="list-group-item">'
@@ -206,7 +241,7 @@
 				$('#subjectList').append(subjectListItemTemplate);
 				}
 			}
-			});
+		});
 
 				
 
@@ -232,7 +267,12 @@
 			$.ajax({
 				url: 'subjects/view/' + $(this).data('value') ,
 				dataType: 'json',
+				beforeSend: function() {
+					$('#subjectList').hide();
+					$('div#subjectlistloader').show();
+            	},
 				success: function(data) {
+					$('div#subjectlistloader').hide();
 					$('#subjectList').html("");
 
 					for(var c=0; c < data.length; c++) {
@@ -251,13 +291,28 @@
 			$.ajax({
 				url: 'students/view/' + $(this).data('value') ,
 				dataType: 'json',
+				beforeSend: function() {
+                    $('div#studentlistloader').show();
+                    $('#studentTable').hide();
+            	},
 				success: function(data) {
-					for(var c=0; c < data.length; c++) {
+					$('div#studentlistloader').hide();
+					$('#studentTable').show();
+					
+					if (data.warning != undefined) {
 						var studentListItemTemplate = '<tr>' 
-													+ '<td>' + data[c].id +'</td>' 
-													+ '<td>' + data[c].firstname + ' ' + data[c].lastname + '</td>' 
-												+ '</tr>'
-					$('#studentTable').find('tbody').append(studentListItemTemplate);
+													+ '<td></td>' 
+													+ '<td>' + data.warning + '</td>' 
+													+ '</tr>';
+						$('#studentTable').find('tbody').append(studentListItemTemplate);
+					} else {
+						for(var c=0; c < data.length; c++) {
+							var studentListItemTemplate = '<tr>' 
+														+ '<td>' + data[c].id +'</td>' 
+														+ '<td>' + data[c].firstname + ' ' + data[c].lastname + '</td>' 
+														+ '</tr>';
+							$('#studentTable').find('tbody').append(studentListItemTemplate);
+						}
 					}
 				}
 			});        
