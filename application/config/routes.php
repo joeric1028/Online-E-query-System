@@ -77,6 +77,7 @@ $route['subjects/delete/(:num)'] = 'managestudents/deletesubject/$1';
 $route['accounts'] = 'accounts';
 $route['accounts/view'] = 'accounts/getaccounts';
 $route['accounts/delete'] = 'accounts/deleteaccounts';
+$route['accounts/balance/view/(:num)'] = 'accounts/getbalance/$1';
 $route['assessments/view'] = 'accounts/getassessments';
 $route['assessments/view/(:num)'] = 'accounts/getassessmentsbystudentid/$1';
 $route['assessments/add'] = 'accounts/addassessmentsbystudentid';

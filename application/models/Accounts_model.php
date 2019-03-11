@@ -13,7 +13,8 @@ class Accounts_model extends CI_Model {
 		echo json_encode($query->result());
 	}
     
-  public function delete_accounts() {
+  public function delete_accounts() 
+  {
     $this->db->delete('schoolaccount',array(
       'assessments_id' => $this->input->post('assessmentId'),
       'student_id' => $this->input->post('studentId')
@@ -25,6 +26,37 @@ class Accounts_model extends CI_Model {
     $this->db->where('student_id',$this->input->post('studentId'));
     $query = $this->db->get();
     echo json_encode($query->result());
+  }
+
+  public function get_balance($studentId) 
+  {
+    $balanceData = array(
+      'totalBalance' => 0,
+      'totalPayments' => 0,
+      'remainingBalance' => 0
+    );
+
+    $this->db->select('assessments.id,schoolaccount.amount,assessments.assessmentname,assessments.assessmenttype');
+    $this->db->from('assessments');
+    $this->db->join('schoolaccount', 'assessments.id = schoolaccount.assessments_id');
+    $this->db->where('student_id',$studentId);
+    $query1 = $this->db->get();
+    foreach ($query1->result() as $row)
+    {
+      if($row->assessmenttype == "Add") {
+        $balanceData['totalBalance'] += floatVal($row->amount);
+      } else {
+        $balanceData['totalBalance'] -= floatVal($row->amount);
+      }
+    }
+
+    $query2 = $this->db->get_where('payments', array('student_id' => $studentId));
+    foreach ($query2->result() as $row)
+    {
+        $balanceData['totalPayments'] += floatVal($row->amount);
+    }
+    $balanceData['remainingBalance'] = $balanceData['totalBalance'] - $balanceData['totalPayments'];
+    echo json_encode($balanceData);
   }
 
   public function get_accountbystudent($studentId)

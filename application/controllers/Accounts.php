@@ -39,6 +39,11 @@ class Accounts extends CI_Controller {
         header("Content-Type: application/json; charset=UTF-8");
         $this->Accounts_model->delete_accounts();
     }
+
+    public function getbalance($studentId) {
+        header("Content-Type: application/json; charset=UTF-8");
+        $this->Accounts_model->get_balance($studentId);
+    }
     /* Accounts */
 
     /* Assessments */

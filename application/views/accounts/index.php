@@ -57,6 +57,33 @@
 <?php endif;?>
 <div class="row">
   <div class="col-5">
+    <div class="card p-3">
+      <div class="d-flex align-items-center">
+        <span class="stamp stamp-md bg-blue mr-3">
+          <i class="fas fa-money-bill-wave"></i>
+        </span>
+        <div>
+          <h4 class="m-0" id="totalBalance"><span>50000</span></h4>
+          <small class="text-muted">Total Balance</small>
+        </div>
+      </div>
+    </div>
+  </div><div class="col-5">
+    <div class="card p-3">
+      <div class="d-flex align-items-center">
+        <span class="stamp stamp-md bg-green mr-3">
+          <i class="fas fa-money-bill-wave"></i>
+        </span>
+        <div>
+          <h4 class="m-0" id="remainingBalance"><span>50000</span></h4>
+          <small class="text-muted">Remaining Balance</small>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-5">
     <div class="card">
       <div class="card-header d-flex justify-content-between">
         <span class="my-auto">Assessment</span>
@@ -219,7 +246,25 @@
   </div>
 </div>
 <script>
+  function getBalanceByStudent(id) {
+    $.ajax({
+        url: 'accounts/balance/view/' + id,
+        dataType: 'json',
+        success: function(data) {
+          console.log(data);
+          var totalBalance = data.totalBalance;
+          var remainingBalance = data.remainingBalance;
+          $('#totalBalance > span').html("P " + numberWithCommas(totalBalance.toFixed(2)));
+          $('#remainingBalance > span').html("P " + numberWithCommas(remainingBalance.toFixed(2)));
+        }
+    });
+  }
 
+  function numberWithCommas(x) {
+    var parts = x.toString().split(".");
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    return parts.join(".");
+}
 
   $(document).ready(function () {
     $('.error').hide();
@@ -328,7 +373,7 @@
       });
     });
   
-    // Select User
+    // Select User / Student
     $('#studentTable tbody').on( 'click', 'tr', function () {
       var userData = table.row( this ).data();
       var name = userData.firstname + " ";
@@ -342,6 +387,9 @@
       $('#selectedStudentLevel').text("Grade " + userData.gradelevel);
       $('.collapse').collapse('hide');
       $('.add-buttons').prop('disabled',false);
+
+      // Retrieve Student Balance
+      getBalanceByStudent(userData.id);
   
       // Retrieve Accounts Assessments for Selected Student
       $.ajax({
@@ -362,6 +410,7 @@
 
           // Deletes Assessment
           $('.deleteAssessment').on('click', function(event) {
+            
             $.ajax({
                 type: "POST",
                 url: 'accounts/delete',
@@ -383,8 +432,9 @@
                     $('#assessmentTable > tbody').append(assessmentTemplate);
                     $('#addAssessmentModal').modal('hide');
                   }
+                  getBalanceByStudent(userData.id);
                 }
-              })
+              });
           });
         }
       });
@@ -420,6 +470,7 @@
           url: '<?php echo base_url('assessments/add');?>',
           data: newAssessment,
           success: function(data) {
+            getBalanceByStudent(userData.id);
             $('#assessmentTable > tbody').html("");
             for(var c=0; c < data.length; c++) {
               var assessmentTemplate = '<tr data-id="' + data[c].id + '">'
@@ -435,6 +486,7 @@
 
               // Deletes Assessment
               $('.deleteAssessment').on('click', function(event) {
+                getBalanceByStudent(userData.id);
                 $.ajax({
                   type: "POST",
                   url: 'assessments/delete/' + $(this).parent().parent().data('id'),
@@ -475,6 +527,7 @@
           url: 'payments/create',
           data: newPayment,
           success: function(data) {
+            getBalanceByStudent(userData.id);
             $('#addScheduleModal').modal('hide');
             $('#paymentsTable > tbody').html("");
             for(var c=0; c < data.length; c++) {
@@ -549,6 +602,9 @@
           $('#studentDropdownBtn').val($(this).text());
           $('#studentDropdownBtn').attr('data-value',$(this).data('value'));
 
+          // Retrieve Balance for Selected Student
+          getBalanceByStudent($(this).data('value'));
+
           // Retrieve Accounts Assessments for Selected Student
           $.ajax({
             url: 'assessments/view/' + $(this).data('value'),
@@ -565,6 +621,9 @@
               }
             }
           });
+
+          // Retrieve Balance for Selected Student
+          getBalanceByStudent($('#studentDropdownBtn').data('value'));
 
           // Retrieve Payments for Selected Student
           $.ajax({

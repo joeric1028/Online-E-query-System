@@ -259,25 +259,25 @@
                 if(isNaN(avg1)) {
                     $('#1stgrading').text("NG");
                 } else {
-                    $('#1stgrading').text(avg1);
+                    $('#1stgrading').text(avg1.toFixed(2));
                 }
                 
                 if(isNaN(avg2)) {
                     $('#2ndgrading').text("NG");
                 } else {
-                    $('#2ndgrading').text(avg2);
+                    $('#2ndgrading').text(avg2.toFixed(2));
                 }
 
                 if(isNaN(avg3)) {
                     $('#3rdgrading').text("NG");
                 } else {
-                    $('#3rdgrading').text(avg3);
+                    $('#3rdgrading').text(avg3.toFixed(2));
                 }
 
                 if(isNaN(avg4)) {
                     $('#4thgrading').text("NG");
                 } else {
-                    $('#4thgrading').text(avg4);
+                    $('#4thgrading').text(avg4.toFixed(2));
                 }
 
             }
@@ -317,7 +317,7 @@
             "rowid": "id"
         });
     }
-
+ 
     $(document).ready(function () {
         var date = new Date();
         var formData = {
@@ -356,84 +356,6 @@
             }
         });
         <?php endif; ?>
-
-        // For Grades
-        /*$.ajax({
-            type: "POST",
-            url: "<?php //echo site_url('grades/view');?>",
-            data: formData,
-            beforeSend: function() {
-                $('.loader').show();
-            },
-            error: function(xhr, status, error) {
-                $('.loader').hide();
-                $('.grading').show();
-
-                alert( "error occured!\n"+error );
-            },
-            success: function(data) {
-                $('.loader').hide();
-                $('.grading').show();
-                
-                if (data.error != undefined)
-                {
-                    $('div#1stgrading').text(data.error);
-                    $('div#2ndgrading').text(data.error);
-                    $('div#3rdgrading').text(data.error);
-                    $('div#4thgrading').text(data.error);
-                } 
-                else
-                {
-                    if(data.warning != undefined)
-                    {
-                        $('div#1stgrading').text(data.warning);
-                        $('div#2ndgrading').text(data.warning);
-                        $('div#3rdgrading').text(data.warning);
-                        $('div#4thgrading').text(data.warning);
-                    }
-                    else
-                    {
-                        var ng = 'NG';
-                        if (data.data[0].firstgrading != null)
-                        {
-                            $('div#1stgrading').text(data.data[0].firstgrading);
-                        }
-                        else
-                        {
-                            $('div#1stgrading').text(ng);
-                        }
-
-                        if (data.data[0].secondgrading != null)
-                        {
-                            $('div#2ndgrading').text(data.data[0].secondgrading);
-                        }
-                        else
-                        {
-                            $('div#2ndgrading').text('NG');
-                        }
-
-                        if (data.data[0].thirdgrading != null)
-                        {
-                            $('div#3rdgrading').text(data.data[0].thirdgrading);
-                        }
-                        else
-                        {
-                            $('div#3rdgrading').text('NG');
-                        }
-
-                        if (data.data[0].fourthgrading != null)
-                        {
-                            $('div#4thgrading').text(data.data[0].fourthgrading);
-                        }
-                        else
-                        {
-                            $('div#4thgrading').text('NG');
-                        }
-                    }
-                }
-            }
-        });
-        */
 
         getStudentsByLevel($('#sectionDropdownBtn').data('value'));
         getSubjectsByLevel($('#sectionDropdownBtn').data('value'));
