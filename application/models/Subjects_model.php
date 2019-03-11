@@ -7,12 +7,38 @@ class Subjects_model extends CI_Model {
     
 	public function get_subjects() {
 		$query = $this->db->get('subjects');
-		echo json_encode($query->result());
+
+		if ($query == false) {
+			$errorMessage = "Error retrieving subjects.";
+			$error = array('error' => $errorMessage);
+			echo json_encode($error);
+		} else {
+			if ($query->num_rows() == 0){
+				$errorMessage = "No subject is added.";
+				$error = array('warning' => $errorMessage);
+				echo json_encode($error);
+			} else {
+				echo json_encode($query->result());
+			}
+		}
 	}
     
 	public function get_subjectsbylevel($gradelevel) {
 		$query = $this->db->get_where('subjects',array('gradelevel' => $gradelevel));
-		echo json_encode($query->result());
+		
+		if ($query == false) {
+			$errorMessage = "Error retrieving subjects.";
+			$error = array('error' => $errorMessage);
+			echo json_encode($error);
+		} else {
+			if ($query->num_rows() == 0){
+				$errorMessage = "No subject is added.";
+				$error = array('warning' => $errorMessage);
+				echo json_encode($error);
+			} else {
+				echo json_encode($query->result());
+			}
+		}
 	}
     	
 	public function create_subject() {

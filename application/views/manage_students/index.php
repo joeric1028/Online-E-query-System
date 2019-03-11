@@ -206,28 +206,33 @@
 				$('#subjectList').html("");
 				$('div#subjectlistloader').hide();
 
-				for(var c=0; c < data.length; c++) {
-				var subjectListItemTemplate = '<li class="list-group-item" data-value="' + data[c].id + '">'
+				if (data.warning != undefined) {
+					var subjectListItemTemplate = '<div>' + data.warning + '</div>';
+					$('#subjectList').append(subjectListItemTemplate);
+				} else {
+					for (var c=0; c < data.length; c++) {
+						var subjectListItemTemplate = '<li class="list-group-item" data-value="' + data[c].id + '">'
 												+ data[c].subject
 												+ '<button type="button" class="close custom-close" aria-label="Close">'
 												+ '<span aria-hidden="true">&times;</span>'
 												+ '</button>'
 											+ '</li>';
-				$('#subjectList').append(subjectListItemTemplate);
-				}
-
-				$('.list-group li').mouseenter(function(){
-					if($('.btn:first-child').val() != "All Levels") {
-						$(this).find('.custom-close').show();
+						$('#subjectList').append(subjectListItemTemplate);
 					}
-				}).mouseleave(function(){
-					$(this).find('.custom-close').hide();
-				});
 
-				$('.custom-close').on('click', function() {
-					deleteSubject($(this).parent().data('value'));
-					$(this).parent().remove();
-				});
+					$('.list-group li').mouseenter(function() {
+						if($('.btn:first-child').val() != "All Levels") {
+							$(this).find('.custom-close').show();
+						}
+					}).mouseleave(function(){
+						$(this).find('.custom-close').hide();
+					});
+
+					$('.custom-close').on('click', function() {
+						deleteSubject($(this).parent().data('value'));
+						$(this).parent().remove();
+					});
+				}
 			}
 		});
 	}
