@@ -35,19 +35,21 @@
         </div>
         <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
           <div class="card-body">
-            <table cellpadding="0" cellspacing="0" id="studentTable">
-              <thead class="customTh">
-                <tr>
-                  <th>ID No.</th>
-                  <th>First name</th>
-                  <th>Middle name</th>
-                  <th>Last Name</th>
-                  <th>Grade</th>
-                </tr>
-              </thead>
-              <tbody class="customTd">
-              </tbody>
-            </table>
+            <div class="table-responsive">
+              <table cellpadding="0" cellspacing="0" id="studentTable" class="w-100">
+                <thead class="customTh">
+                  <tr>
+                    <th>ID No.</th>
+                    <th>First name</th>
+                    <th>Middle name</th>
+                    <th>Last Name</th>
+                    <th>Grade</th>
+                  </tr>
+                </thead>
+                <tbody class="customTd">
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>
@@ -55,6 +57,33 @@
   </div>
 </div>
 <?php endif;?>
+<div class="row">
+  <div class="col-5">
+    <div class="card p-3">
+      <div class="d-flex align-items-center">
+        <span class="stamp stamp-md bg-blue mr-3">
+          <i class="fas fa-money-bill-wave"></i>
+        </span>
+        <div>
+          <h4 class="m-0" id="totalBalance"><span></span></h4>
+          <small class="text-muted">Total Balance</small>
+        </div>
+      </div>
+    </div>
+  </div><div class="col-5">
+    <div class="card p-3">
+      <div class="d-flex align-items-center">
+        <span class="stamp stamp-md bg-green mr-3">
+          <i class="fas fa-money-bill-wave"></i>
+        </span>
+        <div>
+          <h4 class="m-0" id="remainingBalance"><span></span></h4>
+          <small class="text-muted">Remaining Balance</small>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 <div class="row">
   <div class="col-5">
     <div class="card">
@@ -82,24 +111,27 @@
   <div class="col-7">
     <div class="card">
       <div class="card-header d-flex justify-content-between">
-        <span class="my-auto">Schedule of Payments</span>
+        <span class="my-auto">Payments</span>
         <?php if($type == "Treasurer" || $type == "Administrator"): ?>
-        <button class="btn btn-outline-success btn-sm add-buttons" data-toggle="modal" data-target="#addScheduleModal" disabled>Add Schedule</button>
+        <button class="btn btn-outline-success btn-sm add-buttons" data-toggle="modal" data-target="#addScheduleModal" disabled>Add Payment</button>
         <?php endif;?>
       </div>
       <div class="card-body">
-        <table cellpadding="0" cellspacing="0" id="paymentsTable">
-          <thead class="customTh">
-            <tr>
-              <th>Date</th>
-              <th>Particulars</th>
-              <th>O.R. No</th>
-              <th>Amount</th>
-            </tr>
-          </thead>
-          <tbody class="customTd">
-          </tbody>
-        </table>
+        <div class="table-responsive">
+          <table cellpadding="0" cellspacing="0" id="paymentsTable" class="w-100">
+            <thead class="customTh">
+              <tr>
+                <th style="width: 18%">Date</th>
+                <th style="width: 30%">Particulars</th>
+                <th style="width: 30">O.R. No</th>
+                <th style="width: 19%">Amount</th>
+                <th style="width: 7%"></th>
+              </tr>
+            </thead>
+            <tbody class="customTd">
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </div>
@@ -180,7 +212,7 @@
     <div class="modal-content">
       <form name="addscheduleform" id="addScheduleform" action="" method="post">
         <div class="modal-header">
-          <h5 class="modal-title">Add Assessment</h5>
+          <h5 class="modal-title">Add Payment</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
           </button>
@@ -219,7 +251,25 @@
   </div>
 </div>
 <script>
+  function getBalanceByStudent(id) {
+    $.ajax({
+        url: 'accounts/balance/view/' + id,
+        dataType: 'json',
+        success: function(data) {
+          console.log(data);
+          var totalBalance = data.totalBalance;
+          var remainingBalance = data.remainingBalance;
+          $('#totalBalance > span').html("P " + numberWithCommas(totalBalance.toFixed(2)));
+          $('#remainingBalance > span').html("P " + numberWithCommas(remainingBalance.toFixed(2)));
+        }
+    });
+  }
 
+  function numberWithCommas(x) {
+    var parts = x.toString().split(".");
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    return parts.join(".");
+}
 
   $(document).ready(function () {
     $('.error').hide();
@@ -257,7 +307,9 @@
         success: function(data) {
           for(var c=0; c < data.length; c++) {
             $('#particulars').append('<option value="' + data[c].id + '" selected="">' + data[c].assessmentname + '</option>');
-            $('#scheduleParticulars').append('<option value="' + data[c].id + '" selected="">' + data[c].assessmentname + '</option>');
+            if(data[c].assessmenttype != "Deduct") {
+              $('#scheduleParticulars').append('<option value="' + data[c].id + '" selected="">' + data[c].assessmentname + '</option>');
+            }
           }
         }
     });
@@ -328,7 +380,7 @@
       });
     });
   
-    // Select User
+    // Select User / Student
     $('#studentTable tbody').on( 'click', 'tr', function () {
       var userData = table.row( this ).data();
       var name = userData.firstname + " ";
@@ -342,6 +394,9 @@
       $('#selectedStudentLevel').text("Grade " + userData.gradelevel);
       $('.collapse').collapse('hide');
       $('.add-buttons').prop('disabled',false);
+
+      // Retrieve Student Balance
+      getBalanceByStudent(userData.id);
   
       // Retrieve Accounts Assessments for Selected Student
       $.ajax({
@@ -360,7 +415,7 @@
             $('#assessmentTable > tbody').append(assessmentTemplate);
           }
 
-          // Deletes Assessment
+          // Deletes Assessment (in Retrieve Assessment)
           $('.deleteAssessment').on('click', function(event) {
             $.ajax({
                 type: "POST",
@@ -383,8 +438,9 @@
                     $('#assessmentTable > tbody').append(assessmentTemplate);
                     $('#addAssessmentModal').modal('hide');
                   }
+                  getBalanceByStudent(userData.id);
                 }
-              })
+              });
           });
         }
       });
@@ -395,15 +451,52 @@
           success: function(data) {
             $('#addScheduleModal').modal('hide');
             $('#paymentsTable > tbody').html("");
+            console.log('Retrieve Account Payments for Selected Student');
             for(var c=0; c < data.length; c++) {
               var assessmentTemplate = '<tr data-id="' + data[c].id + '">'
                                       + '<td>' + data[c].date + '</td>'
                                       + '<td>' + data[c].assessmentname + '</td>'
                                       + '<td>' + data[c].ornumber + '</td>'
                                       + '<td>' + data[c].amount + '</td>'
+                                      + '<td>'
+                                      +   '<button class="btn btn-link icon deletePayment">'
+                                      +   '<i class="fa fa-trash"></i>'
+                                      + '</button></td>'
                                       + '</tr>';
               $('#paymentsTable > tbody').append(assessmentTemplate);
             }
+
+            // Deletes Payment (in Retrieve Payment)
+            $('.deletePayment').on('click', function(event) {
+              console.log('Deletes Payment (in Retrieve Payment)');
+              console.log($(this).parent().parent().data('id'));
+              getBalanceByStudent(userData.id);
+              $.ajax({
+                type: "POST",
+                url: 'payments/delete',
+                data: { 
+                  paymentId: $(this).parent().parent().data('id'),
+                  studentId: userData.id
+                },
+                success: function(data) {
+                  $('#paymentsTable > tbody').html("");
+                  for(var c=0; c < data.length; c++) {
+                    var paymentTemplate = '<tr data-id="' + data[c].id + '">'
+                                            + '<td>' + data[c].date + '</td>'
+                                            + '<td>' + data[c].assessmentname + '</td>'
+                                            + '<td>' + data[c].ornumber + '</td>'
+                                            + '<td>' + data[c].amount + '</td>'
+                                            + '<td>'
+                                            +   '<button class="btn btn-link icon deletePayment">'
+                                            +   '<i class="fa fa-trash"></i>'
+                                            + '</button></td>'
+                                            + '</tr>';
+                    $('#paymentsTable > tbody').append(paymentTemplate);
+                  }
+                  $('#addAssessmentModal').modal('hide');
+                }
+              })
+            });
           }
         });
  
@@ -420,6 +513,7 @@
           url: '<?php echo base_url('assessments/add');?>',
           data: newAssessment,
           success: function(data) {
+            getBalanceByStudent(userData.id);
             $('#assessmentTable > tbody').html("");
             for(var c=0; c < data.length; c++) {
               var assessmentTemplate = '<tr data-id="' + data[c].id + '">'
@@ -433,11 +527,16 @@
               $('#assessmentTable > tbody').append(assessmentTemplate);
               $('#addAssessmentModal').modal('hide');
 
-              // Deletes Assessment
+              // Deletes Assessment (in Add Assessment)
               $('.deleteAssessment').on('click', function(event) {
+                getBalanceByStudent(userData.id);
                 $.ajax({
                   type: "POST",
-                  url: 'assessments/delete/' + $(this).parent().parent().data('id'),
+                  url: 'accounts/delete',
+                  data: { 
+                    assessmentId: $(this).parent().parent().data('id'),
+                    studentId: userData.id
+                  },
                   success: function(data) {
                     $('#assessmentTable > tbody').html("");
                     for(var c=0; c < data.length; c++) {
@@ -463,6 +562,7 @@
       // Add Payment Schedule
       $('#addSchedule').on('click', function(event) {
         event.preventDefault();
+        console.log('Add Payment Schedule');
         var newPayment = {
             date: $('#scheduleDate').val(),
             orNumber: $('#scheduleOrNo').val(),
@@ -475,6 +575,7 @@
           url: 'payments/create',
           data: newPayment,
           success: function(data) {
+            getBalanceByStudent(userData.id);
             $('#addScheduleModal').modal('hide');
             $('#paymentsTable > tbody').html("");
             for(var c=0; c < data.length; c++) {
@@ -483,9 +584,44 @@
                                       + '<td>' + data[c].assessmentname + '</td>'
                                       + '<td>' + data[c].ornumber + '</td>'
                                       + '<td>' + data[c].amount + '</td>'
+                                      + '<td>'
+                                      +   '<button class="btn btn-link icon deletePayment">'
+                                      +   '<i class="fa fa-trash"></i>'
+                                      + '</button></td>'
                                       + '</tr>';
               $('#paymentsTable > tbody').append(assessmentTemplate);
             }
+ 
+            // Deletes Payment (in Add Payment)
+            $('.deletePayment').on('click', function(event) {
+              console.log('Deletes Payment (in Add Payment)');
+              getBalanceByStudent(userData.id);
+              $.ajax({
+                type: "POST",
+                url: 'payments/delete',
+                data: { 
+                  paymentId: $(this).parent().parent().data('id'),
+                  studentId: userData.id
+                },
+                success: function(data) {
+                  $('#paymentsTable > tbody').html("");
+                  for(var c=0; c < data.length; c++) {
+                    var paymentTemplate = '<tr data-id="' + data[c].id + '">'
+                                            + '<td>' + data[c].date + '</td>'
+                                            + '<td>' + data[c].assessmentname + '</td>'
+                                            + '<td>' + data[c].ornumber + '</td>'
+                                            + '<td>' + data[c].amount + '</td>'
+                                            + '<td>'
+                                            +   '<button class="btn btn-link icon deletePayment">'
+                                            +   '<i class="fa fa-trash"></i>'
+                                            + '</button></td>'
+                                            + '</tr>';
+                    $('#paymentsTable > tbody').append(paymentTemplate);
+                  }
+                  $('#addAssessmentModal').modal('hide');
+                }
+              })
+            });
           }
         });
       });
@@ -549,6 +685,9 @@
           $('#studentDropdownBtn').val($(this).text());
           $('#studentDropdownBtn').attr('data-value',$(this).data('value'));
 
+          // Retrieve Balance for Selected Student
+          getBalanceByStudent($(this).data('value'));
+
           // Retrieve Accounts Assessments for Selected Student
           $.ajax({
             url: 'assessments/view/' + $(this).data('value'),
@@ -577,12 +716,19 @@
                                         + '<td>' + data[c].assessmentname + '</td>'
                                         + '<td>' + data[c].ornumber + '</td>'
                                         + '<td>' + data[c].amount + '</td>'
+                                        + '<td>'
+                                        +   '<button class="btn btn-link icon deletePayment">'
+                                        +   '<i class="fa fa-trash"></i>'
+                                        + '</button></td>'
                                         + '</tr>';
                 $('#paymentsTable > tbody').append(assessmentTemplate);
               }
             }
           });
         });
+
+        // Retrieve Balance for Selected Student
+        getBalanceByStudent($('#studentDropdownBtn').data('value'));
 
         // Retrieve Accounts Assessments for Selected Student
         $.ajax({
@@ -612,6 +758,10 @@
                                       + '<td>' + data[c].assessmentname + '</td>'
                                       + '<td>' + data[c].ornumber + '</td>'
                                       + '<td>' + data[c].amount + '</td>'
+                                      + '<td>'
+                                      +   '<button class="btn btn-link icon deletePayment">'
+                                      +   '<i class="fa fa-trash"></i>'
+                                      + '</button></td>'
                                       + '</tr>';
               $('#paymentsTable > tbody').append(assessmentTemplate);
             }

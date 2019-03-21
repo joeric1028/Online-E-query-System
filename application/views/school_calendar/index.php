@@ -19,15 +19,17 @@
         <div class="card">
             <div class="card-header">School Events</div>
             <div class="card-body">
-                <table id="calendarTable"> 
-                </table>
-                <div id="loaderschoolevent">
+                <div class="table-responsive">
+                    <table id="calendarTable"> 
+                    </table>
+                    <div id="loaderschoolevent">
                         <div class="loader disable-selection" id="loader-4">
                             <span></span>
                             <span></span>
                             <span></span>
                         </div>
                     </div>
+                </div>
             </div>
         </div>    
     </div> 
