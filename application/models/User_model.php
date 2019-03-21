@@ -167,21 +167,23 @@ class User_model extends CI_Model {
 
 	public function update_user() {
 		$data = array(
-        	'idnumber' => $this->input->post('username'),
+        	'idnumber' => $this->input->post('idnumber'),
         	'firstname' => $this->input->post('firstname'),
         	'middlename' => $this->input->post('middlename'),
         	'lastname' => $this->input->post('lastname'),
         	'sex' => $this->input->post('sex'),
         	'type' => $this->input->post('type'),
-        	'password' => $this->input->post('password')
 		);
-
-		$query = $this->db->update('users', $data, array('idnumber' => $data['idnumber']));
-
-		if ($query == false) {
-			return false;
-		} else {
+		
+		$query = $this->db->update('users', $data,array( 'idnumber' => $data['idnumber']));
+		if($query) {
+			$response_array['status'] = 'success';
+			echo json_encode($data['idnumber'].' updated!');
 			return true;
+		} else {
+			$response_array['status'] = 'error';
+			echo json_encode('error');
+			return false;
 		}
 	}
 

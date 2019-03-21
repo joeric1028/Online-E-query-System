@@ -57,16 +57,18 @@
                             <span></span>
                         </div>
                     </div>
-                <table cellpadding="0" cellspacing="0" id="studentTable">
-                    <thead class="customTh">
-                        <tr>
-                            <th style="width: 15%">ID No.</th>
-                            <th style="width: 60%">Full Name</th>
-							<th style="width: 20%"></th>
-                        </tr>
-                    </thead>
-                    <tbody class="customTd"></tbody>
-                </table>
+				<div class="table-responsive">
+					<table cellpadding="0" cellspacing="0" id="studentTable">
+						<thead class="customTh">
+							<tr>
+								<th style="width: 15%">ID No.</th>
+								<th style="width: 60%">Full Name</th>
+								<th style="width: 20%"></th>
+							</tr>
+						</thead>
+						<tbody class="customTd"></tbody>
+					</table>
+				</div>
             </div>
         </div>
     </div>

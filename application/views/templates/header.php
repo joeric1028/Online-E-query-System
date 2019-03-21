@@ -17,8 +17,10 @@
         <script type="text/javascript" charset="utf8" src="<?php echo base_url('assets/plugins/DataTables/datatables.js');?>"></script>
         <script type="text/javascript" charset="utf8" src="<?php echo base_url('assets/plugins/moment.js/moment.min.js');?>"></script>
         <script type="text/javascript" charset="utf8" src="<?php echo base_url('assets/plugins/daterangepicker/daterangepicker.js');?>"></script>
-        <script type="text/javascript" src="<?php echo base_url('assets/plugins/select2-4.0.5/dist/js/select2.min.js');?>"></script>
-        <script type="text/javascript" src="<?php echo base_url('assets/js/bootstrap.min.js');?>"></script>
+        <script type="text/javascript" charset="utf8" src="<?php echo base_url('assets/plugins/cellEdit/dataTables.cellEdit.js');?>"></script>
+        <script type="text/javascript" charset="utf8" src="<?php echo base_url('assets/plugins/SweetAlert/sweetalert.min.js');?>"></script>
+        <script type="text/javascript" charset="utf8" src="<?php echo base_url('assets/plugins/select2-4.0.5/dist/js/select2.min.js');?>"></script>
+        <script type="text/javascript" charset="utf8" src="<?php echo base_url('assets/js/bootstrap.min.js');?>"></script>
     </head>
     <body>
       <img src="<?php echo base_url('assets/img/backgrounds/bg.jpg');?>" id="bg-image" />

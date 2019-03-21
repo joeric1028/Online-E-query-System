@@ -179,5 +179,19 @@ class Accounts_model extends CI_Model {
     echo json_encode($query->result());
   }
 
+  public function delete_payment()
+	{
+    $this->db->delete('payments', array(
+      'id' => $this->input->post('paymentId'),
+      'student_id' => $this->input->post('studentId')
+    ));
+
+    $this->db->select('payments.id,payments.date,payments.ornumber,payments.amount,assessments.assessmentname');
+    $this->db->from('payments');
+    $this->db->join('assessments', 'assessments.id = payments.assessments_id');
+    $this->db->where('student_id', $this->input->post('studentId'));
+    $query = $this->db->get();
+    echo json_encode($query->result());
+  }
   /* Payments */
 }
