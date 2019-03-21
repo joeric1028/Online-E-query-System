@@ -17,11 +17,12 @@
         <script type="text/javascript" charset="utf8" src="<?php echo base_url('assets/plugins/DataTables/datatables.js');?>"></script>
         <script type="text/javascript" charset="utf8" src="<?php echo base_url('assets/plugins/moment.js/moment.min.js');?>"></script>
         <script type="text/javascript" charset="utf8" src="<?php echo base_url('assets/plugins/daterangepicker/daterangepicker.js');?>"></script>
-        <script type="text/javascript" src="<?php echo base_url('assets/plugins/select2-4.0.5/dist/js/select2.min.js');?>"></script>
-        <script type="text/javascript" src="<?php echo base_url('assets/js/bootstrap.min.js');?>"></script>
+        <script type="text/javascript" charset="utf8" src="<?php echo base_url('assets/plugins/cellEdit/dataTables.cellEdit.js');?>"></script>
+        <script type="text/javascript" charset="utf8" src="<?php echo base_url('assets/plugins/SweetAlert/sweetalert.min.js');?>"></script>
+        <script type="text/javascript" charset="utf8" src="<?php echo base_url('assets/plugins/select2-4.0.5/dist/js/select2.min.js');?>"></script>
+        <script type="text/javascript" charset="utf8" src="<?php echo base_url('assets/js/bootstrap.min.js');?>"></script>
     </head>
     <body>
-    
       <img src="<?php echo base_url('assets/img/backgrounds/bg.jpg');?>" id="bg-image" />
       <nav class="navbar navbar-inverse navbar-expand-lg navbar-dark bg-primary sticky-top">
         <ul class="navbar-nav mr-auto">
@@ -36,7 +37,13 @@
                   ?>"><span class="fas fa-bars"></span></a>
           </li>
           <li class="nav-item">
-            <a class="navbar-brand" href="#">Online E-Query System</a>
+            <a class="navbar-brand" href="#">Online E-Query System <?php
+              if ($this->session->has_userdata('logged_in')){
+                echo '- ' . $this->session->type;
+              } else {
+                echo '';
+              } 
+            ?></a>
           </li>
         </ul>
         <div class="nav-item my-2 my-lg-0">
@@ -58,9 +65,14 @@
               <div class="profile-userpic">
                   <div class="profcon">
                     <div id="profile">
-                      <img id="pic" class="d-flex align-items-center image" class="img-responsive" alt="" style="opacity:0.2;" src="<?php echo base_url('assets/img/profilepictures/avatarM.png')?>">
+                      <img id="pic" class="d-flex align-items-center image" class="img-responsive" alt="" style="opacity:0.2;" src="<?php 
+                      if ($this->session->sex == 'Male') {
+                        echo base_url('assets/img/profilepictures/avatarM.png');
+                      } else {
+                        echo base_url('assets/img/profilepictures/avatarF.png');
+                      }?>">
                       <div class="overlay" id="profile">
-                          <button class="btn img-responsive" id="profile">Update</button>
+                          <button class="btn img-responsive" data-toggle="modal" data-target="#UploadProfilePictureModal" id="profile">Update</button>
                       </div>
                     </div>
                     <div id="loaderprof">
@@ -78,8 +90,12 @@
               <li>
                 <div class="d-flex align-items-center "><h6>Welcome, 
                   <?php 
-                    if ($this->session->has_userdata('logged_in')){
-                      echo $firstname;
+                    if ($this->session->has_userdata('logged_in')) {
+                      if ($this->session->sex == 'Male') {
+                        echo 'Mr. ' . $firstname;
+                      } else {
+                        echo 'Ms. ' . $firstname;
+                      }
                     } else {
                       echo 'Guest';
                     } 
@@ -93,7 +109,7 @@
               <?php if($type == "Administrator"): ?>
                 <li id="usersLink">
                   <a <?php if($activePage === "users"):?>class="active"<?php endif;?> href="<?php echo site_url('users')?>">
-                    <i class="fas fa-users"></i> Manage Users  
+                    <i class="fas fa-users"></i> Users  
                   </a>
                 </li>
               <?php endif; if($type != "Teacher"):?>
@@ -105,7 +121,7 @@
               <?php endif; if($type == "Teacher" || $type == "Administrator"):?>
                 <li id="studentsLink">
                   <a <?php if($activePage === "students"):?>class="active"<?php endif;?> href="<?php echo site_url('students')?>">
-                    <i class="fas fa-user-graduate"></i> Manage Classes  
+                    <i class="fas fa-user-graduate"></i> Classes  
                   </a>
                 </li>
               <?php endif; if($type != "Treasurer"):?>
@@ -135,7 +151,7 @@
         </div>
         <!-- /#sidebar-wrapper -->
         <!-- Upload Profile Picture Modal -->
-        <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+        <div id="UploadProfilePictureModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
           <div class="modal-dialog modal-sm modal-dialog-centered">
             <div class="modal-content">
               <div class="modal-header">  
@@ -145,17 +161,19 @@
                 </button>
               </div>
               <div class="modal-body">
-                <form>
+              <form action="" id="profilesubmit" enctype="multipart/form-data" method="post" accept-charset="utf-8">
                   <div class="form-group">
                     <label for="uploadPic">Upload Picture</label>
-                    <input type="file" class="form-control-file" id="uploadPic">
+                    <input type="file" class="form-control-file" id="image_file" name="file" size="20">
                   </div>
-                </form>
               </div>
               <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
+                <label class="error form-label text-success" id="profilestatussuccess"></label>
+	              <label class="error form-label text-danger" id="profilestatuserror"></label>
+                <input type="submit" class="btn btn-primary" id="submitprofile" value="Upload">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" id="closeprofile">Close</button>
               </div>
+              </form>
             </div>
           </div>
         </div>
@@ -201,7 +219,3 @@
         <!-- Page Content -->
         <div id="page-content-wrapper">
           <div class="container-fluid">
-                
-              
-              
-      

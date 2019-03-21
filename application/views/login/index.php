@@ -11,9 +11,9 @@
 						<div class="card-body">
 						<?php echo form_open('login'); ?>
 							<div class="form-group">
-								<label for="username">Username</label>
-								<input type="text" class="form-control" id="username" name="username" placeholder="Username" value="<?php echo set_value('username'); ?>" size="25"/>
-								<div class="form-group text-danger"><?php echo form_error('username'); ?></div>
+								<label for="idnumber">ID Number</label>
+								<input type="text" class="form-control" id="idnumber" name="idnumber" placeholder="ID Number" value="<?php echo set_value('idnumber'); ?>" size="25"/>
+								<div class="form-group text-danger"><?php echo form_error('idnumber'); ?></div>
 							</div>
 							<div class="form-group">
 								<label for="password">Password</label>

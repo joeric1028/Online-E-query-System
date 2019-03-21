@@ -49,32 +49,63 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | Examples:	my-controller/index	-> my_controller/index
 |		my-controller/my-method	-> my_controller/my_method
 */
-$route['default_controller'] = 'welcome';
+$route['default_controller'] = 'login';
 
 $route['main'] = 'main';
 $route['login'] = 'login';
 $route['logout'] = 'api/logout';
 
+// Manage Users
 $route['users'] = 'manageusers';
 $route['users/create'] = 'manageusers/createuser';
+$route['users/update'] = 'manageusers/updateuser';
 $route['users/delete'] = 'manageusers/deleteuser';
+$route['parents/search'] = 'manageusers/searchparent'; 
 
+// Manage Students
 $route['students'] = 'managestudents';
+$route['students/view'] = 'managestudents/getstudents';
+$route['students/view/(:num)'] = 'managestudents/getstudentsbylevel/$1';
+$route['students/parent/view/(:num)'] = 'managestudents/getstudentsbyparent/$1';
+$route['students/create'] = 'managestudents/createstudent';
+$route['students/delete/(:num)'] = 'managestudents/deletestudent/$1';
+$route['subjects/view'] = 'managestudents/getsubjects';
+$route['subjects/view/(:num)'] = "managestudents/getsubjectsbylevel/$1";
+$route['subjects/create'] = 'managestudents/createsubject';
+$route['subjects/delete/(:num)'] = 'managestudents/deletesubject/$1';
 
+// Accounts
 $route['accounts'] = 'accounts';
+$route['accounts/view'] = 'accounts/getaccounts';
+$route['accounts/update'] = 'accounts/updateaccounts';
+$route['accounts/delete'] = 'accounts/deleteaccounts';
+$route['accounts/balance/view/(:num)'] = 'accounts/getbalance/$1';
+$route['assessments/view'] = 'accounts/getassessments';
+$route['assessments/view/(:num)'] = 'accounts/getassessmentsbystudentid/$1';
+$route['assessments/add'] = 'accounts/addassessmentsbystudentid';
+$route['assessments/update'] = 'accounts/updateassessment';
+$route['assessments/delete/(:num)'] = 'accounts/deleteassessment/$1';
+$route['payments/view/(:num)'] = 'accounts/getpaymentsbystudentid/$1';
+$route['payments/create'] = 'accounts/createpaymentschedule';
+$route['payments/delete'] = 'accounts/deletepayment';
 
+
+// Grades
 $route['grades'] = 'grades';
 $route['grades/view'] = 'grades/getgrades';
+$route['grades/view/(:num)'] = 'grades/getgradesByStudent/$1';
+$route['grades/update'] = 'grades/updateGrades';
 
+
+// School Calendar
 $route['calendar'] = 'schoolcalendar';
 $route['calendar/create'] = 'schoolcalendar/createevent';
 $route['calendar/upcoming'] = 'schoolcalendar/upcomingevent';
 $route['calendar/school'] = 'schoolcalendar/schoolevent';
+$route['calendar/export'] = 'schoolcalendar/exportevent';
 
-$route['news/(:any)'] = 'news/view/$1';
-$route['news'] = 'news';
+// Under Construction
 $route['welcome'] = 'welcome';
-$route['(:any)'] = 'pages/view/$1';
 
 $route['api/(:any)'] = 'api/$1';
 

@@ -1,46 +1,50 @@
 <?php
-class SchoolCalendar extends CI_Controller {
+    class SchoolCalendar extends CI_Controller {
 
-    public function index()
-    {
-        if (!$this->session->has_userdata('logged_in'))
-        {
-            redirect('login');
+        public function index() {
+            if (!is_https()) {
+                redirect('calendar', 'location', 301);
+            }
+
+            if (!$this->session->has_userdata('logged_in')) {
+                redirect('login');
+            }
+
+            $data = array(
+                'idnumber'      =>  $this->session->idnumber,
+                'id'            =>  $this->session->id,
+                'type'          =>  $this->session->type,
+                'firstname'     =>  $this->session->firstname,
+                'middlename'    =>  $this->session->middlename,
+                'lastname'      =>  $this->session->lastname,
+                'sex'           =>  $this->session->sex,
+                'logged_in'     =>  $this->session->logged_in,
+                'title'         =>  'School Calendar',
+                'activePage'    =>  'calendar'
+            );
+
+            $this->load->view('templates/header', $data);
+            $this->load->view('school_calendar/index', $data);
+            $this->load->view('templates/footer');
         }
 
-        $data = array(
-            'idnumber'  => $this->session->idnumber,
-            'id'     => $this->session->id,
-            'type'     => $this->session->type,
-            'firstname'     => $this->session->firstname,
-            'middlename'     => $this->session->middlename,
-            'lastname'     => $this->session->lastname,
-            'sex'     => $this->session->sex,
-            'logged_in' => $this->session->logged_in,
-            'title' =>  'Welcome to E-Query System!',
-            'activePage' => 'calendar'
-        );
+        public function upcomingevent() {
+            header("Content-Type: application/json; charset=UTF-8");
+            $this->News_model->get_upcomingEvent();
+        }
 
-        $this->load->view('templates/header', $data);
-        $this->load->view('school_calendar/index', $data);
-        $this->load->view('templates/footer');
-    }
+        public function schoolevent() {
+            header("Content-Type: application/json; charset=UTF-8");
+            $this->News_model->get_schoolEvent();
+        }
 
-    public function upcomingevent()
-    {
-        header("Content-Type: application/json; charset=UTF-8");
-        $this->News_model->get_upcomingEvent();
-    }
+        public function createevent() {
+            header("Content-Type: application/json; charset=UTF-8");
+            $this->News_model->create_event();
+        }
 
-    public function schoolevent()
-    {
-        header("Content-Type: application/json; charset=UTF-8");
-        $this->News_model->get_schoolEvent();
+        public function exportevent() {
+            header("Content-Type: application/pdf; charset=UTF-8;");
+            $this->load->view('school_calendar/exportpdf');
+        }
     }
-
-    public function createevent()
-    {
-        header("Content-Type: application/json; charset=UTF-8");
-        $this->News_model->create_event();
-    }
-}

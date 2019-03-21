@@ -1,24 +1,21 @@
 <?php
 class News_model extends CI_Model {
 
-    public function __construct()
-	{
+		public function __construct() {
 		$this->load->database();
 	}
 	
-	public function get_news($slug = FALSE)
-	{
-		if ($slug === FALSE)
-		{
+	public function get_news($slug = FALSE) {
+		if ($slug === FALSE) {
 			$query = $this->db->get('schoolactivities');
 			return $query->result_array();
 		}
+		
 		$query = $this->db->get_where('schoolactivities', array('slug' => $slug));
 		return $query->row_array();
 	}
 
-	public function get_upcomingEvent()
-	{
+	public function get_upcomingEvent() {
 		$date = cal_days_in_month(CAL_GREGORIAN, $this->input->post('month'), $this->input->post('year'));
 		$data = array(
 			$this->input->post('year') . '-' . $this->input->post('month') . '-' . $this->input->post('day'),
@@ -28,23 +25,18 @@ class News_model extends CI_Model {
 		$sql = "SELECT * FROM `schoolactivities` WHERE `startdate` BETWEEN ? AND ? ORDER BY `startdate` ASC;";
 		$query = $this->db->query($sql, $data);
 
-		if ($query)
-		{
+		if ($query) {
 			$result = array( 'data' => $query->result());
 
-			if ($query->first_row() != null)
-			{
+			if ($query->first_row() != null) {
 				echo json_encode($result);
-			}
-			else {
+			} else {
 				$errorMessage = 'No event this month.';
 				$error = array('warning' => $errorMessage);
 	
 				echo json_encode($error);
 			}
-		}
-		else
-		{
+		} else {
 			$errorMessage = 'Unable to display.';
 			$error = array('error' => $errorMessage);
 	
@@ -52,14 +44,10 @@ class News_model extends CI_Model {
 		}
 	}
 
-	public function get_schoolEvent()
-	{
-		if ($this->input->post('month') <= 3)
-		{
+	public function get_schoolEvent() {
+		if ($this->input->post('month') <= 3) {
 			$year = ($this->input->post('year')-1);
-		}
-		else
-		{
+		} else {
 			$year = $this->input->post('year');
 		}
 
@@ -72,28 +60,32 @@ class News_model extends CI_Model {
 		$queryactivities = $this->db->query($sqlactivities, $data);
 
 		$sqlyear = "SELECT * FROM `schoolyear` WHERE `id` = ? ;";
-		$queryyear = $this->db->query($sqlyear, $queryactivities->first_row()->schoolyear_id);
+		if ($queryactivities->first_row() != null) {
+			$queryyear = $this->db->query($sqlyear, $queryactivities->first_row()->schoolyear_id);
+		} else {
+			$errorMessage = 'No event this school year.';
+			$error = array('warning' => $errorMessage);
 
-		if ($queryactivities && $queryyear)
-		{
-			$result = array( 'data' => array('schoolactivities' => $queryactivities->result(), 
-											'schoolyear' => $queryyear->result())
-							);
+			echo json_encode($error);
+			return;
+		}
 
-			if ($queryactivities->first_row() != null)
-			{
+		if ($queryactivities && $queryyear) {
+			$result = array(
+				'data' => array(
+					'schoolactivities' 	=> $queryactivities->result(), 
+					'schoolyear' 		=> $queryyear->result())
+			);
+
+			if ($queryactivities->first_row() != null) {
 				echo json_encode($result);
-			}
-			else 
-			{
+			} else {
 				$errorMessage = 'No event this school year.';
 				$error = array('warning' => $errorMessage);
 	
 				echo json_encode($error);
 			}
-		}
-		else
-		{
+		} else {
 			$errorMessage = 'Unable to display.';
 			$error = array('error' => $errorMessage);
 	
@@ -101,25 +93,19 @@ class News_model extends CI_Model {
 		}
 	}
 
-	public function create_event()
-	{
+	public function create_event() {
 		$date = explode('-', $this->input->post('startdate'));
 
-		if ($date[1] <= 3)
-		{
+		if ($date[1] <= 3) {
 			$year = ($date[0]-1);
-		}
-		else
-		{
+		} else {
 			$year = $date[0];
 		}
 
 		$query = $this->db->get_where('schoolyear', array('start' => $year));
 
-		foreach ($query->result() as $row)
-		{
-			if ($year == $row->start)
-			{
+		foreach ($query->result() as $row) {
+			if ($year == $row->start) {
 				$data = array(
 					'name' => $this->input->post('name'),
 					'startdate' => $this->input->post('startdate'),
@@ -129,18 +115,16 @@ class News_model extends CI_Model {
 
 				$query = $this->db->insert('schoolactivities', $data);
 
-				if ($query == false)
-				{
+				if ($query == false) {
 					$errorMessage = "Unable to proceed. Can't create event";
 					$error = array('error' => $errorMessage);
 					echo json_encode($error);
-				}
-				else {
+				} else {
 					$successMessage = "Creating event has been successful.";
 					$success = array('success' => $successMessage);
 					echo json_encode($success);
 				}
-				exit();
+				return;
 			}
 		}
 
@@ -152,19 +136,15 @@ class News_model extends CI_Model {
 
 		$query = $this->db->insert('schoolyear', $schoolyeardata);
 
-		if ($query == false)
-		{
+		if ($query == false) {
 			$errorMessage = "Unable to proceed. Can't create event";
 			$error = array('error' => $errorMessage);
 			echo json_encode($error);
-		}
-		else {
+		} else {
 			$query = $this->db->get_where('schoolyear', array('start' => $year));
 
-			foreach ($query->result() as $row)
-			{
-				if ($year == $row->start)
-				{
+			foreach ($query->result() as $row) {
+				if ($year == $row->start) {
 					$data = array(
 						'name' => $this->input->post('name'),
 						'startdate' => $this->input->post('startdate'),
@@ -174,13 +154,11 @@ class News_model extends CI_Model {
 
 					$query = $this->db->insert('schoolactivities', $data);
 
-					if ($query == false)
-					{
+					if ($query == false) {
 						$errorMessage = "Unable to proceed. Can't create event";
 						$error = array('error' => $errorMessage);
 						echo json_encode($error);
-					}
-					else {
+					} else {
 						$successMessage = "Creating event has been successful.";
 						$success = array('success' => $successMessage);
 						echo json_encode($success);

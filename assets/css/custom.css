@@ -8,6 +8,24 @@
     
 }
 
+.avatar {
+    width: 2rem;
+    height: 2rem;
+    line-height: 2rem;
+    border-radius: 50%;
+    display: inline-block;
+    background: #ced4da no-repeat center/cover;
+    position: relative;
+    text-align: center;
+    color: #868e96;
+    font-weight: 600;
+    vertical-align: bottom;
+    font-size: .875rem;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
 
 .bg-blue {
     background-color: #467fcf !important;
@@ -93,7 +111,7 @@
 }
 
 .fas {
-    margin-right: 5px;
+    /*margin-right: 5px;*/
     left: 0px;
 }
 
@@ -105,6 +123,14 @@
     background-color: #f5f5f5;
 }
 
+.icon {
+    color: #9aa0ac !important;
+}
+
+a.icon:hover {
+    color: #f78888 !important;
+}
+
 .login-container {
     margin: 10vh auto;
     max-width: 500px;
@@ -112,6 +138,10 @@
 
 .list-group.custom-list-group > .list-group-item {
     border: 0px solid #fff;
+}
+
+.list-group.custom-list-group > .list-group-item:hover {
+    cursor: pointer;
 }
 
 .list-group.custom-list-group > .list-group-item:hover:not(.active) {
@@ -175,6 +205,24 @@
 .profcon:hover .image {
     opacity: 0.3;
   }
+
+.stamp-md {
+    min-width: 2.5rem;
+    height: 2.5rem;
+    line-height: 2.5rem;
+}
+.stamp {
+    color: #fff;
+    background: #868e96;
+    display: inline-block;
+    min-width: 2rem;
+    height: 2rem;
+    padding: 0 .25rem;
+    line-height: 2rem;
+    text-align: center;
+    border-radius: 3px;
+    font-weight: 600;
+}
 
 /* Container needed to position the button. Adjust the width as needed */
 .profcon {

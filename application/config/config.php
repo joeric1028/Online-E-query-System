@@ -23,8 +23,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | a PHP script and you can easily do that on your own.
 |
 */
-$config['base_url'] = 'http://jvty13.heliohost.org/'; //for live website
-//$config['base_url'] = 'http://jvty13/'; // for virtualhost
+$config['base_url'] = 'https://jvty13.heliohost.org/'; //for live website
+//$config['base_url'] = 'https://jvty13/'; // for virtualhost
 
 /*
 |--------------------------------------------------------------------------
@@ -224,7 +224,7 @@ $config['allow_get_array'] = TRUE;
 | your log files will fill up very fast.
 |
 */
-$config['log_threshold'] = 0;
+$config['log_threshold'] = 4;
 
 /*
 |--------------------------------------------------------------------------
