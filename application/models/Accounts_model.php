@@ -16,11 +16,11 @@ class Accounts_model extends CI_Model {
   public function delete_accounts() 
   {
     $this->db->delete('schoolaccount',array(
-      'assessments_id' => $this->input->post('assessmentId'),
+      'id' => $this->input->post('assessmentId'),
       'student_id' => $this->input->post('studentId')
     ));
 
-    $this->db->select('assessments.id,schoolaccount.amount,assessments.assessmentname');
+    $this->db->select('schoolaccount.id, assessments.id AS assessment_id,schoolaccount.amount,assessments.assessmentname');
     $this->db->from('assessments');
     $this->db->join('schoolaccount', 'assessments.id = schoolaccount.assessments_id');
     $this->db->where('student_id',$this->input->post('studentId'));
@@ -78,7 +78,7 @@ class Accounts_model extends CI_Model {
 
   public function get_assessmentsbystudentid($studentId) 
   {
-    $this->db->select('assessments.id,schoolaccount.amount,assessments.assessmentname');
+    $this->db->select('schoolaccount.id,assessments.id AS assessment_id,schoolaccount.amount,assessments.assessmentname');
     $this->db->from('assessments');
     $this->db->join('schoolaccount', 'assessments.id = schoolaccount.assessments_id');
     $this->db->where('student_id',$studentId);

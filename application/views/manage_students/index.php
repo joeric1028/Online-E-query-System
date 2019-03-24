@@ -337,7 +337,7 @@
 			}
 		});     
 	}
-
+//
 	function addStudent() {
 		$.ajax({
 			url: 'students/create/',
@@ -524,7 +524,7 @@
 				}
 			});     
 		});
-
+ 
 		$('.edit-cancel').on('click', function(e) {
 			e.preventDefault();
 			var thisStudentRow = $(this).parent().parent().parent();
@@ -575,8 +575,8 @@
 				$.ajax({
 					url: 'students/delete/' + studentId ,
 					dataType: 'json',
-					success: function() {
-						swal("Success!", "Student Deleted!", "success");
+					success: function(data) {
+						swal("Success!", data, "success");
 						student.remove();
 					},
 					error: function(status) {

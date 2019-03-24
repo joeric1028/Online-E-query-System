@@ -116,10 +116,10 @@ class Student_model extends CI_Model {
 	}
 
 	public function delete_student($studentId) {
-		$this->db->select('CONCAT(firstname, " ", lastname' );
+		$this->db->select('CONCAT(firstname, " ", lastname) as studentName');
 		$this->db->from('student');
 		$this->db->where('id', $studentId);
-		$studentName = $this->db->get();
+		$studentName = $this->db->get()->row()->studentName;
 		$query = $this->db->delete('student',array('id' => $studentId));
 
 		if($query) {

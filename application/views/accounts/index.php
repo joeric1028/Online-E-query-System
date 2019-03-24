@@ -59,7 +59,7 @@
 </div>
 <?php endif;?>
 <div class="row">
-  <div class="col-5">
+  <div class="col-4">
     <div class="card p-3">
       <div class="d-flex align-items-center">
         <span class="stamp stamp-md bg-blue mr-3">
@@ -71,10 +71,24 @@
         </div>
       </div>
     </div>
-  </div><div class="col-5">
+  </div>
+  <div class="col-4">
     <div class="card p-3">
       <div class="d-flex align-items-center">
         <span class="stamp stamp-md bg-green mr-3">
+          <i class="fas fa-money-bill-wave"></i>
+        </span>
+        <div>
+          <h4 class="m-0" id="totalPayments"><span></span></h4>
+          <small class="text-muted">Total Payments</small>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-4">
+    <div class="card p-3">
+      <div class="d-flex align-items-center">
+        <span class="stamp stamp-md bg-yellow mr-3">
           <i class="fas fa-money-bill-wave"></i>
         </span>
         <div>
@@ -126,7 +140,7 @@
                 <th style="width: 30%">Particulars</th>
                 <th style="width: 30">O.R. No</th>
                 <th style="width: 19%">Amount</th>
-                <th style="width: 7%"></th>
+                <th style="width: 50px"></th>
               </tr>
             </thead>
             <tbody class="customTd">
@@ -237,8 +251,8 @@
           </div>
           <div class="form-group">
             <label class="form-label">Amount Paid</label>
-            <input type="text" class="form-control" name="amountdue" id="scheduleAmountPaid">
-            <label class="error text-danger" for="amountdue" id="amountdue_error">This field is required.</label>
+            <input type="number" class="form-control" name="amountdue" id="scheduleAmountPaid" value="0" min="0">
+            <label class="error text-danger"  for="amountdue" id="amountdue_error">This field is required.</label>
           </div>
         </div>
         <div class="modal-footer">
@@ -252,6 +266,14 @@
   </div>
 </div>
 <script>
+  var assessmentItems;
+
+  function getSelectedStudentData() {
+    var studentTable = $('#studentTable').DataTable();
+    var studentData = studentTable.row( '.selected' ).data();
+    return studentData;
+  }
+
   // Retrieves Assessment Items for Manage Particulars
   function getAssessmentItems() {
     $.ajax({
@@ -264,7 +286,9 @@
               $('#scheduleParticulars').append('<option value="' + data[c].id + '" selected="">' + data[c].assessmentname + '</option>');
             }
           }
-        }
+          assessmentItems = data;
+        },
+        async: false
     });
   }
 
@@ -287,12 +311,17 @@
     $('#assessmentTable > tbody').html("");
     for(var c=0; c < data.length; c++) {
       var assessmentTemplate = '<tr data-id="' + data[c].id + '">'
-                              + '<td>' + data[c].assessmentname + '</td>'
+                              + '<td data-id="' + data[c].assessment_id + '">' + data[c].assessmentname + '</td>'
                               + '<td>' + data[c].amount + '</td>'
-                              + '<td>'
-                              +   '<button class="btn btn-link icon deleteAssessment">'
-                              +   '<i class="fa fa-trash"></i>'
-                              + '</button></td>'
+                              + '<td class="text-center">'
+                              +	 '<div class="item-action dropdown">'
+                              +		'<a href="javascript:void(0)" data-toggle="dropdown" class="icon"><i class="fas fa-ellipsis-v"></i></a>'
+                              +		'<div class="dropdown-menu dropdown-menu-right">'
+                              +			'<a href="javascript:void(0)" onClick="updateAssessment(this)" class="dropdown-item"><i class="dropdown-icon far fa-edit"></i> Edit </a>'
+                              +			'<a href="javascript:void(0)" onClick="deleteAssessment(this)" class="dropdown-item"><i class="dropdown-icon far fa-trash-alt"></i> Delete </a>'
+                              +		'</div>'
+                              +	'</div>'
+                              + '</td>' 
                               + '</tr>';
       $('#assessmentTable > tbody').append(assessmentTemplate);
       // $('#addAssessmentModal').modal('hide');
@@ -308,10 +337,15 @@
                               + '<td>' + data[c].assessmentname + '</td>'
                               + '<td>' + data[c].ornumber + '</td>'
                               + '<td>' + data[c].amount + '</td>'
-                              + '<td>'
-                              +   '<button class="btn btn-link icon deletePayment">'
-                              +   '<i class="fa fa-trash"></i>'
-                              + '</button></td>'
+                              + '<td class="text-center">'
+                              +	 '<div class="item-action dropdown">'
+                              +		'<a href="javascript:void(0)" data-toggle="dropdown" class="icon"><i class="fas fa-ellipsis-v"></i></a>'
+                              +		'<div class="dropdown-menu dropdown-menu-right">'
+                              +			'<a href="javascript:void(0)" onClick="updatePayment(this)" class="dropdown-item"><i class="dropdown-icon far fa-edit"></i> Edit </a>'
+                              +			'<a href="javascript:void(0)" onClick="deletePayment(this)" class="dropdown-item"><i class="dropdown-icon far fa-trash-alt"></i> Delete </a>'
+                              +		'</div>'
+                              +	'</div>'
+                              + '</td>' 
                               + '</tr>';
       $('#paymentsTable > tbody').append(paymentTemplate);
     }
@@ -323,12 +357,6 @@
       url: 'assessments/view/' + studentId,
       success: function(data) {
         displayAssessments(data);
-        
-        // Deletes Assessment (in Retrieve Assessment)
-        $('.deleteAssessment').on('click', function(event) {
-          var assessmentId = $(this).parent().parent().data('id');
-          deleteAssessment(assessmentId, studentId);
-        });
       }
     });
   }
@@ -341,13 +369,6 @@
         $('#addScheduleModal').modal('hide');
         $('#paymentsTable > tbody').html("");
         displayPayments(data);
-
-        // Deletes Payment (in Retrieve Payment)
-        $('.deletePayment').on('click', function(event) {
-          var paymentId = $(this).parent().parent().data('id');
-          getBalanceByStudent(studentId);
-          deletePayment(paymentId,studentId);
-        });
       }
     });
   }
@@ -383,37 +404,124 @@
 
   function addPaymentByStudentId(studentId) {
     var newPayment = {
-        date: $('#scheduleDate').val(),
-        orNumber: $('#scheduleOrNo').val(),
-        amount: $('#scheduleAmountPaid').val(),
-        assessmentId: $('#scheduleParticulars').val(),
-        studentId: studentId,
-      };
-    $.ajax({
-      type: 'POST',
-      url: 'payments/create',
-      data: newPayment,
-      success: function(data) {
-        swal("Success!", "Payment Added!", "success");
-        getBalanceByStudent(studentId);
-        $('#addScheduleModal').modal('hide');
-        displayPayments(data, status);
+      date: $('#scheduleDate').val(),
+      orNumber: $('#scheduleOrNo').val(),
+      amount: $('#scheduleAmountPaid').val(),
+      assessmentId: $('#scheduleParticulars').val(),
+      studentId: studentId,
+    };
 
-        // Deletes Payment (in Add Payment)
-        $('.deletePayment').on('click', function(event) {
-          var paymentId = $(this).parent().parent().data('id');
-          deletePayment(paymentId,studentId);
+    $('.error').hide();
+  
+    var orNumber = $("#scheduleOrNo").val();
+
+    if (orNumber == "") {
+      $("#orno_error").show();
+      $("#scheduleOrNo").focus();
+      return;
+    } else {
+      $.ajax({
+        type: 'POST',
+        url: 'payments/create',
+        data: newPayment,
+        success: function(data) {
+          swal("Success!", "Payment Added!", "success");
           getBalanceByStudent(studentId);
-        });
-      }, 
-      error: function(status) {
-        swal("Error!", "Something's wrong!", "error");
-      }
-    });
+          $('#addScheduleModal').modal('hide');
+          displayPayments(data, status);
+        }, 
+        error: function(status) {
+          swal("Error!", "Something's wrong!", "error");
+        }
+      });
+    }
+  }
+
+  function updateAssessment(selector) {
+    function getAssessmentTemplate(asst_id,name,amount) {
+      var assessmentDefaultTemplate = '<td data-id="' + asst_id + '">' + name + '</td>'
+                                  +   '<td>' + amount + '</td>'
+                                  +   '<td class="text-center">'
+                                  +   '<div class="item-action dropdown">'
+                                  +     '<a href="javascript:void(0)" data-toggle="dropdown" class="icon"><i class="fas fa-ellipsis-v"></i></a>'
+                                  +     '<div class="dropdown-menu dropdown-menu-right">'
+                                  +       '<a href="javascript:void(0)" onclick="updateAssessment(this)" class="dropdown-item"><i class="dropdown-icon far fa-edit"></i> Edit </a>'
+                                  +       '<a href="javascript:void(0)" onclick="deleteAssessment(this)" class="dropdown-item"><i class="dropdown-icon far fa-trash-alt"></i> Delete </a>'
+                                  +     '</div>'
+                                  +   '</div>'
+                                  + '</td>';
+      return assessmentDefaultTemplate;
+    }
+
+    var assessmentItemsOptions = "";
+    for(var c=0; c < assessmentItems.length; c++) {
+      assessmentItemsOptions += '<option value="' + assessmentItems[c].id + '" selected="">' + assessmentItems[c].assessmentname + '</option>';
+    }
+    var assessment = $(selector).parent().parent().parent().parent();
+    var currAssessmentId = assessment.data('id');
+    var currAssessmentItemId = assessment.children().eq(0).data('id');
+    var currAssessmentName  = assessment.children().eq(0).html();
+    var currAssessmentAmount = assessment.children().eq(1).html();
+    
+    var editAssessmentTemplate  =   '<td><select class="form-control custom-select edit-assessment" name="type">'
+                                +   assessmentItemsOptions
+                                +   '</select></td>'
+                                +   '<td><input value="' + currAssessmentAmount + '" class="form-control"</td>'
+                                +   '<td class="text-center align-middle">'
+                                +   '<div class="item-action dropdown">'
+                                +     '<div class="d-flex">'
+                                + 			'<button class="btn btn-sm btn-outline-success form-control ml-1 edit-save"><i class="fas fa-check"></i></button>'
+                                +			  '<button class="btn btn-sm btn-outline-warning form-control ml-1 edit-cancel"><i class="fas fa-times"></i></button>'
+                                +		  '</div>'
+                                +   '</div>'
+                                +   '</td>';
+
+    assessment.html(editAssessmentTemplate)
+    assessment.find('select').val(currAssessmentItemId);
+
+    $('.edit-save').on('click', function(e) {
+			e.preventDefault();
+			var thisAssessmentRow = $(this).parent().parent().parent().parent();
+			var newAssessment = thisAssessmentRow.find('select').val();
+      var newAssessmentName = thisAssessmentRow.find(".edit-assessment option:selected").text();
+      var newAmount = thisAssessmentRow.find('input').val();
+
+			$.ajax({
+				url: 'accounts/update',
+				type: 'POST',
+				dataType: 'json',
+				dataSrc: '',
+				data: { 
+					'assessmentId': newAssessment,
+					'amount': newAmount
+				}, 
+				success: function(data) {
+					swal("Success!", data, "success");
+					thisAssessmentRow.html(getAssessmentTemplate(newAssessment, newAssessmentName, newAmount));
+				},
+				error: function(status) {
+					swal("Error!", "Something's wrong!", "error");
+				}
+			});     
+		});
+
+		$('.edit-cancel').on('click', function(e) {
+			e.preventDefault();
+			var thisAssessmentRow = $(this).parent().parent().parent().parent();
+			thisAssessmentRow.html(getAssessmentTemplate(currAssessmentItemId,currAssessmentName,currAssessmentAmount));
+		});
+  }
+
+  function updatePayment(selector) {
+    alert('updatePayment!');
   }
 
   // Deletes Payment of Selected Student
-  function deletePayment(paymentId,studentId) {
+  function deletePayment(selector) {
+    var payment = $(selector).parent().parent().parent().parent();
+    var paymentId = payment.data('id');
+    var student = getSelectedStudentData();
+
     swal({
       title: "Are you sure?",
       text: "Changes cannot be undone once deleted!",
@@ -428,7 +536,7 @@
           url: 'payments/delete',
           data: { 
             paymentId: paymentId,
-            studentId: studentId
+            studentId: student.id
           },
           success: function(data, status) {
             swal("Success!", "Payment successfuly deleted!", "success");
@@ -443,7 +551,10 @@
   }
 
   // Deletes Assessment of Selected Student
-  function deleteAssessment(assessmentId,studentId) {
+  function deleteAssessment(selector) {
+    var assessment = $(selector).parent().parent().parent().parent();
+    var assessmentId = assessment.data('id');
+    var student = getSelectedStudentData();
     swal({
       title: "Are you sure?",
       text: "Changes cannot be undone once deleted!",
@@ -458,12 +569,12 @@
           url: 'accounts/delete',
           data: { 
             assessmentId: assessmentId,
-            studentId: studentId
+            studentId: student.id
           },
           success: function(data, status) {
             swal("Success!", "Assessment successfuly deleted!", "success");
             displayAssessments(data);
-            getBalanceByStudent(studentId);
+            getBalanceByStudent(student.id);
           },
           error: function(status) {
             swal("Error!", "Something's wrong!", "error");
@@ -480,10 +591,20 @@
         dataType: 'json',
         success: function(data) {
           var totalBalance = data.totalBalance;
+          var totalPayments = data.totalPayments;
           var remainingBalance = data.remainingBalance;
+          
           $('#totalBalance > span').html("P " + numberWithCommas(totalBalance.toFixed(2)));
+          $('#totalPayments > span').html("P " + numberWithCommas(totalPayments.toFixed(2)));
           $('#remainingBalance > span').html("P " + numberWithCommas(remainingBalance.toFixed(2)));
         }
+    });
+  }
+
+  function initializeDatePicker() {
+    $('.datepicker').daterangepicker({
+      singleDatePicker: true,
+      showDropdowns: true,
     });
   }
 
@@ -495,12 +616,10 @@
   }
 
   $(document).ready(function () {
+    var assessmentItems;
     $('.error').hide();
 
-    $('#scheduleDate').daterangepicker({
-      singleDatePicker: true,
-      showDropdowns: true,
-    });
+    initializeDatePicker();
   
     // Select Students Table
     var table = $('#studentTable').DataTable({
