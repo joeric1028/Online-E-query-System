@@ -20,7 +20,7 @@
             <div class="card-header">School Events</div>
             <div class="card-body">
                 <div class="table-responsive">
-                    <table id="calendarTable"> 
+                    <table id="calendarTable" class="bcma-table"> 
                     </table>
                     <div id="loaderschoolevent">
                         <div class="loader disable-selection" id="loader-4">

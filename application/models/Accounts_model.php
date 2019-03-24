@@ -156,13 +156,6 @@ class Accounts_model extends CI_Model {
   }
 
   public function create_paymentschedule() {
-    // $data = array(
-    //   'date' => $this->input->post('date'),
-    //   'ornumber' => $this->input->post('orNumber'),
-    //   'amount' => $this->input->post('amount'),
-    //   'assessments_id' => $this->input->post('assessmentId'),
-    //   'student_id' => $this->input->post('studentId')
-    // );
     $this->db->insert('payments', array(
       'date' => $this->input->post('date'),
       'ornumber' => $this->input->post('orNumber'),

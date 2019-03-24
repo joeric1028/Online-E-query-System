@@ -36,13 +36,14 @@
         <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
           <div class="card-body">
             <div class="table-responsive">
-              <table cellpadding="0" cellspacing="0" id="studentTable" class="w-100">
+              <table cellpadding="0" cellspacing="0" id="studentTable" class="w-100 bcma-table">
                 <thead class="customTh">
                   <tr>
                     <th>ID No.</th>
                     <th>First name</th>
                     <th>Middle name</th>
                     <th>Last Name</th>
+                    <th>Parent</th>
                     <th>Grade</th>
                   </tr>
                 </thead>
@@ -94,7 +95,7 @@
         <?php endif; ?>
       </div>
       <div class="card-body">
-        <table cellpadding="0" cellspacing="0" id="assessmentTable">
+        <table cellpadding="0" cellspacing="0" id="assessmentTable" class="bcma-table">
           <thead class="customTh">
             <tr>
               <th style="width:25%">Particulars</th>
@@ -118,7 +119,7 @@
       </div>
       <div class="card-body">
         <div class="table-responsive">
-          <table cellpadding="0" cellspacing="0" id="paymentsTable" class="w-100">
+          <table cellpadding="0" cellspacing="0" id="paymentsTable" class="w-100 bcma-table">
             <thead class="customTh">
               <tr>
                 <th style="width: 18%">Date</th>
@@ -220,7 +221,7 @@
         <div class="modal-body">
           <div class="form-group">
             <label class="form-label">Date</label>
-            <input type="text" class="form-control" name="scheduleDate" id="scheduleDate">
+            <input type="text" class="form-control datepicker" name="scheduleDate" id="scheduleDate">
             <label class="error text-danger" for="scheduleDate" id="scheduleDate_error">This field is required.</label>
           </div>
           <div class="form-group">
@@ -251,12 +252,233 @@
   </div>
 </div>
 <script>
+  // Retrieves Assessment Items for Manage Particulars
+  function getAssessmentItems() {
+    $.ajax({
+        url: '<?php echo base_url('assessments/view');?>',
+        dataType: 'json',
+        success: function(data) {
+          for(var c=0; c < data.length; c++) {
+            $('#particulars').append('<option value="' + data[c].id + '" selected="">' + data[c].assessmentname + '</option>');
+            if(data[c].assessmenttype != "Deduct") {
+              $('#scheduleParticulars').append('<option value="' + data[c].id + '" selected="">' + data[c].assessmentname + '</option>');
+            }
+          }
+        }
+    });
+  }
+
+  function displayAssessmentItems(data) {
+    for(var c=0; c < data.length; c++) {
+      var assessmentListItemTemplate = '<li class="list-group-item d-flex justify-content-between" data-id="' + data[c].id + '">'
+                                      +   '<div class="col-5 align-center pt-1">' + data[c].assessmentname + '</div>'
+                                      +   '<select class="col-4 form-control custom-select" name="type" id="assessmentType">'
+                                      +   '<option value="Add"' + (data[c].assessmenttype == "Add" ? "selected" : "")  + '>Add</option>'
+                                      +    '<option value="Deduct"' + (data[c].assessmenttype == "Deduct" ? "selected" : "")  + '>Deduct</option>'
+                                      +   '</select>'
+                                      +   '<button class="btn btn-link btn-sm text-danger delete-assessment-item">Remove</button>'
+                                      + '</li>';
+      $('#assessmentItemsList').append(assessmentListItemTemplate);
+    }
+  }
+
+  // Displays Assessments For Selected Student
+  function displayAssessments(data) {
+    $('#assessmentTable > tbody').html("");
+    for(var c=0; c < data.length; c++) {
+      var assessmentTemplate = '<tr data-id="' + data[c].id + '">'
+                              + '<td>' + data[c].assessmentname + '</td>'
+                              + '<td>' + data[c].amount + '</td>'
+                              + '<td>'
+                              +   '<button class="btn btn-link icon deleteAssessment">'
+                              +   '<i class="fa fa-trash"></i>'
+                              + '</button></td>'
+                              + '</tr>';
+      $('#assessmentTable > tbody').append(assessmentTemplate);
+      // $('#addAssessmentModal').modal('hide');
+    }
+  }
+
+  // Displays Payments For Selected Student
+  function displayPayments(data) {
+    $('#paymentsTable > tbody').html("");
+    for(var c=0; c < data.length; c++) {
+      var paymentTemplate = '<tr data-id="' + data[c].id + '">'
+                              + '<td>' + data[c].date + '</td>'
+                              + '<td>' + data[c].assessmentname + '</td>'
+                              + '<td>' + data[c].ornumber + '</td>'
+                              + '<td>' + data[c].amount + '</td>'
+                              + '<td>'
+                              +   '<button class="btn btn-link icon deletePayment">'
+                              +   '<i class="fa fa-trash"></i>'
+                              + '</button></td>'
+                              + '</tr>';
+      $('#paymentsTable > tbody').append(paymentTemplate);
+    }
+  }
+
+  // Retrieves Account Assessments of Selected Student
+  function getAccountsAssessmentByStudent(studentId) {
+    $.ajax({
+      url: 'assessments/view/' + studentId,
+      success: function(data) {
+        displayAssessments(data);
+        
+        // Deletes Assessment (in Retrieve Assessment)
+        $('.deleteAssessment').on('click', function(event) {
+          var assessmentId = $(this).parent().parent().data('id');
+          deleteAssessment(assessmentId, studentId);
+        });
+      }
+    });
+  }
+
+  // Retrieves Account Payments of Selected Student
+  function getAccountsPaymentByStudent(studentId) {
+    $.ajax({
+      url: 'payments/view/' + studentId,
+      success: function(data) {
+        $('#addScheduleModal').modal('hide');
+        $('#paymentsTable > tbody').html("");
+        displayPayments(data);
+
+        // Deletes Payment (in Retrieve Payment)
+        $('.deletePayment').on('click', function(event) {
+          var paymentId = $(this).parent().parent().data('id');
+          getBalanceByStudent(studentId);
+          deletePayment(paymentId,studentId);
+        });
+      }
+    });
+  }
+
+  function addAssessmentByStudentId(studentId) {
+    var newAssessment = { 
+        assessmentsId: $('#particulars').val(),
+        amount: $('#assessmentAmountDue').val(),
+        studentId: studentId
+      };
+    $.ajax({
+      type: "POST",
+      url: '<?php echo base_url('assessments/add');?>',
+      data: newAssessment,
+      success: function(data, status) {
+        swal("Success!", "Assessment Added!", "success");
+        getBalanceByStudent(studentId);
+        displayAssessments(data);
+        $('#addAssessmentModal').modal('hide');
+        
+        // Deletes Assessment (in Add Assessment)
+        $('.deleteAssessment').on('click', function(event) {
+          var assessmentId = $(this).parent().parent().data('id');
+          getBalanceByStudent(studentId);
+          deleteAssessment(assessmentId, studentId);
+        });
+      },
+      error: function(status) {
+        swal("Error!", "Something's wrong!", "error");
+      }
+    });
+  }
+
+  function addPaymentByStudentId(studentId) {
+    var newPayment = {
+        date: $('#scheduleDate').val(),
+        orNumber: $('#scheduleOrNo').val(),
+        amount: $('#scheduleAmountPaid').val(),
+        assessmentId: $('#scheduleParticulars').val(),
+        studentId: studentId,
+      };
+    $.ajax({
+      type: 'POST',
+      url: 'payments/create',
+      data: newPayment,
+      success: function(data) {
+        swal("Success!", "Payment Added!", "success");
+        getBalanceByStudent(studentId);
+        $('#addScheduleModal').modal('hide');
+        displayPayments(data, status);
+
+        // Deletes Payment (in Add Payment)
+        $('.deletePayment').on('click', function(event) {
+          var paymentId = $(this).parent().parent().data('id');
+          deletePayment(paymentId,studentId);
+          getBalanceByStudent(studentId);
+        });
+      }, 
+      error: function(status) {
+        swal("Error!", "Something's wrong!", "error");
+      }
+    });
+  }
+
+  // Deletes Payment of Selected Student
+  function deletePayment(paymentId,studentId) {
+    swal({
+      title: "Are you sure?",
+      text: "Changes cannot be undone once deleted!",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    })
+    .then((willDelete) => {
+      if (willDelete) {
+        $.ajax({
+          type: "POST",
+          url: 'payments/delete',
+          data: { 
+            paymentId: paymentId,
+            studentId: studentId
+          },
+          success: function(data, status) {
+            swal("Success!", "Payment successfuly deleted!", "success");
+            displayPayments(data);
+          },
+          error: function(status) {
+            swal("Error!", "Something's wrong!", "error");
+          }
+        });
+      }
+    });
+  }
+
+  // Deletes Assessment of Selected Student
+  function deleteAssessment(assessmentId,studentId) {
+    swal({
+      title: "Are you sure?",
+      text: "Changes cannot be undone once deleted!",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    })
+    .then((willDelete) => {
+      if (willDelete) {
+        $.ajax({
+          type: "POST",
+          url: 'accounts/delete',
+          data: { 
+            assessmentId: assessmentId,
+            studentId: studentId
+          },
+          success: function(data, status) {
+            swal("Success!", "Assessment successfuly deleted!", "success");
+            displayAssessments(data);
+            getBalanceByStudent(studentId);
+          },
+          error: function(status) {
+            swal("Error!", "Something's wrong!", "error");
+          }
+        });
+      } 
+    }); 
+  }
+
+  // Retrieves Balance of Selected Student
   function getBalanceByStudent(id) {
     $.ajax({
         url: 'accounts/balance/view/' + id,
         dataType: 'json',
         success: function(data) {
-          console.log(data);
           var totalBalance = data.totalBalance;
           var remainingBalance = data.remainingBalance;
           $('#totalBalance > span').html("P " + numberWithCommas(totalBalance.toFixed(2)));
@@ -265,14 +487,20 @@
     });
   }
 
+  // Format Numbers with Commas
   function numberWithCommas(x) {
     var parts = x.toString().split(".");
     parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     return parts.join(".");
-}
+  }
 
   $(document).ready(function () {
     $('.error').hide();
+
+    $('#scheduleDate').daterangepicker({
+      singleDatePicker: true,
+      showDropdowns: true,
+    });
   
     // Select Students Table
     var table = $('#studentTable').DataTable({
@@ -296,23 +524,16 @@
           }
         },
         { "data": "lastname"},
+        { "render": function(data,type,full) {
+            return full.parent_firstname + " " + full.parent_lastname;
+          }
+        },
         { "data": "gradelevel"},
       ]
     });
   
     // Retrieves Assessment Items for Add Assessment Modal
-    $.ajax({
-        url: '<?php echo base_url('assessments/view');?>',
-        dataType: 'json',
-        success: function(data) {
-          for(var c=0; c < data.length; c++) {
-            $('#particulars').append('<option value="' + data[c].id + '" selected="">' + data[c].assessmentname + '</option>');
-            if(data[c].assessmenttype != "Deduct") {
-              $('#scheduleParticulars').append('<option value="' + data[c].id + '" selected="">' + data[c].assessmentname + '</option>');
-            }
-          }
-        }
-    });
+    getAssessmentItems();
   
     // Retrieves Assessment Items for Manage Assessments Modal
     $('#manageAssessmentItemsModal').on('show.bs.modal', function () {
@@ -322,19 +543,7 @@
         dataType: 'json',
         success: function(data) {
           if(data != null) {
-            for(var c=0; c < data.length; c++) {
-              var assessmentListItemTemplate = '<li class="list-group-item d-flex justify-content-between" data-id="' + data[c].id + '">'
-                                              +   '<div class="col-5 align-center pt-1">' + data[c].assessmentname + '</div>'
-                                              +   '<select class="col-4 form-control custom-select" name="type" id="assessmentType">'
-                                              +   '<option value="Add"' + (data[c].assessmenttype == "Add" ? "selected" : "")  + '>Add</option>'
-                                              +    '<option value="Deduct"' + (data[c].assessmenttype == "Deduct" ? "selected" : "")  + '>Deduct</option>'
-                                              +   '</select>'
-                                              +   '<button class="btn btn-link btn-sm text-danger delete-assessment-item">Remove</button>'
-                                              + '</li>';
-                                          
-              $('#assessmentItemsList').append(assessmentListItemTemplate);
-            }
-            
+            displayAssessmentItems(data);
             var toBeRemovedAssessments = [];
 
             // Removes Assessment Item
@@ -358,6 +567,7 @@
                   });
                 });
             
+                // Update Assessment Items
                 $.ajax({
                   type: 'POST',
                   url: 'assessments/update',
@@ -366,10 +576,10 @@
                     removedAssessmentList: toBeRemovedAssessments 
                   },
                   success: function(data) {
-                    console.log('update success');
+                    swal("Success!", "Assessment Items updated!", "success");
                   },
                   error: function(response) {
-                    console.log(response);
+                    swal("Error!", "Something's wrong!", "error");
                   }
                 });
             
@@ -385,7 +595,7 @@
       var userData = table.row( this ).data();
       var name = userData.firstname + " ";
     
-      if(userData.middlename != null || userData.middlename != "") {
+      if(userData.middlename != null && userData.middlename != "") {
         name += userData.middlename + " ";
       }
       name += userData.lastname;
@@ -399,231 +609,22 @@
       getBalanceByStudent(userData.id);
   
       // Retrieve Accounts Assessments for Selected Student
-      $.ajax({
-        url: 'assessments/view/' + userData.id,
-        success: function(data) {
-          $('#assessmentTable > tbody').html("");
-          for(var c=0; c < data.length; c++) {
-            var assessmentTemplate = '<tr data-id="' + data[c].id + '">'
-                                    + '<td>' + data[c].assessmentname + '</td>'
-                                    + '<td>' + data[c].amount + '</td>'
-                                    + '<td>'
-                                    +   '<button class="btn btn-link icon deleteAssessment">'
-                                    +   '<i class="fa fa-trash"></i>'
-                                    + '</button></td>'
-                                    + '</tr>';
-            $('#assessmentTable > tbody').append(assessmentTemplate);
-          }
-
-          // Deletes Assessment (in Retrieve Assessment)
-          $('.deleteAssessment').on('click', function(event) {
-            $.ajax({
-                type: "POST",
-                url: 'accounts/delete',
-                data: { 
-                  assessmentId: $(this).parent().parent().data('id'),
-                  studentId: userData.id
-                },
-                success: function(data) {
-                  $('#assessmentTable > tbody').html("");
-                  for(var c=0; c < data.length; c++) {
-                    var assessmentTemplate = '<tr data-id="' + data[c].id + '">'
-                                            + '<td>' + data[c].assessmentname + '</td>'
-                                            + '<td>' + data[c].amount + '</td>'
-                                            + '<td>'
-                                            +   '<button class="btn btn-link icon deleteAssessment">'
-                                            +   '<i class="fa fa-trash"></i>'
-                                            + '</button></td>'
-                                            + '</tr>';
-                    $('#assessmentTable > tbody').append(assessmentTemplate);
-                    $('#addAssessmentModal').modal('hide');
-                  }
-                  getBalanceByStudent(userData.id);
-                }
-              });
-          });
-        }
-      });
+      getAccountsAssessmentByStudent(userData.id);
 
       // Retrieve Account Payments for Selected Student
-      $.ajax({
-          url: 'payments/view/' + userData.id,
-          success: function(data) {
-            $('#addScheduleModal').modal('hide');
-            $('#paymentsTable > tbody').html("");
-            console.log('Retrieve Account Payments for Selected Student');
-            for(var c=0; c < data.length; c++) {
-              var assessmentTemplate = '<tr data-id="' + data[c].id + '">'
-                                      + '<td>' + data[c].date + '</td>'
-                                      + '<td>' + data[c].assessmentname + '</td>'
-                                      + '<td>' + data[c].ornumber + '</td>'
-                                      + '<td>' + data[c].amount + '</td>'
-                                      + '<td>'
-                                      +   '<button class="btn btn-link icon deletePayment">'
-                                      +   '<i class="fa fa-trash"></i>'
-                                      + '</button></td>'
-                                      + '</tr>';
-              $('#paymentsTable > tbody').append(assessmentTemplate);
-            }
+      getAccountsPaymentByStudent(userData.id);
 
-            // Deletes Payment (in Retrieve Payment)
-            $('.deletePayment').on('click', function(event) {
-              console.log('Deletes Payment (in Retrieve Payment)');
-              console.log($(this).parent().parent().data('id'));
-              getBalanceByStudent(userData.id);
-              $.ajax({
-                type: "POST",
-                url: 'payments/delete',
-                data: { 
-                  paymentId: $(this).parent().parent().data('id'),
-                  studentId: userData.id
-                },
-                success: function(data) {
-                  $('#paymentsTable > tbody').html("");
-                  for(var c=0; c < data.length; c++) {
-                    var paymentTemplate = '<tr data-id="' + data[c].id + '">'
-                                            + '<td>' + data[c].date + '</td>'
-                                            + '<td>' + data[c].assessmentname + '</td>'
-                                            + '<td>' + data[c].ornumber + '</td>'
-                                            + '<td>' + data[c].amount + '</td>'
-                                            + '<td>'
-                                            +   '<button class="btn btn-link icon deletePayment">'
-                                            +   '<i class="fa fa-trash"></i>'
-                                            + '</button></td>'
-                                            + '</tr>';
-                    $('#paymentsTable > tbody').append(paymentTemplate);
-                  }
-                  $('#addAssessmentModal').modal('hide');
-                }
-              })
-            });
-          }
-        });
  
-      // Adds Assessment Particulars To User
+      // Adds Assessment Assessment To User
       $('#addAssessment').on('click', function(event) {
         event.preventDefault();
-        var newAssessment = { 
-            assessmentsId: $('#particulars').val(),
-            amount: $('#assessmentAmountDue').val(),
-            studentId: userData.id
-          };
-        $.ajax({
-          type: "POST",
-          url: '<?php echo base_url('assessments/add');?>',
-          data: newAssessment,
-          success: function(data) {
-            getBalanceByStudent(userData.id);
-            $('#assessmentTable > tbody').html("");
-            for(var c=0; c < data.length; c++) {
-              var assessmentTemplate = '<tr data-id="' + data[c].id + '">'
-                                      + '<td>' + data[c].assessmentname + '</td>'
-                                      + '<td>' + data[c].amount + '</td>'
-                                      + '<td>'
-                                      +   '<button class="btn btn-link icon deleteAssessment">'
-                                      +   '<i class="fa fa-trash"></i>'
-                                      + '</button></td>'
-                                      + '</tr>';
-              $('#assessmentTable > tbody').append(assessmentTemplate);
-              $('#addAssessmentModal').modal('hide');
-
-              // Deletes Assessment (in Add Assessment)
-              $('.deleteAssessment').on('click', function(event) {
-                getBalanceByStudent(userData.id);
-                $.ajax({
-                  type: "POST",
-                  url: 'accounts/delete',
-                  data: { 
-                    assessmentId: $(this).parent().parent().data('id'),
-                    studentId: userData.id
-                  },
-                  success: function(data) {
-                    $('#assessmentTable > tbody').html("");
-                    for(var c=0; c < data.length; c++) {
-                      var assessmentTemplate = '<tr data-id="' + data[c].id + '">'
-                                              + '<td>' + data[c].assessmentname + '</td>'
-                                              + '<td>' + data[c].amount + '</td>'
-                                              + '<td>'
-                                              +   '<button class="btn btn-link icon deleteAssessment">'
-                                              +   '<i class="fa fa-trash"></i>'
-                                              + '</button></td>'
-                                              + '</tr>';
-                      $('#assessmentTable > tbody').append(assessmentTemplate);
-                      $('#addAssessmentModal').modal('hide');
-                    }
-                  }
-                })
-              });
-            }
-          }
-        })
+        addAssessmentByStudentId(userData.id);
       });
 
       // Add Payment Schedule
       $('#addSchedule').on('click', function(event) {
         event.preventDefault();
-        console.log('Add Payment Schedule');
-        var newPayment = {
-            date: $('#scheduleDate').val(),
-            orNumber: $('#scheduleOrNo').val(),
-            amount: $('#scheduleAmountPaid').val(),
-            assessmentId: $('#scheduleParticulars').val(),
-            studentId: userData.id,
-          };
-        $.ajax({
-          type: 'POST',
-          url: 'payments/create',
-          data: newPayment,
-          success: function(data) {
-            getBalanceByStudent(userData.id);
-            $('#addScheduleModal').modal('hide');
-            $('#paymentsTable > tbody').html("");
-            for(var c=0; c < data.length; c++) {
-              var assessmentTemplate = '<tr data-id="' + data[c].id + '">'
-                                      + '<td>' + data[c].date + '</td>'
-                                      + '<td>' + data[c].assessmentname + '</td>'
-                                      + '<td>' + data[c].ornumber + '</td>'
-                                      + '<td>' + data[c].amount + '</td>'
-                                      + '<td>'
-                                      +   '<button class="btn btn-link icon deletePayment">'
-                                      +   '<i class="fa fa-trash"></i>'
-                                      + '</button></td>'
-                                      + '</tr>';
-              $('#paymentsTable > tbody').append(assessmentTemplate);
-            }
- 
-            // Deletes Payment (in Add Payment)
-            $('.deletePayment').on('click', function(event) {
-              console.log('Deletes Payment (in Add Payment)');
-              getBalanceByStudent(userData.id);
-              $.ajax({
-                type: "POST",
-                url: 'payments/delete',
-                data: { 
-                  paymentId: $(this).parent().parent().data('id'),
-                  studentId: userData.id
-                },
-                success: function(data) {
-                  $('#paymentsTable > tbody').html("");
-                  for(var c=0; c < data.length; c++) {
-                    var paymentTemplate = '<tr data-id="' + data[c].id + '">'
-                                            + '<td>' + data[c].date + '</td>'
-                                            + '<td>' + data[c].assessmentname + '</td>'
-                                            + '<td>' + data[c].ornumber + '</td>'
-                                            + '<td>' + data[c].amount + '</td>'
-                                            + '<td>'
-                                            +   '<button class="btn btn-link icon deletePayment">'
-                                            +   '<i class="fa fa-trash"></i>'
-                                            + '</button></td>'
-                                            + '</tr>';
-                    $('#paymentsTable > tbody').append(paymentTemplate);
-                  }
-                  $('#addAssessmentModal').modal('hide');
-                }
-              })
-            });
-          }
-        });
+        addPaymentByStudentId(userData.id);
       });
     });
 
@@ -667,7 +668,7 @@
     });
 
     <?php if($type == "Parent"): ?>
-    // Student Dropdown
+    // Retrieve Students of Parents for Dropdown
     $.ajax({
       url: 'students/parent/view/' + <?php echo $id ?>,
       success: function(data) {
@@ -680,6 +681,16 @@
           }
         }
 
+        // Retrieve Balance for Selected Student
+        getBalanceByStudent($('#studentDropdownBtn').data('value'));
+
+        // Retrieve Accounts Assessments for Selected Student
+        getAccountsAssessmentByStudent($(this).data('value'));
+
+        // Retrieve Account Payments for Selected Student
+        getAccountsPaymentByStudent($(this).data('value'));
+
+        // Student Dropdown onClick
         $('.dropdown-menu a').click(function(){
           $('#studentDropdownBtn').text($(this).text());
           $('#studentDropdownBtn').val($(this).text());
@@ -689,83 +700,10 @@
           getBalanceByStudent($(this).data('value'));
 
           // Retrieve Accounts Assessments for Selected Student
-          $.ajax({
-            url: 'assessments/view/' + $(this).data('value'),
-            success: function(data) {
-              $('#assessmentTable > tbody').html("");
-              for(var c=0; c < data.length; c++) {
-                var assessmentTemplate = '<tr data-id="' + data[c].id + '">'
-                                        + '<td>' + data[c].assessmentname + '</td>'
-                                        + '<td>' + data[c].amount + '</td>'
-                                        + '<td>'
-                                        + '</button></td>'
-                                        + '</tr>';
-                $('#assessmentTable > tbody').append(assessmentTemplate);
-              }
-            }
-          });
+          getAccountsAssessmentByStudent($(this).data('value'));
 
-          // Retrieve Payments for Selected Student
-          $.ajax({
-            url: 'payments/view/' + $(this).data('value'),
-            success: function(data) {
-              $('#paymentsTable > tbody').html("");
-              for(var c=0; c < data.length; c++) {
-                var assessmentTemplate = '<tr data-id="' + data[c].id + '">'
-                                        + '<td>' + data[c].date + '</td>'
-                                        + '<td>' + data[c].assessmentname + '</td>'
-                                        + '<td>' + data[c].ornumber + '</td>'
-                                        + '<td>' + data[c].amount + '</td>'
-                                        + '<td>'
-                                        +   '<button class="btn btn-link icon deletePayment">'
-                                        +   '<i class="fa fa-trash"></i>'
-                                        + '</button></td>'
-                                        + '</tr>';
-                $('#paymentsTable > tbody').append(assessmentTemplate);
-              }
-            }
-          });
-        });
-
-        // Retrieve Balance for Selected Student
-        getBalanceByStudent($('#studentDropdownBtn').data('value'));
-
-        // Retrieve Accounts Assessments for Selected Student
-        $.ajax({
-          url: 'assessments/view/' + $('#studentDropdownBtn').data('value'),
-          success: function(data) {
-            $('#assessmentTable > tbody').html("");
-            for(var c=0; c < data.length; c++) {
-              var assessmentTemplate = '<tr data-id="' + data[c].id + '">'
-                                      + '<td>' + data[c].assessmentname + '</td>'
-                                      + '<td>' + data[c].amount + '</td>'
-                                      + '<td>'
-                                      + '</button></td>'
-                                      + '</tr>';
-              $('#assessmentTable > tbody').append(assessmentTemplate);
-            }
-          }
-        });
-
-        // Retrieve Payments for Selected Student
-        $.ajax({
-          url: 'payments/view/' + $('#studentDropdownBtn').data('value'),
-          success: function(data) {
-            $('#paymentsTable > tbody').html("");
-            for(var c=0; c < data.length; c++) {
-              var assessmentTemplate = '<tr data-id="' + data[c].id + '">'
-                                      + '<td>' + data[c].date + '</td>'
-                                      + '<td>' + data[c].assessmentname + '</td>'
-                                      + '<td>' + data[c].ornumber + '</td>'
-                                      + '<td>' + data[c].amount + '</td>'
-                                      + '<td>'
-                                      +   '<button class="btn btn-link icon deletePayment">'
-                                      +   '<i class="fa fa-trash"></i>'
-                                      + '</button></td>'
-                                      + '</tr>';
-              $('#paymentsTable > tbody').append(assessmentTemplate);
-            }
-          }
+          // Retrieve Account Payments for Selected Student
+          getAccountsPaymentByStudent($(this).data('value'));
         });
       }
     });

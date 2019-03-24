@@ -54,7 +54,7 @@
             </div>
             <div class="card-body">
                 <div class="table-responsive">
-                    <table cellpadding="0" cellspacing="0" id="subjectTable" class="w-100">
+                    <table cellpadding="0" cellspacing="0" id="subjectTable" class="w-100 bcma-table">
                         <thead class="customTh">
                             <tr>
                                 <th style="width:40%"></th>
@@ -88,7 +88,7 @@
             <div class="card-header">Overall Grades</div>
             <div class="card-body">
                 <div class="table-responsive">
-                    <table cellpadding="0" cellspacing="0" id="gradesTable" class="w-100">
+                    <table cellpadding="0" cellspacing="0" id="gradesTable" class="w-100 bcma-table">
                         <thead class="customTh">
                             <tr>
                                 <th style="width: 30%"> Subject Name </th>
@@ -311,7 +311,6 @@
                     }
                 }
 
-                console.log('yo' + data[0].id);
                 getGradesByStudent(data[0].id);
 
                 $('.dropdown-menu a').click(function(){
@@ -319,7 +318,6 @@
                     $('#studentDropdownBtn').val($(this).text());
                     $('#studentDropdownBtn').attr('data-value',$(this).data('value'));
 
-                    console.log('yo' + $(this).data('value'));
                     getGradesByStudent($(this).data('value'));
                 });
             }
@@ -344,7 +342,7 @@
                 'secondgrading': $('#subjectTable').find('tr').eq(c).find('input').eq(1).val(),
                 'thirdgrading': $('#subjectTable').find('tr').eq(c).find('input').eq(2).val(),
                 'fourthgrading': $('#subjectTable').find('tr').eq(c).find('input').eq(3).val()
-                });
+            });
         }
 
         // Data to be updated
@@ -365,11 +363,12 @@
                 $('.loader').show();
             },
             success: function(data) {
-                console.log('grade update success');
+                swal("Success!", "Grades updated!", "success");
                 $('.loader').hide();
                 getGradesByStudent($('li.active').data('value'));
             },
             error: function() {
+                swal("Error!", "Something's wrong!", "error");
                 $('.loader').hide();
                 getGradesByStudent($('li.active').data('value'));
             }
@@ -388,7 +387,6 @@
 
     // Retrieves grades of selected student
     $('#studentList').click(function(e) {
-        console.log($('li.active').attr('data-value'));
         getGradesByStudent($('li.active').attr('data-value'));
     });
 </script>

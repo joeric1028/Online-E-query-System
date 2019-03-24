@@ -66,7 +66,42 @@ class Subjects_model extends CI_Model {
 		}
 	}
 
+	public function update_subject() {
+		$data = array(
+        	'id' => $this->input->post('id'),
+        	'subject' => $this->input->post('subjectName'),
+        	'gradelevel' => $this->input->post('gradeLevel'),
+		);
+
+		$this->db->where('id',$data['id']);
+		$query = $this->db->update('subjects',$data);
+
+		if($query) {
+			$response_array['status'] = 'success';
+			echo json_encode($data['subject'].' updated!');
+			return true;
+		} else {
+			$response_array['status'] = 'error';
+			echo json_encode('error');
+			return false;
+		}
+	}
+
 	public function delete_subject($subjectId) {
-		$this->db->delete('subjects',array('id' => $subjectId));
+		$this->db->select('subject');
+		$this->db->from('subjects');
+		$this->db->where('id', $subjectId);
+		$subject = $this->db->get()->row();
+		$query = $this->db->delete('subjects',array('id' => $subjectId));
+
+		if($query) {
+			$response_array['status'] = 'success';
+			echo json_encode($subject->subject.' deleted!');
+			return true;
+		} else {
+			$response_array['status'] = 'error';
+			echo json_encode('error');
+			return false;
+		}
 	}
 } 
