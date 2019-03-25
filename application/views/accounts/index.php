@@ -109,17 +109,19 @@
         <?php endif; ?>
       </div>
       <div class="card-body">
-        <table cellpadding="0" cellspacing="0" id="assessmentTable" class="bcma-table">
-          <thead class="customTh">
-            <tr>
-              <th style="width:25%">Particulars</th>
-              <th style="width:25%">Amount Due</th>
-              <th style="width:10%"></th>
-            </tr>
-          </thead>
-          <tbody class="customTd">
-          </tbody>
-        </table>
+        <div class="table-responsive">
+          <table cellpadding="0" cellspacing="0" id="assessmentTable" class="bcma-table">
+            <thead class="customTh">
+              <tr>
+                <th style="width:25%">Particulars</th>
+                <th style="width:25%">Amount Due</th>
+                <th style="width:10%"></th>
+              </tr>
+            </thead>
+            <tbody class="customTd">
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </div>
@@ -466,7 +468,7 @@
     var editAssessmentTemplate  =   '<td><select class="form-control custom-select edit-assessment" name="type">'
                                 +   assessmentItemsOptions
                                 +   '</select></td>'
-                                +   '<td><input value="' + currAssessmentAmount + '" class="form-control"</td>'
+                                +   '<td><input value="' + currAssessmentAmount + '" class="form-control" type="number" /></td>'
                                 +   '<td class="text-center align-middle">'
                                 +   '<div class="item-action dropdown">'
                                 +     '<div class="d-flex">'
@@ -492,6 +494,7 @@
 				dataType: 'json',
 				dataSrc: '',
 				data: { 
+          'id': thisAssessmentRow.data('id'), 
 					'assessmentId': newAssessment,
 					'amount': newAmount
 				}, 

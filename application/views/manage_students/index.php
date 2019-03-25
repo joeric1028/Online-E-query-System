@@ -524,7 +524,7 @@
 				}
 			});     
 		});
- 
+
 		$('.edit-cancel').on('click', function(e) {
 			e.preventDefault();
 			var thisStudentRow = $(this).parent().parent().parent();

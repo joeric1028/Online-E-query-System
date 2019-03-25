@@ -11,7 +11,29 @@ class Accounts_model extends CI_Model {
 
 		$query = $this->db->get('schoolaccount');
 		echo json_encode($query->result());
-	}
+  }
+  
+  public function update_accounts() 
+  {
+    $data = array(
+			'id' => $this->input->post('id'),
+			'assessments_id' => $this->input->post('assessmentId'),
+			'amount' => $this->input->post('amount'),
+		);
+
+    $this->db->where('id',$data['id']);
+		$query = $this->db->update('schoolaccount',$data);
+
+		if($query) {
+			$response_array['status'] = 'success';
+			echo json_encode('Assessment updated!');
+			return true;
+		} else {
+			$response_array['status'] = 'error';
+			echo json_encode('error');
+			return false;
+		}
+  }
     
   public function delete_accounts() 
   {

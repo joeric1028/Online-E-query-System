@@ -34,6 +34,11 @@ class Accounts extends CI_Controller {
         header("Content-Type: application/json; charset=UTF-8");
         $this->Accounts_model->get_accounts();
     }
+    
+    public function updateaccounts() {
+        header("Content-Type: application/json; charset=UTF-8");
+        $this->Accounts_model->update_accounts();
+    }
 
     public function deleteaccounts() {
         header("Content-Type: application/json; charset=UTF-8");
