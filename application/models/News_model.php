@@ -45,7 +45,7 @@ class News_model extends CI_Model {
 	}
 
 	public function get_schoolEvent() {
-		if ($this->input->post('month') <= 3) {
+		if ($this->input->post('month') <= 4) {
 			$year = ($this->input->post('year')-1);
 		} else {
 			$year = $this->input->post('year');
@@ -53,7 +53,7 @@ class News_model extends CI_Model {
 
 		$data = array(
 			$year . '-6-1',
-			($year+1) . '-3-1'
+			($year+1) . '-4-1'
 		);
 
 		$sqlactivities = "SELECT * FROM `schoolactivities` WHERE `startdate` BETWEEN ? AND ? ORDER BY `startdate` ASC;";
