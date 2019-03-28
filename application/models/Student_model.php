@@ -67,7 +67,31 @@ class Student_model extends CI_Model {
 			'users_id' => $this->input->post('parentId')
 		);
  
+		// Step 1: Inserting new student in student table
 		$query = $this->db->insert('student', $data);
+
+		// Step 2: Retrieve ID of newly inserted student
+		$newStudentId = $this->db->insert_id();
+
+		// Step 3: Retrieve all assessments where default is active(1)
+		$defaultAsst = $this->db->get_where('assessments',array('setdefault' => '1'));
+
+		// Step 4: Iterate through each result
+		foreach($defaultAsst->result() as $asst){
+			$defaultAsstArray = array(
+				'amount' => $asst->amount,
+				'assessments_id' => $asst->id,
+				'student_id' => $newStudentId
+			);
+
+			// Step 5: Insert each default assessment to schoolaccount table
+			$addDefaultAccts = $this->db->insert('schoolaccount', $defaultAsstArray);
+			if ($addDefaultAccts == false) {
+				$errorMessage = "Unable to proceed. Can't add default assessments";
+				$error = array('error' => $errorMessage);
+				echo json_encode($error);
+			}
+		}
 
 		if ($query == false) {
 			$errorMessage = "Unable to proceed. Can't add student";

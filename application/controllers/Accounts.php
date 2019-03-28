@@ -89,6 +89,11 @@ class Accounts extends CI_Controller {
         header("Content-Type: application/json; charset=UTF-8");
         $this->Accounts_model->create_paymentschedule();
     }
+    
+    public function updatepayment() {
+        header("Content-Type: application/json; charset=UTF-8");
+        $this->Accounts_model->update_payment();
+    }
 
     public function deletepayment() {
         header("Content-Type: application/json; charset=UTF-8");

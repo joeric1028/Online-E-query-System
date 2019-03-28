@@ -94,6 +94,7 @@ $route['assessments/delete/(:num)'] = 'accounts/deleteassessment/$1';
 
 $route['payments/view/(:num)'] = 'accounts/getpaymentsbystudentid/$1';
 $route['payments/create'] = 'accounts/createpaymentschedule';
+$route['payments/update'] = 'accounts/updatepayment';
 $route['payments/delete'] = 'accounts/deletepayment';
 
 

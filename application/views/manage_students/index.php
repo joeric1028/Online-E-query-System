@@ -284,7 +284,7 @@
 									+ '<div class="item-action dropdown" style="float: right">'
 									+ 	'<a href="javascript:void(0)" data-toggle="dropdown" class="icon"><i class="fas fa-ellipsis-v"></i></a>'
 									+ 	'<div class="dropdown-menu dropdown-menu-right">'
-									+ 		'<a href="javascript:void(0)" onClick="updateSubject(this)" class="dropdown-item"><i class="dropdown-icon far fa-edit"></i> Edit </a>'
+									+ 		'<a href="javascript:void(0)" onClick="updateSubject(this)" class="dropdown-item"><i class="dropdown-icon far fa-edit"></i> Update </a>'
 									+ 		'<a href="javascript:void(0)" onClick="deleteSubject(this)" class="dropdown-item"><i class="dropdown-icon far fa-trash-alt"></i> Delete </a>'
 									+ 	'</div>'
 									+ '</div>'
@@ -294,6 +294,7 @@
 	}
 
 	function displayStudentTable(data) {
+	    $('#studentTable').find('tbody').html('');
 		for(var c=0; c < data.length; c++) {
 			var studentFullName = data[c].firstname + " " + data[c].middlename + ' ' + data[c].lastname;
 			var studentListItemTemplate = '<tr data-id="' + data[c].id + '">' 
@@ -304,7 +305,7 @@
 										+	 '<div class="item-action dropdown">'
 										+		'<a href="javascript:void(0)" data-toggle="dropdown" class="icon"><i class="fas fa-ellipsis-v"></i></a>'
 										+		'<div class="dropdown-menu dropdown-menu-right">'
-										+			'<a href="javascript:void(0)" onClick="updateStudent(this)" class="dropdown-item"><i class="dropdown-icon far fa-edit"></i> Edit </a>'
+										+			'<a href="javascript:void(0)" onClick="updateStudent(this)" class="dropdown-item"><i class="dropdown-icon far fa-edit"></i> Update </a>'
 										+			'<a href="javascript:void(0)" onClick="deleteStudent(this)" class="dropdown-item"><i class="dropdown-icon far fa-trash-alt"></i> Delete </a>'
 										+		'</div>'
 										+	'</div>'
@@ -356,7 +357,6 @@
 			},
 			success: function(data, status) {
 				swal("Success!", "New Student Added!", "success");
-				$('#studentTable').find('tbody').html('');
 				displayStudentTable(data);
 				$('#addStudentModal').modal('hide');
 			},
@@ -373,7 +373,7 @@
 		var subjectDefaultTemplate = '<div class="item-action dropdown" style="float: right">'
 								   + 	'<a href="javascript:void(0)" data-toggle="dropdown" class="icon"><i class="fas fa-ellipsis-v"></i></a>'
 								   + 	'<div class="dropdown-menu dropdown-menu-right">'
-								   + 		'<a href="javascript:void(0)" onclick="updateSubject(this)" class="dropdown-item"><i class="dropdown-icon far fa-edit"></i> Edit </a>'
+								   + 		'<a href="javascript:void(0)" onclick="updateSubject(this)" class="dropdown-item"><i class="dropdown-icon far fa-edit"></i> Update </a>'
 								   + 		'<a href="javascript:void(0)" onclick="deleteSubject(this)" class="dropdown-item"><i class="dropdown-icon far fa-trash-alt"></i> Delete </a>'
 								   + 	'</div>'
 								   + '</div>';
@@ -444,7 +444,7 @@
 							   + 		'<a href="javascript:void(0)" data-toggle="dropdown" class="icon" aria-expanded="false"><i class="fas fa-ellipsis-v"></i>'
 							   + 		'</a>'
 							   + 	'<div class="dropdown-menu">'
-							   +		'<a href="javascript:void(0)" onclick="updateStudent(this)" class="dropdown-item"><i class="dropdown-icon far fa-edit"></i> Edit </a>'
+							   +		'<a href="javascript:void(0)" onclick="updateStudent(this)" class="dropdown-item"><i class="dropdown-icon far fa-edit"></i> Update </a>'
 							   +		'<a href="javascript:void(0)" onclick="deleteStudent(this)" class="dropdown-item"><i class="dropdown-icon far fa-trash-alt"></i> Delete </a></div></div>'
 							   + 	'</td>';
 			return studentRowTemplate;
