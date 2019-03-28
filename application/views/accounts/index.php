@@ -750,7 +750,8 @@
 
   function changeCheckbox(selector) {
     var checkbox = $(selector);
-    var amount = $(selector).parent().parent().siblings().eq(0);
+    var amount = $(selector).parent().parent().siblings().eq(0).children().eq(0);
+
     if(checkbox.prop('checked') == true) {
       amount.attr('disabled',false);
       amount.focus();
