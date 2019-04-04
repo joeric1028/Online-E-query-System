@@ -7,7 +7,10 @@ class Student_model extends CI_Model {
 	
 	public function get_students()
 	{
-		$query = $this->db->get('student');
+		$this->db->select('student.id, student.firstname, student.middlename, student.lastname, student.gradelevel, users.id AS parent_id, users.firstname AS parent_firstname, users.lastname AS parent_lastname');
+		$this->db->from('student');
+		$this->db->join('users', 'student.users_id = users.id');
+		$query = $this->db->get();
 
 		if ($query == false) {
 			$errorMessage = "Error retrieving student.";
@@ -25,7 +28,12 @@ class Student_model extends CI_Model {
 	}
     
 	public function get_studentsbylevel($gradelevel) {
-		$query = $this->db->get_where('student',array('gradelevel' => $gradelevel));
+		$this->db->select('student.id, student.firstname, student.middlename, student.lastname, student.gradelevel, users.id AS parent_id, users.firstname AS parent_firstname, users.lastname AS parent_lastname');
+		$this->db->from('student');
+		$this->db->where('gradelevel', $gradelevel);
+		$this->db->join('users', 'student.users_id = users.id');
+		$query = $this->db->get();
+		// $query = $this->db->get_where('student',array('gradelevel' => $gradelevel));
 
 		if ($query == false) {
 			$errorMessage = "Error retrieving student.";
@@ -59,7 +67,31 @@ class Student_model extends CI_Model {
 			'users_id' => $this->input->post('parentId')
 		);
  
+		// Step 1: Inserting new student in student table
 		$query = $this->db->insert('student', $data);
+
+		// Step 2: Retrieve ID of newly inserted student
+		$newStudentId = $this->db->insert_id();
+
+		// Step 3: Retrieve all assessments where default is active(1)
+		$defaultAsst = $this->db->get_where('assessments',array('setdefault' => '1'));
+
+		// Step 4: Iterate through each result
+		foreach($defaultAsst->result() as $asst){
+			$defaultAsstArray = array(
+				'amount' => $asst->amount,
+				'assessments_id' => $asst->id,
+				'student_id' => $newStudentId
+			);
+
+			// Step 5: Insert each default assessment to schoolaccount table
+			$addDefaultAccts = $this->db->insert('schoolaccount', $defaultAsstArray);
+			if ($addDefaultAccts == false) {
+				$errorMessage = "Unable to proceed. Can't add default assessments";
+				$error = array('error' => $errorMessage);
+				echo json_encode($error);
+			}
+		}
 
 		if ($query == false) {
 			$errorMessage = "Unable to proceed. Can't add student";
@@ -67,18 +99,61 @@ class Student_model extends CI_Model {
 			echo json_encode($error);
 		}
 		else {
+			$this->db->select('student.id, student.firstname, student.middlename, student.lastname, student.gradelevel, users.id AS parent_id, users.firstname AS parent_firstname, users.lastname AS parent_lastname');
+			$this->db->from('student');
+			$this->db->join('users', 'student.users_id = users.id');
 			if($this->input->post('selectedLevel') != "") {
-				$query = $this->db->get_where('student',array('gradelevel' => $this->input->post('selectedLevel')));
+				$this->db->where('gradelevel', $this->input->post('selectedLevel'));
+				$query = $this->db->get();
 				echo json_encode($query->result());
 			} else {
-				$query = $this->db->get('student');
+				$query = $this->db->get();
 				echo json_encode($query->result());
 			}
 
 		}
 	}
 
+	public function update_student($studentId) {
+		$data = array(
+			'id' => $this->input->post('id'),
+			'firstname' => $this->input->post('firstName'),
+			'middlename' => $this->input->post('middleName'),
+			'lastname' => $this->input->post('lastName'),
+			'users_id' => $this->input->post('parentId')
+		);
+
+		$userExists = $this->db->get_where('student', array('id' => $studentId));
+
+		$this->db->where('id',$studentId);
+		$query = $this->db->update('student',$data);
+
+		if($query) {
+			$response_array['status'] = 'success';
+			echo json_encode($data['firstname']." ".$data['lastname'].' updated!');
+			return true;
+		} else {
+			$response_array['status'] = 'error';
+			echo json_encode('error');
+			return false;
+		}
+	}
+
 	public function delete_student($studentId) {
-		$this->db->delete('student',array('id' => $studentId));
+		$this->db->select('CONCAT(firstname, " ", lastname) as studentName');
+		$this->db->from('student');
+		$this->db->where('id', $studentId);
+		$studentName = $this->db->get()->row()->studentName;
+		$query = $this->db->delete('student',array('id' => $studentId));
+
+		if($query) {
+			$response_array['status'] = 'success';
+			echo json_encode($studentName.' deleted!');
+			return true;
+		} else {
+			$response_array['status'] = 'error';
+			echo json_encode('error');
+			return false;
+		}
 	}
 }

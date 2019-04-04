@@ -17,7 +17,7 @@
       <div class="card-body">
         <section>
           <div class="table-responsive">
-            <table cellpadding="0" cellspacing="0" id="userTable" class="w-100">
+            <table cellpadding="0" cellspacing="0" id="userTable" class="w-100 bcma-table">
               <thead class="customTh">
                 <tr>
                   <th>ID No.</th>
@@ -144,7 +144,7 @@
 						console.log(data.status);
 					},
 					error: function(data) {
-						swal('Update error!');
+						swal('Update error!', "Something's wrong", 'error');
 						console.log(data.status);
 					}
 			});

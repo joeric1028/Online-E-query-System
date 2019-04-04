@@ -54,7 +54,7 @@
             </div>
             <div class="card-body">
                 <div class="table-responsive">
-                    <table cellpadding="0" cellspacing="0" id="subjectTable" class="w-100">
+                    <table cellpadding="0" cellspacing="0" id="subjectTable" class="w-100 bcma-table">
                         <thead class="customTh">
                             <tr>
                                 <th style="width:40%"></th>
@@ -88,7 +88,7 @@
             <div class="card-header">Overall Grades</div>
             <div class="card-body">
                 <div class="table-responsive">
-                    <table cellpadding="0" cellspacing="0" id="gradesTable" class="w-100">
+                    <table cellpadding="0" cellspacing="0" id="gradesTable" class="w-100 bcma-table">
                         <thead class="customTh">
                             <tr>
                                 <th style="width: 30%"> Subject Name </th>
@@ -102,7 +102,9 @@
                                 <th style="width: 15%">Final Grade</th>
                             </tr>
                         </thead>
-                        <tbody class="customTd"></tbody>
+                        <tbody class="customTd">
+                            <tr><th class="text-center text-muted" colspan="7"><i>No Student Selected</i></th></tr>
+                        </tbody>
                     </table>
                 </div>
             </div>
@@ -122,17 +124,22 @@
             dataType: 'json',
             success: function(data) {
                 $('#studentList').html('');
-                for(var c=0; c < data.length; c++) {
-                    var studentListItemTemplate = '<li class="list-group-item" data-value="' + data[c].id + '">'
-                                                + data[c].firstname + ' ' + data[c].lastname + '</li>';
-                    $('#studentList').append(studentListItemTemplate);
- 
-                    // Allows selection of student
-                    $('#studentList > li').click(function(e) {
-                        e.preventDefault()
-                        $(this).parent().find('li').removeClass('active');
-                        $(this).addClass('active');
-                    });
+                if(data.length > 0 ) {
+                    for(var c=0; c < data.length; c++) {
+                        var studentListItemTemplate = '<li class="list-group-item" data-value="' + data[c].id + '">'
+                                                    + data[c].firstname + ' ' + data[c].lastname + '</li>';
+                        $('#studentList').append(studentListItemTemplate);
+     
+                        // Allows selection of student
+                        $('#studentList > li').click(function(e) {
+                            e.preventDefault()
+                            $(this).parent().find('li').removeClass('active');
+                            $(this).addClass('active');
+                        });
+                    }
+                } else {
+                    var studentListItemTemplate = '<li class="list-group-item"><i class="text-muted">No Students Assigned</i></li>';
+                        $('#studentList').append(studentListItemTemplate);
                 }
             }
         });   
@@ -145,24 +152,28 @@
             dataType: 'json',
             success: function(data) {
                 $('#subjectTable').find('tbody').html('');
-                for(var c=0; c < data.length; c++) {
-                    var subjectRowTemplate =    '<tr data-value=' + data[c].id + '>'
-                                            +       '<td>' + data[c].subject + '</td>'
-                                            +       '<td>'
-                                            +           '<input maxlength="3" onkeypress="enableSaveBtnOnChange()" type="text" class="form-control" name="1st">'
-                                            +       '</td>'
-                                            +       '<td>'
-                                            +           '<input maxlength="3" onkeypress="enableSaveBtnOnChange()" type="text" class="form-control" name="2nd">'
-                                            +       '</td>'
-                                            +       '<td>'
-                                            +           '<input maxlength="3" onkeypress="enableSaveBtnOnChange()" type="text" class="form-control" name="3rd">'
-                                            +       '</td>'
-                                            +       '<td>'
-                                            +           '<input maxlength="3" onkeypress="enableSaveBtnOnChange()" type="text" class="form-control" name="4th">'
-                                            +       '</td>'
-                                            +   '</tr>';
+                if(data.length > 0) {
+                    for(var c=0; c < data.length; c++) {
+                        var subjectRowTemplate =    '<tr data-value=' + data[c].id + '>'
+                                                +       '<td>' + data[c].subject + '</td>'
+                                                +       '<td>'
+                                                +           '<input maxlength="3" onkeypress="enableSaveBtnOnChange()" type="text" class="form-control" name="1st">'
+                                                +       '</td>'
+                                                +       '<td>'
+                                                +           '<input maxlength="3" onkeypress="enableSaveBtnOnChange()" type="text" class="form-control" name="2nd">'
+                                                +       '</td>'
+                                                +       '<td>'
+                                                +           '<input maxlength="3" onkeypress="enableSaveBtnOnChange()" type="text" class="form-control" name="3rd">'
+                                                +       '</td>'
+                                                +       '<td>'
+                                                +           '<input maxlength="3" onkeypress="enableSaveBtnOnChange()" type="text" class="form-control" name="4th">'
+                                                +       '</td>'
+                                                +   '</tr>';
+                        $('#subjectTable').append(subjectRowTemplate);
+                    }
+                } else {
+                    var subjectRowTemplate =    '<tr><td class="text-center text-muted" colspan="5"><i>No Subjects Assigned</i></td></tr>';
                     $('#subjectTable').append(subjectRowTemplate);
-
                 }
             }
         });   
@@ -311,7 +322,6 @@
                     }
                 }
 
-                console.log('yo' + data[0].id);
                 getGradesByStudent(data[0].id);
 
                 $('.dropdown-menu a').click(function(){
@@ -319,7 +329,6 @@
                     $('#studentDropdownBtn').val($(this).text());
                     $('#studentDropdownBtn').attr('data-value',$(this).data('value'));
 
-                    console.log('yo' + $(this).data('value'));
                     getGradesByStudent($(this).data('value'));
                 });
             }
@@ -334,49 +343,55 @@
 
     $('.saveBtn').click(function(){
         var grades = [];
-
-        // Pushes input in each row to an array
-        for(var c=1; c < $('#subjectTable').find('tr').length; c++) {
-            var subjectsId = $('#subjectTable').find('tr').eq(c).data('value');
-            grades.push({
-                'subjects_id': subjectsId,
-                'firstgrading': $('#subjectTable').find('tr').eq(c).find('input').eq(0).val(),
-                'secondgrading': $('#subjectTable').find('tr').eq(c).find('input').eq(1).val(),
-                'thirdgrading': $('#subjectTable').find('tr').eq(c).find('input').eq(2).val(),
-                'fourthgrading': $('#subjectTable').find('tr').eq(c).find('input').eq(3).val()
+        if($('li.active').length > 0) {
+            // Pushes input in each row to an array
+            for(var c=1; c < $('#subjectTable').find('tr').length; c++) {
+                var subjectsId = $('#subjectTable').find('tr').eq(c).data('value');
+                grades.push({
+                    'subjects_id': subjectsId,
+                    'firstgrading': $('#subjectTable').find('tr').eq(c).find('input').eq(0).val(),
+                    'secondgrading': $('#subjectTable').find('tr').eq(c).find('input').eq(1).val(),
+                    'thirdgrading': $('#subjectTable').find('tr').eq(c).find('input').eq(2).val(),
+                    'fourthgrading': $('#subjectTable').find('tr').eq(c).find('input').eq(3).val()
                 });
-        }
-
-        // Data to be updated
-        var updateData = {
-            'studentId': $('li.active').attr('data-value'),
-            'gradeLevel': $('#sectionDropdownBtn').data('value'),
-            'grades': grades
-        }
-
-        // Update Grades AJAX
-        $.ajax({
-            type: 'POST',
-            url: 'grades/update',
-            dataType: 'json',
-            data: updateData,
-            beforeSend: function() {
-                $('.grading').text("");
-                $('.loader').show();
-            },
-            success: function(data) {
-                console.log('grade update success');
-                $('.loader').hide();
-                getGradesByStudent($('li.active').data('value'));
-            },
-            error: function() {
-                $('.loader').hide();
-                getGradesByStudent($('li.active').data('value'));
             }
-        });
 
-        // Disable save button when ajax sucess
-        $('.saveBtn').attr('disabled',true);
+            // Data to be updated
+            var updateData = {
+                'studentId': $('li.active').attr('data-value'),
+                'gradeLevel': $('#sectionDropdownBtn').data('value'),
+                'grades': grades
+            }
+
+            // Update Grades AJAX
+            $.ajax({
+                type: 'POST',
+                url: 'grades/update',
+                dataType: 'json',
+                data: updateData,
+                beforeSend: function() {
+                    $('.grading').text("");
+                    $('.loader').show();
+                },
+                success: function(data) {
+                    swal("Success!", "Grades updated!", "success");
+                    $('.loader').hide();
+                    getGradesByStudent($('li.active').data('value'));
+                },
+                error: function() {
+                    swal("Error!", "Something's wrong!", "error");
+                    $('.loader').hide();
+                    getGradesByStudent($('li.active').data('value'));
+                }
+            });
+
+            // Disable save button when ajax sucess
+            $('.saveBtn').attr('disabled',true);
+        } else {
+            swal("Hold on!", "Please select a Student.","info");
+        }
+
+        
     });
 
     $('.dropdown-menu a').click(function(){
@@ -388,7 +403,9 @@
 
     // Retrieves grades of selected student
     $('#studentList').click(function(e) {
-        console.log($('li.active').attr('data-value'));
-        getGradesByStudent($('li.active').attr('data-value'));
+        if($('li.active').length > 0) {
+            $('#gradesTable > tbody').html('');
+            getGradesByStudent($('li.active').attr('data-value'));
+        }
     });
 </script>

@@ -22,7 +22,7 @@
     </div>
 </div>
 <div class="row">
-    <div class="col-4">
+    <div class="col-5">
         <div class="card" id="subjectCard">
             <div class="card-header d-flex justify-content-between">
                 <span>Subjects</span>
@@ -42,7 +42,7 @@
             </div>
         </div>
     </div>
-    <div class="col-8">
+    <div class="col-7">
         <div class="card" id="studentCard">
             <div class="card-header d-flex justify-content-between">
                 <span>Students</span>
@@ -58,12 +58,13 @@
                         </div>
                     </div>
 				<div class="table-responsive">
-					<table cellpadding="0" cellspacing="0" id="studentTable">
+					<table cellpadding="0" cellspacing="0" class="bcma-table" id="studentTable">
 						<thead class="customTh">
 							<tr>
-								<th style="width: 15%">ID No.</th>
-								<th style="width: 60%">Full Name</th>
-								<th style="width: 20%"></th>
+								<th style="width: 4em">ID No.</th>
+								<th>Student Name</th>
+								<th style="width: 10em">Parent</th>
+								<th style="width: 50px"></th>
 							</tr>
 						</thead>
 						<tbody class="customTd"></tbody>
@@ -74,7 +75,7 @@
     </div>
 </div>
 
-	<div id="addSubjectModal" class="modal fade" tabindex="-1" role="dialog">
+<div id="addSubjectModal" class="modal fade" tabindex="-1" role="dialog">
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
 		<form name="addsubjectform" id="addsubjectform" action="" method="post">
@@ -86,9 +87,9 @@
 		</div>
 		<div class="modal-body">
 			<div class="form-group">
-			<label class="form-label">Subject Name</label>
-			<input type="text" class="form-control" name="subjectname" id="subjectname">
-			<label class="error text-danger" for="subjectname" id="subjectname_error">This field is required.</label>
+				<label class="form-label">Subject Name</label>
+				<input type="text" class="form-control" name="subjectname" id="subjectname">
+				<label class="error text-danger" for="subjectname" id="subjectname_error">This field is required.</label>
 			</div>
 			<div class="form-group">
 			<label class="form-label">Grade Level</label>
@@ -106,6 +107,7 @@
 		<div class="modal-footer">
 			<label class="error form-label text-success" id="statussuccess"></label>
 			<label class="error form-label text-danger" id="statuserror"></label>
+			<button type="submit" class="btn btn-primary" id="updatesubject" hidden>Save</button>
 			<button type="submit" class="btn btn-primary" id="addsubject">Add</button>
 			<button type="button" class="btn btn-secondary" data-dismiss="modal" id="addsubjectclose">Cancel</button>
 		</div>
@@ -147,7 +149,7 @@
 			</div>
 			<div class="form-group">
 			<label class="form-label">Parent</label>
-			<select class="form-control select2" name="selectParent" id="selectParent" style="width: 100%;height: 100px"><option></option></select>
+			<select class="form-control select2 selectParent" name="selectParent" id="selectParent" style="width: 100%;height: 100px"><option></option></select>
 			<label class="error text-danger" for="selectParent" id="selectparent_error">This field is required.</label>
 			</div>
 			<div class="form-group">
@@ -189,6 +191,25 @@
 
 	<script>
 	$('table#studentTable').hide();
+
+	function initializeSelect2(){
+		// Search Parent
+		$('.selectParent').select2({
+			placeholder: '--- Select Parent ---',
+			ajax: {
+				url: 'parents/search',
+				dataType: 'json',
+				delay: 250,
+				processResults: function (data) {
+					return {
+						results: data
+					};
+				},
+				cache: true
+			}
+		});
+	}
+
 	function getSubjects(currentLevel) {
 		var url;
 		if(currentLevel != undefined) {
@@ -196,7 +217,7 @@
 		} else {
 			url = 'subjects/view';
 		}
-		// Get Subjects
+		
 		$.ajax({
 			url: url,
 			dataType: 'json',
@@ -208,57 +229,26 @@
 				$('#subjectList').html("");
 				$('div#subjectlistloader').hide();
 
-				for(var c=0; c < data.length; c++) {
-				var subjectListItemTemplate = '<li class="list-group-item" data-value="' + data[c].id + '">'
-												+ data[c].subject
-												+ '<button type="button" class="close custom-close" aria-label="Close">'
-												+ '<span aria-hidden="true">&times;</span>'
-												+ '</button>'
-											+ '</li>';
-				$('#subjectList').append(subjectListItemTemplate);
+				if (data.warning != undefined) {
+					var subjectListItemTemplate = '<div>' + data.warning + '</div>';
+					$('#subjectList').append(subjectListItemTemplate);
+				} else {
+					displaySubjectList(data);
 				}
-
-				$('.list-group li').mouseenter(function(){
-					if($('.btn:first-child').val() != "All Levels") {
-						$(this).find('.custom-close').show();
-					}
-				}).mouseleave(function(){
-					$(this).find('.custom-close').hide();
-				});
-
-				$('.custom-close').on('click', function() {
-					deleteSubject($(this).parent().data('value'));
-					$(this).parent().remove();
-				});
 			}
 		});
 	}
 
-	function deleteSubject(subjectId) {
-		console.log(subjectId);
-		$.ajax({
-			url: 'subjects/delete/' + subjectId,
-			dataType: 'json',
-			success: function() {
-				console.log('delete success');
-			}
-		});
-	}
+	function getStudents(currentLevel) {
+		var url;
+		if(currentLevel != undefined) {
+			url = 'students/view/' + currentLevel;
+		} else {
+			url = 'students/view';
+		}
 
-	function deleteStudent(studentId) {
 		$.ajax({
-			url: 'students/delete/' + studentId ,
-			dataType: 'json',
-			success: function() {
-				console.log('delete success');
-			}
-		});
-	}
-
-	$(document).ready(function () {
-		// Get Students
-		$.ajax({
-			url: '<?php echo site_url('students/view');?>',
+			url: url,
 			dataType: 'json',
 			beforeSend: function() {
 				$('#studentTable').hide();
@@ -276,26 +266,332 @@
 												+ '</tr>';
 					$('#studentTable').find('tbody').append(studentListItemTemplate);
 				} else {
-					for(var c=0; c < data.length; c++) {
-						var studentListItemTemplate = '<tr>' 
-													+ '<td>' + data[c].id + '</td>' 
-													+ '<td>' + data[c].firstname + ' ' + data[c].lastname + '</td>' 
-													+ '<td><button class="btn btn-link btn-sm text-danger removeStudent">Remove</td>'
-													+ '</tr>';
-						$('#studentTable').find('tbody').append(studentListItemTemplate);
-
-						$('.removeStudent').on('click', function(event) {
-							deleteStudent($(this).parent().siblings().eq(0).html());
-							$(this).parent().parent().remove();
-						});
-					}
+					displayStudentTable(data);
+					$('.removeStudent').on('click', function(event) {
+						deleteStudent($(this).parent().siblings().eq(0).html());
+						$(this).parent().parent().remove();
+					});
+					
 				}
 			}
 		}); 
+	}
 
+	function displaySubjectList(data) {
+		for (var c=0; c < data.length; c++) {
+			var subjectListItemTemplate = '<li class="list-group-item" data-value="' + data[c].id + '" data-level="' + data[c].gradelevel + '">'
+									+ '<span>' + data[c].subject + '</span>'
+									+ '<div class="item-action dropdown" style="float: right">'
+									+ 	'<a href="javascript:void(0)" data-toggle="dropdown" class="icon"><i class="fas fa-ellipsis-v"></i></a>'
+									+ 	'<div class="dropdown-menu dropdown-menu-right">'
+									+ 		'<a href="javascript:void(0)" onClick="updateSubject(this)" class="dropdown-item"><i class="dropdown-icon far fa-edit"></i> Update </a>'
+									+ 		'<a href="javascript:void(0)" onClick="deleteSubject(this)" class="dropdown-item"><i class="dropdown-icon far fa-trash-alt"></i> Delete </a>'
+									+ 	'</div>'
+									+ '</div>'
+									+ '</li>';
+			$('#subjectList').append(subjectListItemTemplate);
+		}
+	}
+
+	function displayStudentTable(data) {
+	    $('#studentTable').find('tbody').html('');
+		for(var c=0; c < data.length; c++) {
+			var studentFullName = data[c].firstname + " " + data[c].middlename + ' ' + data[c].lastname;
+			var studentListItemTemplate = '<tr data-id="' + data[c].id + '">' 
+										+ '<td>' + data[c].id + '</td>' 
+										+ '<td data-fn="' + data[c].firstname + '" data-mi="' + data[c].middlename + '" data-ln="' + data[c].lastname + '" >' + studentFullName + '</td>'
+										+ '<td data-id="' + data[c].parent_id + '">' + data[c].parent_firstname + " " + data[c].parent_lastname + '</td>'
+										+ '<td class="text-center">'
+										+	 '<div class="item-action dropdown">'
+										+		'<a href="javascript:void(0)" data-toggle="dropdown" class="icon"><i class="fas fa-ellipsis-v"></i></a>'
+										+		'<div class="dropdown-menu dropdown-menu-right">'
+										+			'<a href="javascript:void(0)" onClick="updateStudent(this)" class="dropdown-item"><i class="dropdown-icon far fa-edit"></i> Update </a>'
+										+			'<a href="javascript:void(0)" onClick="deleteStudent(this)" class="dropdown-item"><i class="dropdown-icon far fa-trash-alt"></i> Delete </a>'
+										+		'</div>'
+										+	'</div>'
+										+ '</td>' 
+										+ '</tr>'
+			$('#studentTable').find('tbody').append(studentListItemTemplate);
+		}
+	}
+
+	function addSubject() {
+		$.ajax({
+			url: 'subjects/create/',
+			type: 'POST',
+			dataType: 'json',
+			dataSrc: '',
+			data: { 
+				'subjectName': $('#subjectname').val(),
+				'gradeLevel': $('#subjectGradeLevel').val(),
+				'selectedLevel': $('#sectionDropdownBtn').attr('data-value')
+			}, 
+			success: function(data) {
+				swal("Success!", "New Subject Added!", "success");
+				$('#subjectList').html('');
+				displaySubjectList(data);
+
+				$('#addSubjectModal').modal('hide');
+			},
+			error: function(status) {
+				swal("Error!", "Something's wrong!", "error");
+			}
+		});     
+	}
+//
+	function addStudent() {
+		$.ajax({
+			url: 'students/create/',
+			type: 'POST',
+			dataType: 'json',
+			dataSrc: '',
+			data: { 
+				'firstName': $('#firstname').val(),
+				'middleName': $('#middlename').val(),
+				'lastName': $('#lastname').val(),
+				'idNumber': $('#idnumber').val(),
+				'gender': $('input[name=gender]:checked').val(),
+				'parentId': $('.selectParent').val(),
+				'gradeLevel': $('#studentGradeLevel').val(),
+				'selectedLevel': $('#subjectGradeLevel').attr('data-value')
+			},
+			success: function(data, status) {
+				swal("Success!", "New Student Added!", "success");
+				displayStudentTable(data);
+				$('#addStudentModal').modal('hide');
+			},
+			error: function(status) {
+				swal("Error!", "Something's wrong!", "error");
+			}
+		});    
+	}
+
+	function updateSubject(selector) {
+		var subject = $(selector).parent().parent().parent();
+		var currSubject = subject.find('span').html();
+		var currLevel = subject.data('level');
+		var subjectDefaultTemplate = '<div class="item-action dropdown" style="float: right">'
+								   + 	'<a href="javascript:void(0)" data-toggle="dropdown" class="icon"><i class="fas fa-ellipsis-v"></i></a>'
+								   + 	'<div class="dropdown-menu dropdown-menu-right">'
+								   + 		'<a href="javascript:void(0)" onclick="updateSubject(this)" class="dropdown-item"><i class="dropdown-icon far fa-edit"></i> Update </a>'
+								   + 		'<a href="javascript:void(0)" onclick="deleteSubject(this)" class="dropdown-item"><i class="dropdown-icon far fa-trash-alt"></i> Delete </a>'
+								   + 	'</div>'
+								   + '</div>';
+		var editSubjectTemplate = '<input value="' + currSubject + '" class="form-control" type="text"/>'
+								+	'<select class="form-control edit-dropdown ml-1" name="type">'
+								+ 		'<option value="1">Gr. 1</option>'
+								+ 		'<option value="2">Gr. 2</option>'
+								+ 		'<option value="3">Gr. 3</option>'
+								+ 		'<option value="4">Gr. 4</option>'
+								+ 		'<option value="5">Gr. 5</option>'
+								+ 		'<option value="6">Gr. 6</option>'
+								+ 	'</select>'
+								+ 	'<button class="btn btn-sm btn-outline-success form-control ml-1 edit-save"><i class="fas fa-check"></i></button>'
+								+	'<button class="btn btn-sm btn-outline-warning form-control ml-1 edit-cancel"><i class="fas fa-times"></i></button>';
+		if(!subject.hasClass('d-flex')) {
+			subject.addClass('d-flex');
+		}
+		subject.html(editSubjectTemplate);
+		subject.find('select').val(currLevel);
+
+		$('.edit-save').on('click', function(e) {
+			e.preventDefault();
+			var thisSubject = $(this).parent();
+			var newSubject = $(this).siblings().eq(0).val();
+
+			$.ajax({
+				url: 'subjects/update',
+				type: 'POST',
+				dataType: 'json',
+				dataSrc: '',
+				data: { 
+					'id': subject.data('value'),
+					'subjectName': subject.find('input').val(),
+					'gradeLevel': subject.find('select').val()
+				}, 
+				success: function(data) {
+					swal("Success!", data, "success");
+					thisSubject.html('<span>' + newSubject + '</span>' + subjectDefaultTemplate);
+					if(thisSubject.hasClass('d-flex')) {
+						thisSubject.removeClass('d-flex');
+					}
+				},
+				error: function(status) {
+					swal("Error!", "Something's wrong!", "error");
+				}
+			});     
+		});
+
+		$('.edit-cancel').on('click', function(e) {
+			e.preventDefault();
+			var thisSubject = $(this).parent();
+			thisSubject.html('<span>' + currSubject + '</span>' + subjectDefaultTemplate);
+			if(thisSubject.hasClass('d-flex')) {
+				thisSubject.removeClass('d-flex');
+			}
+		});
+
+	}
+
+	function updateStudent(selector) {
+
+		function getStudentRowTemplate(id,studentName,parent) {
+			var studentRowTemplate ='<td>' + id + '</td>'
+							   + 	'<td data-fn="' + studentName.firstname + '" data-mi="' + studentName.middlename + '" data-ln="' + studentName.lastname + '" >' + studentName.fullName + '</td>'
+							   +	'<td data-id="' + parent.id + '">' + parent.name + '</td>'
+							   + 	'<td class="text-center">'
+							   + 	'<div class="item-action dropdown">'
+							   + 		'<a href="javascript:void(0)" data-toggle="dropdown" class="icon" aria-expanded="false"><i class="fas fa-ellipsis-v"></i>'
+							   + 		'</a>'
+							   + 	'<div class="dropdown-menu">'
+							   +		'<a href="javascript:void(0)" onclick="updateStudent(this)" class="dropdown-item"><i class="dropdown-icon far fa-edit"></i> Update </a>'
+							   +		'<a href="javascript:void(0)" onclick="deleteStudent(this)" class="dropdown-item"><i class="dropdown-icon far fa-trash-alt"></i> Delete </a></div></div>'
+							   + 	'</td>';
+			return studentRowTemplate;
+		}
+
+		var student = $(selector).parent().parent().parent().parent();
+		var currStudent = {
+			id: student.children().eq(0).html(),
+			name: {
+				firstname: student.children().eq(1).data('fn'),
+				middlename: student.children().eq(1).data('mi'),
+				lastname: student.children().eq(1).data('ln'),
+				fullName: student.children().eq(1).html(),
+			},
+			parent: {
+				id: student.children().eq(2).data('id'),
+				name: student.children().eq(2).html()
+			}
+		};
+		var editStudentTemplate =  	'<td><input value="' + currStudent.id + '" class="form-control" placeholder="ID No."/></td>'
+							    + 	'<td>'
+								+		'<div class="d-flex">'
+								+ 			'<input value="' + currStudent.name.firstname + '" class="form-control" placeholder="First Name"/>'
+								+ 			'<input value="' + currStudent.name.middlename + '" class="form-control ml-1" placeholder="MI" style="width: 3em"/>'
+								+ 			'<input value="' + currStudent.name.lastname + '" class="form-control ml-1" placeholder="Last Name"/>'
+								+		'</div>'
+								+ 	'</td>'
+							    +	'<td>'
+								+ 		'<select class="form-control select2 selectParent" name="selectParent">'
+								+			'<option value="' + currStudent.parent.id + '" selected="selected">' + currStudent.parent.name + '</option>'
+								+		'</select>'
+								+	'</td>'
+							    + 	'<td class="text-center align-middle">'
+								+		'<div class="d-flex">'
+							    + 			'<button class="btn btn-sm btn-outline-success form-control ml-1 edit-save"><i class="fas fa-check"></i></button>'
+							    +			'<button class="btn btn-sm btn-outline-warning form-control ml-1 edit-cancel"><i class="fas fa-times"></i></button>'
+							    +		'</div>'
+								+ 	'</td>';
+		student.html(editStudentTemplate);
+		initializeSelect2();
+
+		$('.edit-save').on('click', function(e) {
+			e.preventDefault();
+			var thisStudentRow = $(this).parent().parent().parent();
+			var newStudentId = thisStudentRow.find('input').eq(0).val();
+			var newStudentName =  {
+				firstname: thisStudentRow.find('input').eq(1).val(),
+				middlename: thisStudentRow.find('input').eq(2).val(),
+				lastname: thisStudentRow.find('input').eq(3).val(),
+				get fullName() {
+					return this.firstname + " " + this.lastname;
+				}
+			};
+			var newParent = {
+				id: thisStudentRow.find('select').val(),
+				name: thisStudentRow.find('select').text()
+			};
+			
+			$.ajax({
+				url: 'students/update/' + thisStudentRow.data('id'),
+				type: 'POST',
+				dataType: 'json',
+				dataSrc: '',
+				data: { 
+					'id': thisStudentRow.find('input').eq(0).val(),
+					'firstName': thisStudentRow.find('input').eq(1).val(),
+					'middleName': thisStudentRow.find('input').eq(2).val(),
+					'lastName': thisStudentRow.find('input').eq(3).val(),
+					'parentId': thisStudentRow.find('select').val()
+				}, 
+				success: function(data) {
+					swal("Success!", data, "success");
+					thisStudentRow.html(getStudentRowTemplate(newStudentId, newStudentName, newParent));
+				},
+				error: function(status) {
+					swal("Error!", "Something's wrong!", "error");
+				}
+			});     
+		});
+
+		$('.edit-cancel').on('click', function(e) {
+			e.preventDefault();
+			var thisStudentRow = $(this).parent().parent().parent();
+			thisStudentRow.html(getStudentRowTemplate(currStudent.id,currStudent.name,currStudent.parent));
+		});
+	}
+
+	function deleteSubject(selector) {
+		var subject = $(selector).parent().parent().parent();
+		var subjectId = subject.data('value');
+		swal({
+			title: "Are you sure?",
+			text: "Changes cannot be undone once deleted!",
+			icon: "warning",
+			buttons: true,
+			dangerMode: true,
+			})
+		.then((willDelete) => {
+			if (willDelete) {
+				$.ajax({
+					url: 'subjects/delete/' + subjectId,
+					dataType: 'json',
+					success: function(status) {
+						swal("Success!", "Subject Deleted!", "success");
+						subject.remove();
+					},
+					error: function(status) {
+						swal("Error!", "Something's wrong!", "error");
+					}
+				});
+			}
+		});
+	}
+
+	function deleteStudent(selector) {
+		var student = $(selector).parent().parent().parent().parent();
+		var studentId = student.data('id');
+
+		swal({
+			title: "Are you sure?",
+			text: "Changes cannot be undone once deleted!",
+			icon: "warning",
+			buttons: true,
+			dangerMode: true,
+			})
+		.then((willDelete) => {
+			if (willDelete) {
+				$.ajax({
+					url: 'students/delete/' + studentId ,
+					dataType: 'json',
+					success: function(data) {
+						swal("Success!", data, "success");
+						student.remove();
+					},
+					error: function(status) {
+						swal("Error!", "Something's wrong!", "error");
+					}
+				});
+			}
+		});
+		
+	}
+
+	$(document).ready(function () {
+		getStudents();
 		getSubjects();
 				
-
 		$('.error').hide();
 		$('#addSubjectModal').on('shown.bs.modal', function () {
 			$('#subjectname').trigger('focus');
@@ -303,60 +599,17 @@
 
 		$('.dropdown-menu a').click(function(){
 
+			// Empyy Subject List
 			$('#subjectList').html("");
+
+			// Empty Student Table
 			$('#studentTable').find('tbody').html("");
 			
 			// Get Subjects by Level
 			getSubjects($(this).data('value'));    
-
-			$('.list-group li').mouseenter(function(){
-				if($('.btn:first-child').val() != "All Levels") {
-					$(this).find('.custom-close').show();
-				}
-			}).mouseleave(function(){
-				$(this).find('.custom-close').hide();
-			});
-
-			$('.custom-close').on('click', function() {
-				deleteSubject($(this).parent().data('value'));
-				$(this).parent().remove();
-			});
-
+			
 			// Get Students by Level
-			$.ajax({
-				url: 'students/view/' + $(this).data('value') ,
-				dataType: 'json',
-				beforeSend: function() {
-                    $('div#studentlistloader').show();
-                    $('#studentTable').hide();
-            	},
-				success: function(data) {
-					$('div#studentlistloader').hide();
-					$('#studentTable').show();
-					
-					if (data.warning != undefined) {
-						var studentListItemTemplate = '<tr>' 
-													+ '<td></td>' 
-													+ '<td>' + data.warning + '</td>' 
-													+ '</tr>';
-						$('#studentTable').find('tbody').append(studentListItemTemplate);
-					} else {
-						for(var c=0; c < data.length; c++) {
-							var studentListItemTemplate = '<tr>' 
-														+ '<td>' + data[c].id +'</td>' 
-														+ '<td>' + data[c].firstname + ' ' + data[c].lastname + '</td>' 
-														+ '<td><button class="btn btn-link btn-sm text-danger removeStudent">Remove</td>'
-														+ '</tr>';
-							$('#studentTable').find('tbody').append(studentListItemTemplate);
-						}
-
-						$('.removeStudent').on('click', function(event) {
-							deleteStudent($(this).parent().siblings().eq(0).html());
-							$(this).parent().parent().remove();
-						});
-					}
-				}
-			});        
+			getStudents($(this).data('value'));
 
 			$('button#sectionDropdownBtn').text($(this).text());
 			$('button#sectionDropdownBtn').val($(this).text());
@@ -366,75 +619,13 @@
 		// Add Subject
 		$('#addsubject').click(function(event) {
 			event.preventDefault();
-
-			$.ajax({
-				url: 'subjects/create/',
-				type: 'POST',
-				dataType: 'json',
-				dataSrc: '',
-				data: { 
-					'subjectName': $('#subjectname').val(),
-					'gradeLevel': $('#subjectGradeLevel').val(),
-					'selectedLevel': $('#sectionDropdownBtn').attr('data-value')
-				}, 
-				success: function(data) {
-					$('#subjectList').html('');
-					for(var c=0; c < data.length; c++) {
-						var subjectListItemTemplate = '<li class="list-group-item" data-value="'+ data[c].id +'">'
-														+ data[c].subject
-														+ '<button type="button" class="close custom-close" aria-label="Close">'
-														+ '<span aria-hidden="true">&times;</span>'
-														+ '</button>'
-													+ '</li>';
-						$('#subjectList').append(subjectListItemTemplate);
-					}
-
-					$('#addSubjectModal').modal('hide');
-				}
-			});        
+			addSubject();
 		});
 
 		// Add Student
 		$('#addstudent').click(function(event) {
 			event.preventDefault();
-
-			$.ajax({
-				url: 'students/create/',
-				type: 'POST',
-				dataType: 'json',
-				dataSrc: '',
-				data: { 
-					'firstName': $('#firstname').val(),
-					'middleName': $('#middlename').val(),
-					'lastName': $('#lastname').val(),
-					'idNumber': $('#idnumber').val(),
-					'gender': $('input[name=gender]:checked').val(),
-					'parentId': $('#selectParent').val(),
-					'gradeLevel': $('#studentGradeLevel').val(),
-					'selectedLevel': $('#subjectGradeLevel').attr('data-value')
-				},
-				success: function(data) {
-					$('#studentTable').find('tbody').html('');
-					for(var c=0; c < data.length; c++) {
-						var studentListItemTemplate = '<tr>' 
-														+ '<td>' + data[c].id +'</td>' 
-														+ '<td>' + data[c].firstname + " " + data[c].middlename + ' ' + data[c].lastname + '</td>' 
-														+ '<td><button class="btn btn-link btn-sm text-danger removeStudent">Remove</td>'
-													+ '</tr>'
-						$('#studentTable').find('tbody').append(studentListItemTemplate);
-					}
-
-					$('#addStudentModal').modal('hide');
-				}
-			});        
-		});
-
-		$('.list-group li').mouseenter(function(){
-			if($('.btn:first-child').val() != "All Levels") {
-				$(this).find('.custom-close').show();
-			}
-		}).mouseleave(function(){
-			$(this).find('.custom-close').hide();
+			addStudent();
 		});
 
 		$('.list-group li').click(function(e) {
@@ -445,20 +636,6 @@
 			}
 		});
 
-		// Search Parent
-		$('#selectParent').select2({
-			placeholder: '--- Select Parent ---',
-			ajax: {
-				url: 'parents/search',
-				dataType: 'json',
-				delay: 250,
-				processResults: function (data) {
-					return {
-						results: data
-					};
-				},
-				cache: true
-			}
-		});
+		initializeSelect2();
 	});
 	</script>

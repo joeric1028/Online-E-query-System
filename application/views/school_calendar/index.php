@@ -20,7 +20,7 @@
             <div class="card-header">School Events</div>
             <div class="card-body">
                 <div class="table-responsive">
-                    <table id="calendarTable"> 
+                    <table id="calendarTable" class="bcma-table"> 
                     </table>
                     <div id="loaderschoolevent">
                         <div class="loader disable-selection" id="loader-4">
@@ -84,7 +84,7 @@
   </div>
 </div>
 
-<div id="exportEventModal" class="modal fade" tabindex="-1" role="dialog">
+<!-- <div id="exportEventModal" class="modal fade" tabindex="-1" role="dialog">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
         <div class="modal-header">
@@ -114,7 +114,7 @@
         </div>
     </div>
   </div>
-</div>
+</div> -->
 
 <script>
     $(document).ready(function () {

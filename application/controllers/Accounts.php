@@ -34,6 +34,11 @@ class Accounts extends CI_Controller {
         header("Content-Type: application/json; charset=UTF-8");
         $this->Accounts_model->get_accounts();
     }
+    
+    public function updateaccounts() {
+        header("Content-Type: application/json; charset=UTF-8");
+        $this->Accounts_model->update_accounts();
+    }
 
     public function deleteaccounts() {
         header("Content-Type: application/json; charset=UTF-8");
@@ -83,6 +88,11 @@ class Accounts extends CI_Controller {
     public function createpaymentschedule() {
         header("Content-Type: application/json; charset=UTF-8");
         $this->Accounts_model->create_paymentschedule();
+    }
+    
+    public function updatepayment() {
+        header("Content-Type: application/json; charset=UTF-8");
+        $this->Accounts_model->update_payment();
     }
 
     public function deletepayment() {

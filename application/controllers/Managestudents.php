@@ -49,6 +49,11 @@
             $this->Student_model->create_student();
         }
 
+        public function updateStudent($studentId) {
+            header("Content-Type: application/json; charset=UTF-8");
+            $this->Student_model->update_student($studentId);
+        }
+
         public function deletestudent($studentId) {
             header("Content-Type: application/json; charset=UTF-8");
             $this->Student_model->delete_student($studentId);
@@ -69,6 +74,11 @@
         public function createsubject() {
             header("Content-Type: application/json; charset=UTF-8");
             $this->Subjects_model->create_subject();
+        }
+
+        public function updatesubject() {
+            header("Content-Type: application/json; charset=UTF-8");
+            $this->Subjects_model->update_subject();
         }
 
         public function deletesubject($subjectId) {
